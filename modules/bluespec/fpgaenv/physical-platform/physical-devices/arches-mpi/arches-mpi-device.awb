@@ -1,0 +1,43 @@
+%name Arches MPI Physical Device
+%desc Arches MPI Physical Device
+
+%provides arches_mpi_device
+
+%sources -t BSV -v PUBLIC arches-mpi-vhdl-import.bsv
+%sources -t BSV -v PUBLIC arches-mpi-device.bsv
+
+%sources -t VHD -v PRIVATE system.vhd
+
+%sources -t NGC -v PRIVATE dlmb_cntlr_mba_wrapper.ngc
+%sources -t NGC -v PRIVATE dlmb_mba_wrapper.ngc
+
+%sources -t NGC -v PRIVATE fsl_l1_to_mpe_wrapper.ngc
+%sources -t NGC -v PRIVATE fsl_mpe_to_l1_wrapper.ngc
+%sources -t NGC -v PRIVATE fsl_mpecmd_to_vacc_wrapper.ngc
+%sources -t NGC -v PRIVATE fsl_mpedata_to_vacc_wrapper.ngc
+%sources -t NGC -v PRIVATE fsl_vacc_to_mpecmd_wrapper.ngc
+%sources -t NGC -v PRIVATE fsl_vacc_to_mpedata_wrapper.ngc
+
+%sources -t NGC -v PRIVATE ilmb_cntlr_mba_wrapper.ngc
+%sources -t NGC -v PRIVATE ilmb_mba_wrapper.ngc
+
+%sources -t NGC -v PRIVATE inst_m2_dualcompute_infrastructure_wrapper.ngc
+%sources -t NGC -v PRIVATE inst_m2_fsl_if_l1_wrapper.ngc
+%sources -t NGC -v PRIVATE inst_proc_sys_reset_wrapper.ngc
+%sources -t NGC -v PRIVATE inst_util_clk0_pll_wrapper.ngc
+%sources -t NGC -v PRIVATE inst_util_clk100_pll_wrapper.ngc
+%sources -t NGC -v PRIVATE inst_util_srl_reset_clk0_wrapper.ngc
+
+%sources -t NGC -v PRIVATE lmb_bram_mba_wrapper.ngc
+%sources -t NGC -v PRIVATE mb_mba_wrapper.ngc
+
+%sources -t NGC -v PRIVATE plb_bus_mba_wrapper.ngc
+%sources -t NGC -v PRIVATE plb_gpio_monitor_mba_wrapper.ngc
+%sources -t NGC -v PRIVATE plb_mdm_mba_wrapper.ngc
+
+%sources -t NGC -v PRIVATE tmd_mpe_vacc_wrapper.ngc
+
+%sources -t H   -v PUBLIC  arches-mpi-device.h
+%sources -t CPP -v PRIVATE arches-mpi-device.cpp
+
+%sources -t UCF -v PRIVATE m2c_f1.ucf

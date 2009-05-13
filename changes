@@ -1,0 +1,70 @@
+
+----------
+aparasha    Date: Wed May 13 16:39:23 EDT 2009  CSN: CSN-platform-acp-2
+                  Wed May 13 20:39:23 UTC 2009
+
+
+Directory modules
+ bluespec/                 Locally Added               0 
+
+Directory modules/bluespec
+ fpgaenv/                  Locally Added               0 
+
+Directory modules/bluespec/fpgaenv
+ physical-platform/        Locally Added               0 
+
+Directory modules/bluespec/fpgaenv/physical-platform
+ acp-m2c/                  Locally Added               0 
+
+Directory modules/bluespec/fpgaenv/physical-platform/acp-m2c
+ xilinx.download           Locally Added               0 
+ xilinx.ut                 Locally Added               0 
+ acp-m2c.cpp               Locally Added               0 
+ acp-m2c.h                 Locally Added               0 
+ xilinx.xst                Locally Added               0 
+ acp-m2c.awb               Locally Added               0 
+ acp-m2c.bsv               Locally Added               0 
+ acp-m2c.ucf               Locally Added               0 
+
+Directory modules/bluespec/fpgaenv/physical-platform
+ physical-devices/         Locally Added               0 
+
+Directory modules/bluespec/fpgaenv/physical-platform/physical-devices
+ arches-mpi/               Locally Added               0 
+
+Directory modules/bluespec/fpgaenv/physical-platform/physical-devices/arches-mpi
+ inst_m2_dualcompute_infrastructure_wrapper.ngc Locally Added               0 
+ fsl_mpedata_to_vacc_wrapper.ngc Locally Added               0 
+ fsl_vacc_to_mpedata_wrapper.ngc Locally Added               0 
+ mb_mba_wrapper.ngc        Locally Added               0 
+ m2c_f1.ucf                Locally Added               0 
+ arches-mpi-vhdl-import.bsv Locally Added               0 
+ tmd_mpe_vacc_wrapper.ngc  Locally Added               0 
+ plb_gpio_monitor_mba_wrapper.ngc Locally Added               0 
+ fsl_l1_to_mpe_wrapper.ngc Locally Added               0 
+ fsl_mpe_to_l1_wrapper.ngc Locally Added               0 
+ arches-mpi-device.awb     Locally Added               0 
+ plb_mdm_mba_wrapper.ngc   Locally Added               0 
+ inst_m2_fsl_if_l1_wrapper.ngc Locally Added               0 
+ lmb_bram_mba_wrapper.ngc  Locally Added               0 
+ inst_util_clk0_pll_wrapper.ngc Locally Added               0 
+ inst_util_clk100_pll_wrapper.ngc Locally Added               0 
+ dlmb_mba_wrapper.ngc      Locally Added               0 
+ system.vhd                Locally Added               0 
+ dlmb_cntlr_mba_wrapper.ngc Locally Added               0 
+ inst_proc_sys_reset_wrapper.ngc Locally Added               0 
+ arches-mpi-device.cpp     Locally Added               0 
+ ilmb_mba_wrapper.ngc      Locally Added               0 
+ ilmb_cntlr_mba_wrapper.ngc Locally Added               0 
+ inst_util_srl_reset_clk0_wrapper.ngc Locally Added               0 
+ plb_bus_mba_wrapper.ngc   Locally Added               0 
+ arches-mpi-device.h       Locally Added               0 
+ fsl_vacc_to_mpecmd_wrapper.ngc Locally Added               0 
+ fsl_mpecmd_to_vacc_wrapper.ngc Locally Added               0 
+ arches-mpi-device.bsv     Locally Added               0 
+
+Directory modules/bluespec
+ common/                   Locally Added               0 
+
+- Added a new ACP M2 Compute Physical Platform
+- Added a new Arches MPI Physical Device (does not work yet)

@@ -1,0 +1,871 @@
+##############################################################################
+# m2c_f1.ucf                                                                 #
+# ==========                                                                 #
+# apatel                                                                     #
+# 07/18/2008                                                                 #
+#                                                                            #
+# User Constraints File for the M2 Dual-Compute, FPGA 1                      #
+#                                                                            #
+##############################################################################
+
+# Clocks
+NET "FPGA1_CLK0_P" IOSTANDARD="LVDS_25" | LOC=AL15 | DIFF_TERM="TRUE";
+NET "FPGA1_CLK0_N" IOSTANDARD="LVDS_25" | LOC=AL16 | DIFF_TERM="TRUE";
+NET "FPGA1_CLK1_P" IOSTANDARD="LVDS_25" | LOC=AM16 | DIFF_TERM="TRUE";
+NET "FPGA1_CLK1_N" IOSTANDARD="LVDS_25" | LOC=AM17 | DIFF_TERM="TRUE";
+NET "FPGA1_CLK100_P" IOSTANDARD="LVDS_25" | LOC=AL27 | DIFF_TERM="TRUE";
+NET "FPGA1_CLK100_N" IOSTANDARD="LVDS_25" | LOC=AL26 | DIFF_TERM="TRUE";
+
+NET "FPGA1_CLK100_P" TNM_NET = fpga1_clk100;
+TIMESPEC TS_fpga1_clk100 = PERIOD fpga1_clk100 10000 ps;
+
+NET "FPGA1_CLK0_P" TNM_NET = fpga1_clk0;
+TIMESPEC TS_fpga1_clk0 = PERIOD fpga1_clk0 3748 ps;
+
+# LEDs
+NET "FPGA1_LED0_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AK17;
+NET "FPGA1_LED1_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AL17;
+NET "FPGA1_LED2_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AP30;
+NET "FPGA1_LED3_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AN30;
+
+NET "RAM5_LED_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AN29;
+NET "RAM6_LED_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AP28;
+
+NET "FPGA1_TEMP_LED_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AP27;
+NET "FPGA1_HOT_LED_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AN28;
+
+# I2C EEPROM Interface
+NET "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_FPGA1_SCL" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AP16;
+NET "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_FPGA1_SDA" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AP15;
+
+# FPGA Expansion Bus Signals
+NET "FPGA1_REG_EN_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AK12;
+NET "FPGA1_REG_ADS_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AK13;
+NET "FPGA1_REG_UDS_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AJ30;
+NET "FPGA1_REG_LDS_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AK30;
+NET "FPGA1_REG_RESET_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AK15;
+NET "FPGA1_REG_RD_WR_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AK14;
+NET "FPGA1_REG_CLK" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AL30;
+NET "FPGA1_INTR" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AM28;
+NET "FPGA1_REG_RDY_Z" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AL29;
+NET "FPGA1_CONFIG_DATA[0]" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AJ26;
+NET "FPGA1_CONFIG_DATA[1]" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AK27;
+NET "FPGA1_CONFIG_DATA[2]" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AM14;
+NET "FPGA1_CONFIG_DATA[3]" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AN14;
+NET "FPGA1_CONFIG_DATA[4]" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AK29;
+NET "FPGA1_CONFIG_DATA[5]" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AK28;
+NET "FPGA1_CONFIG_DATA[6]" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AP13;
+NET "FPGA1_CONFIG_DATA[7]" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AN13;
+
+# DDR2 SRAM Power Control Signal
+NET "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM_PWR_ON" IOSTANDARD="LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AL14;
+
+# DDR2 SRAM5
+# Bank 27 - Master
+NET  "RAM5_LD_N"                          IOSTANDARD="HSTL_I_18";
+NET  "RAM5_RW_N"                          IOSTANDARD="HSTL_I_18";
+NET  "RAM5_DLL_OFF_N"                     IOSTANDARD="HSTL_I_18";
+NET  "RAM5_K"                             IOSTANDARD="HSTL_I_DCI_18";
+NET  "RAM5_K_N"                           IOSTANDARD="HSTL_I_DCI_18";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[*]"                       IOSTANDARD="HSTL_I_18";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_BW_N[*]"                       IOSTANDARD="HSTL_I_DCI_18";
+NET  "RAM5_MBANK_SEL"                     IOSTANDARD="HSTL_I_DCI_18";
+NET  "RAM5_MBANK_SEL"                     S;
+
+# Bank 31 - Slave
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[*]"                         IOSTANDARD="HSTL_II_DCI_18";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ_P[*]"                       IOSTANDARD="HSTL_II_DCI_18";
+NET  "RAM5_CQ"                            IOSTANDARD="HSTL_II_DCI_18";
+NET  "RAM5_CQ_N"                          IOSTANDARD="HSTL_II_DCI_18";
+
+NET  "RAM5_CQ" TNM_NET = fpga1_ram5_cq;
+TIMESPEC TS_fpga1_ram5_cq = PERIOD fpga1_ram5_cq 3333 ps;
+
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[0]"                          LOC="D20";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[1]"                          LOC="D21";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[2]"                          LOC="C21";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[3]"                          LOC="C20";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[4]"                          LOC="A20";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[5]"                          LOC="A21";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[6]"                          LOC="A22";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[7]"                          LOC="B21";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ_P[0]"                        LOC="D22"; # byte lane 0 parity
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[8]"                          LOC="C23";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[9]"                          LOC="B22";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[10]"                         LOC="B23";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[11]"                         LOC="A24";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[12]"                         LOC="B24";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[13]"                         LOC="C24";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[14]"                         LOC="E24";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[15]"                         LOC="E25";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ_P[1]"                        LOC="D26"; # byte lane 1 parity
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[16]"                         LOC="E28";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[17]"                         LOC="E27";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[18]"                         LOC="C26";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[19]"                         LOC="C25";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[20]"                         LOC="B26";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[21]"                         LOC="A26";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[22]"                         LOC="A25";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[23]"                         LOC="A27";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ_P[2]"                        LOC="B28"; # byte lane 2 parity
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[24]"                         LOC="A29";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[25]"                         LOC="F30";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[26]"                         LOC="E30";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[27]"                         LOC="E29";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[28]"                         LOC="D30";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[29]"                         LOC="C29";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[30]"                         LOC="B29";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ[31]"                         LOC="C28";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_DQ_P[3]"                        LOC="D28"; # byte lane 3 parity
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[21]"                       LOC="D42";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[20]"                       LOC="E42";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[19]"                       LOC="D41";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[18]"                       LOC="D40";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[17]"                       LOC="C41";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[16]"                       LOC="B42";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[15]"                       LOC="B41";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[14]"                       LOC="A41";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[13]"                       LOC="A40";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[12]"                       LOC="A39";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[11]"                       LOC="B39";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[10]"                       LOC="C40";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[9]"                        LOC="C39";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[8]"                        LOC="B36";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[7]"                        LOC="B37";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[6]"                        LOC="A36";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[5]"                        LOC="A37";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[4]"                        LOC="A35";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[3]"                        LOC="A34";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[2]"                        LOC="B34";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[1]"                        LOC="C34";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_ADDR[0]"                        LOC="D33";
+NET  "RAM5_LD_N"                           LOC="D31";
+NET  "RAM5_RW_N"                           LOC="C31";
+NET  "RAM5_DLL_OFF_N"                      LOC="C30";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_BW_N[0]"                        LOC="D35";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_BW_N[1]"                        LOC="D36";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_BW_N[2]"                        LOC="C36";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM5_BW_N[3]"                        LOC="C35";
+NET  "RAM5_K"                              LOC="A30";
+NET  "RAM5_K_N"                            LOC="A31";
+NET  "RAM5_CQ"                             LOC="D25";
+NET  "RAM5_CQ_N"                           LOC="D27";
+NET  "RAM5_MBANK_SEL"                      LOC="B31";
+
+CONFIG DCI_CASCADE = "27 31"; # ENABLE DCI CASCADE: M=BANK 27, S=BANK 31
+
+# DDR2 SRAM6
+# Bank 33 - Master
+NET  "RAM6_LD_N"                          IOSTANDARD="HSTL_I_18";
+NET  "RAM6_RW_N"                          IOSTANDARD="HSTL_I_18";
+NET  "RAM6_DLL_OFF_N"                     IOSTANDARD="HSTL_I_18";
+NET  "RAM6_K"                             IOSTANDARD="HSTL_I_DCI_18";
+NET  "RAM6_K_N"                           IOSTANDARD="HSTL_I_DCI_18";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[*]"                       IOSTANDARD="HSTL_I_18";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_BW_N[*]"                       IOSTANDARD="HSTL_I_DCI_18";
+NET  "RAM6_MBANK_SEL"                     IOSTANDARD="HSTL_I_DCI_18";
+NET  "RAM6_MBANK_SEL"                     S;
+
+# Bank 29 - Slave
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[*]"                         IOSTANDARD="HSTL_II_DCI_18";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ_P[*]"                       IOSTANDARD="HSTL_II_DCI_18";
+NET  "RAM6_CQ"                            IOSTANDARD="HSTL_II_DCI_18";
+NET  "RAM6_CQ_N"                          IOSTANDARD="HSTL_II_DCI_18";
+
+NET "RAM6_CQ" TNM_NET = fpga1_ram6_cq;
+TIMESPEC TS_fpga1_ram6_cq = PERIOD fpga1_ram6_cq 3333 ps;
+
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[0]"                          LOC="AY42";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[1]"                          LOC="AW42";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[2]"                          LOC="AW41";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[3]"                          LOC="AW40";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[4]"                          LOC="AY40";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[5]"                          LOC="BA41";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[6]"                          LOC="BA42";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[7]"                          LOC="BB41";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ_P[0]"                        LOC="BA40"; # byte lane 0 parity
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[8]"                          LOC="BB38";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[9]"                          LOC="BA39";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[10]"                         LOC="AY38";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[11]"                         LOC="AW37";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[12]"                         LOC="AW38";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[13]"                         LOC="AY39";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[14]"                         LOC="BB37";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[15]"                         LOC="BA37";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ_P[1]"                        LOC="AW36"; # byte lane 1 parity
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[16]"                         LOC="BB36";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[17]"                         LOC="BA36";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[18]"                         LOC="AW35";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[19]"                         LOC="BB34";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[20]"                         LOC="BA35";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[21]"                         LOC="BB33";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[22]"                         LOC="BA34";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[23]"                         LOC="AY33";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ_P[2]"                        LOC="AW33"; # byte lane 2 parity
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[24]"                         LOC="AW32";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[25]"                         LOC="AY32";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[26]"                         LOC="BA32";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[27]"                         LOC="BB32";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[28]"                         LOC="BB31";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[29]"                         LOC="BA30";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[30]"                         LOC="BA31";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ[31]"                         LOC="AY30";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_DQ_P[3]"                        LOC="AW31"; # byte lane 3 parity
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[21]"                       LOC="AW20";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[20]"                       LOC="AW21";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[19]"                       LOC="AY20";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[18]"                       LOC="AY19";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[17]"                       LOC="BA19";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[16]"                       LOC="BA20";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[15]"                       LOC="BA21";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[14]"                       LOC="BB20";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[13]"                       LOC="AW22";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[12]"                       LOC="AW23";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[11]"                       LOC="AY22";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[10]"                       LOC="BA22";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[9]"                        LOC="BB21";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[8]"                        LOC="AW26";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[7]"                        LOC="AV26";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[6]"                        LOC="AW27";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[5]"                        LOC="AV28";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[4]"                        LOC="BA29";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[3]"                        LOC="AY29";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[2]"                        LOC="AY28";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[1]"                        LOC="AY27";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_ADDR[0]"                        LOC="AW28";
+NET  "RAM6_LD_N"                           LOC="BB29";
+NET  "RAM6_RW_N"                           LOC="BB28";
+NET  "RAM6_DLL_OFF_N"                      LOC="BB27";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_BW_N[0]"                        LOC="BB24";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_BW_N[1]"                        LOC="BA24";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_BW_N[2]"                        LOC="AY24";
+NET  "m_pi_llpint_phys_plat_arches_mpi_device_prim_device_RAM6_BW_N[3]"                        LOC="AW25";
+NET  "RAM6_K"                              LOC="BB26";
+NET  "RAM6_K_N"                            LOC="BA26";
+NET  "RAM6_CQ"                             LOC="AY37";
+NET  "RAM6_CQ_N"                           LOC="AY35";
+NET  "RAM6_MBANK_SEL"                      LOC="BA27";
+
+CONFIG DCI_CASCADE = "33 29"; # ENABLE DCI CASCADE: M=BANK 33, S=BANK 29
+
+# LVDS Lanes Downstairs
+# LVDS IO LANE 06 FPGA 1 IO bank 21
+NET "LANE_6_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=AU38;
+NET "LANE_6_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=AU37;
+NET "LANE_6_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=AN34;
+NET "LANE_6_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=AM34;
+NET "LANE_6_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=AF35;
+NET "LANE_6_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=AF36;
+NET "LANE_6_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=AJ35;
+NET "LANE_6_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=AK35;
+NET "LANE_6_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=AE35;
+NET "LANE_6_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=AF34;
+NET "LANE_6_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=AP35;
+NET "LANE_6_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=AN36;
+NET "LANE_6_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=AH34;
+NET "LANE_6_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=AG34;
+NET "LANE_6_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=AR37;
+NET "LANE_6_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=AT36;
+NET "LANE_6_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=AH35;
+NET "LANE_6_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=AG36;
+NET "LANE_6_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=AM36;
+NET "LANE_6_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=AN35;
+NET "LANE_6_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=AT37;
+NET "LANE_6_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=AR38;
+NET "LANE_6_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=AD33;
+NET "LANE_6_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=AE32;
+NET "LANE_6_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=AE33;
+NET "LANE_6_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=AE34;
+NET "LANE_6_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=AV39;
+NET "LANE_6_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=AV38;
+NET "LANE_6_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=AC33;
+NET "LANE_6_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=AD32;
+NET "LANE_6_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=AL36;
+NET "LANE_6_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=AL35;
+NET "LANE_6_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=AB33;
+NET "LANE_6_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=AB32;
+NET "LANE_6_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=AH36;
+NET "LANE_6_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=AJ36;
+
+# LVDS IO LANE 07 FPGA 1 IO bank 26
+NET "LANE_7_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=AV6;
+NET "LANE_7_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=AV5;
+NET "LANE_7_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=AG8;
+NET "LANE_7_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=AH8;
+NET "LANE_7_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=AG9;
+NET "LANE_7_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=AH9;
+NET "LANE_7_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=AT6;
+NET "LANE_7_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=AR5;
+NET "LANE_7_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=AH10;
+NET "LANE_7_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=AH11;
+NET "LANE_7_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=AL6;
+NET "LANE_7_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=AL7;
+NET "LANE_7_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=AN4;
+NET "LANE_7_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=AN5;
+NET "LANE_7_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=AN6;
+NET "LANE_7_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=AM6;
+NET "LANE_7_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=AT5;
+NET "LANE_7_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=AU6;
+NET "LANE_7_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=AP6;
+NET "LANE_7_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=AP5;
+NET "LANE_7_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=AT7;
+NET "LANE_7_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=AR7;
+NET "LANE_7_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=AP7;
+NET "LANE_7_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=AR8;
+NET "LANE_7_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=AM9;
+NET "LANE_7_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=AN9;
+NET "LANE_7_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=AN8;
+NET "LANE_7_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=AP8;
+NET "LANE_7_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=AL9;
+NET "LANE_7_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=AL10;
+NET "LANE_7_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=AK8;
+NET "LANE_7_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=AJ8;
+NET "LANE_7_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=AJ11;
+NET "LANE_7_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=AJ10;
+NET "LANE_7_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=AG12;
+NET "LANE_7_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=AG11;
+
+## LVDS IO LANE 08 FPGA 1 IO bank 12
+#NET "LANE_8_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=L6;
+#NET "LANE_8_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=M6;
+#NET "LANE_8_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=T7;
+#NET "LANE_8_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=T6;
+#NET "LANE_8_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=T5;
+#NET "LANE_8_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=T4;
+#NET "LANE_8_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=N5;
+#NET "LANE_8_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=N6;
+#NET "LANE_8_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=U7;
+#NET "LANE_8_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=U6;
+#NET "LANE_8_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=W11;
+#NET "LANE_8_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=W10;
+#NET "LANE_8_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=AA11;
+#NET "LANE_8_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=AA10;
+#NET "LANE_8_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=Y7;
+#NET "LANE_8_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=W7;
+#NET "LANE_8_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=H6;
+#NET "LANE_8_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=J5;
+#NET "LANE_8_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=R4;
+#NET "LANE_8_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=R5;
+#NET "LANE_8_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=G6;
+#NET "LANE_8_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=H5;
+#NET "LANE_8_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=J6;
+#NET "LANE_8_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=K5;
+#NET "LANE_8_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=V5;
+#NET "LANE_8_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=V6;
+#NET "LANE_8_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=K4;
+#NET "LANE_8_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=L5;
+#NET "LANE_8_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=AA7;
+#NET "LANE_8_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=AA6;
+#NET "LANE_8_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=AA9;
+#NET "LANE_8_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=Y10;
+#NET "LANE_8_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=W8;
+#NET "LANE_8_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=V8;
+#NET "LANE_8_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=W5;
+#NET "LANE_8_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=W6;
+#
+## LVDS IO LANE 09 FPGA 1 IO bank 24
+#NET "LANE_9_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=D13;
+#NET "LANE_9_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=E14;
+#NET "LANE_9_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=F12;
+#NET "LANE_9_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=F11;
+#NET "LANE_9_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=G12;
+#NET "LANE_9_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=G11;
+#NET "LANE_9_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=E12;
+#NET "LANE_9_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=D12;
+#NET "LANE_9_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=E10;
+#NET "LANE_9_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=F10;
+#NET "LANE_9_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=L12;
+#NET "LANE_9_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=L11;
+#NET "LANE_9_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=R10;
+#NET "LANE_9_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=P10;
+#NET "LANE_9_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=H10;
+#NET "LANE_9_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=J10;
+#NET "LANE_9_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=J12;
+#NET "LANE_9_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=H11;
+#NET "LANE_9_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=G13;
+#NET "LANE_9_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=G14;
+#NET "LANE_9_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=F14;
+#NET "LANE_9_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=E13;
+#NET "LANE_9_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=H14;
+#NET "LANE_9_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=H15;
+#NET "LANE_9_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=P11;
+#NET "LANE_9_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=N10;
+#NET "LANE_9_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=N11;
+#NET "LANE_9_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=P12;
+#NET "LANE_9_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=K10;
+#NET "LANE_9_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=L10;
+#NET "LANE_9_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=J13;
+#NET "LANE_9_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=H13;
+#NET "LANE_9_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=K12;
+#NET "LANE_9_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=J11;
+#NET "LANE_9_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=K14;
+#NET "LANE_9_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=K13;
+#
+## LVDS IO LANE 10 FPGA 1 IO bank 23
+#NET "LANE_10_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=F35;
+#NET "LANE_10_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=E35;
+#NET "LANE_10_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=E34;
+#NET "LANE_10_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=F34;
+#NET "LANE_10_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=H34;
+#NET "LANE_10_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=G34;
+#NET "LANE_10_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=M34;
+#NET "LANE_10_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=M33;
+#NET "LANE_10_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=F31;
+#NET "LANE_10_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=F32;
+#NET "LANE_10_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=G32;
+#NET "LANE_10_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=G31;
+#NET "LANE_10_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=T32;
+#NET "LANE_10_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=U32;
+#NET "LANE_10_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=L32;
+#NET "LANE_10_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=L31;
+#NET "LANE_10_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=H31;
+#NET "LANE_10_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=J31;
+#NET "LANE_10_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=K32;
+#NET "LANE_10_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=J32;
+#NET "LANE_10_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=N31;
+#NET "LANE_10_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=P31;
+#NET "LANE_10_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=M32;
+#NET "LANE_10_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=M31;
+#NET "LANE_10_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=E32;
+#NET "LANE_10_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=E33;
+#NET "LANE_10_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=G33;
+#NET "LANE_10_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=H33;
+#NET "LANE_10_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=K33;
+#NET "LANE_10_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=J33;
+#NET "LANE_10_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=N33;
+#NET "LANE_10_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=N34;
+#NET "LANE_10_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=P33;
+#NET "LANE_10_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=P32;
+#NET "LANE_10_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=R33;
+#NET "LANE_10_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=R32;
+#
+## LVDS Lanes Upstairs
+## LVDS IO LANE 16 FPGA 1 IO bank 25
+#NET "LANE_16_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=AV35;
+#NET "LANE_16_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=AV36; 
+#NET "LANE_16_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=AU32;
+#NET "LANE_16_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=AU33;
+#NET "LANE_16_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=AR32;
+#NET "LANE_16_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=AP32;
+#NET "LANE_16_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=AV31;
+#NET "LANE_16_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=AU31;
+#NET "LANE_16_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=AN33;
+#NET "LANE_16_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=AM33;
+#NET "LANE_16_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=AU34;
+#NET "LANE_16_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=AT34;
+#NET "LANE_16_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=AT32;
+#NET "LANE_16_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=AT31;
+#NET "LANE_16_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=AV33;
+#NET "LANE_16_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=AV34;
+#NET "LANE_16_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=AF32;
+#NET "LANE_16_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=AG33;
+#NET "LANE_16_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=AR35;
+#NET "LANE_16_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=AR34;
+#NET "LANE_16_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=AR33;
+#NET "LANE_16_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=AP33;
+#NET "LANE_16_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=AJ32;
+#NET "LANE_16_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=AK32;
+#NET "LANE_16_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=AL32;
+#NET "LANE_16_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=AM32;
+#NET "LANE_16_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=AU36;
+#NET "LANE_16_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=AT35;
+#NET "LANE_16_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=AH31;
+#NET "LANE_16_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=AJ31;
+#NET "LANE_16_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=AK33;
+#NET "LANE_16_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=AJ33;
+#NET "LANE_16_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=AG31;
+#NET "LANE_16_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=AF31;
+#NET "LANE_16_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=AH33;
+#NET "LANE_16_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=AG32;
+#
+## LVDS IO LANE 17 FPGA 1 IO bank 6
+#NET "LANE_17_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=AT19;
+#NET "LANE_17_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=AR19;
+#NET "LANE_17_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=AK18;
+#NET "LANE_17_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=AK19;
+#NET "LANE_17_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=AM19;
+#NET "LANE_17_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=AL19;
+#NET "LANE_17_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=AK24;
+#NET "LANE_17_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=AK25;
+#NET "LANE_17_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=AN18;
+#NET "LANE_17_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=AM18;
+#NET "LANE_17_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=AT14;
+#NET "LANE_17_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=AR14;
+#NET "LANE_17_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=AT17;
+#NET "LANE_17_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=AT16;
+#NET "LANE_17_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=AT15;
+#NET "LANE_17_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=AR15;
+#NET "LANE_17_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=AN20;
+#NET "LANE_17_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=AN19;
+#NET "LANE_17_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=AP17;
+#NET "LANE_17_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=AR17;
+#NET "LANE_17_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=AM24;
+#NET "LANE_17_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=AN24;
+#NET "LANE_17_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=AN25;
+#NET "LANE_17_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=AP25;
+#NET "LANE_17_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=AT26;
+#NET "LANE_17_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=AR27;
+#NET "LANE_17_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=AN26;
+#NET "LANE_17_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=AP26;
+#NET "LANE_17_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=AU28;
+#NET "LANE_17_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=AT27;
+#NET "LANE_17_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=AT29;
+#NET "LANE_17_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=AU29;
+#NET "LANE_17_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=AR29;
+#NET "LANE_17_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=AR28;
+#NET "LANE_17_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=AR30;
+#NET "LANE_17_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=AT30;
+#
+## LVDS IO LANE 18 FPGA 1 IO bank 18
+#NET "LANE_18_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=AB11;
+#NET "LANE_18_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=AC10;
+#NET "LANE_18_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=AC8;
+#NET "LANE_18_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=AC9;
+#NET "LANE_18_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=AD10;
+#NET "LANE_18_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=AD11;
+#NET "LANE_18_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=AB9;
+#NET "LANE_18_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=AB8;
+#NET "LANE_18_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=AE9;
+#NET "LANE_18_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=AE10;
+#NET "LANE_18_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=AD8;
+#NET "LANE_18_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=AE8;
+#NET "LANE_18_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=AG6;
+#NET "LANE_18_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=AG7;
+#NET "LANE_18_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=AJ6;
+#NET "LANE_18_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=AJ5;
+#NET "LANE_18_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=AC5;
+#NET "LANE_18_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=AC6;
+#NET "LANE_18_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=AF5;
+#NET "LANE_18_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=AF6;
+#NET "LANE_18_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=AB7;
+#NET "LANE_18_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=AB6;
+#NET "LANE_18_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=AE5;
+#NET "LANE_18_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=AD5;
+#NET "LANE_18_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=AL5;
+#NET "LANE_18_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=AK5;
+#NET "LANE_18_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=AF7;
+#NET "LANE_18_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=AE7;
+#NET "LANE_18_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=AH6;
+#NET "LANE_18_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=AH5;
+#NET "LANE_18_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=AJ7;
+#NET "LANE_18_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=AK7;
+#NET "LANE_18_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=AF9;
+#NET "LANE_18_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=AF10;
+#NET "LANE_18_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=AG4;
+#NET "LANE_18_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=AH4;
+#
+## LVDS IO LANE 19 FPGA 1 IO bank 20
+#NET "LANE_19_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=F9;
+#NET "LANE_19_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=G9;
+#NET "LANE_19_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=G7;
+#NET "LANE_19_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=G8;
+#NET "LANE_19_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=D7;
+#NET "LANE_19_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=E7;
+#NET "LANE_19_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=E9;
+#NET "LANE_19_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=E8;
+#NET "LANE_19_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=F7;
+#NET "LANE_19_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=F6;
+#NET "LANE_19_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=P7;
+#NET "LANE_19_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=P8;
+#NET "LANE_19_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=V9;
+#NET "LANE_19_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=V10;
+#NET "LANE_19_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=E5;
+#NET "LANE_19_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=F5;
+#NET "LANE_19_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=K7;
+#NET "LANE_19_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=L7;
+#NET "LANE_19_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=K8;
+#NET "LANE_19_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=K9;
+#NET "LANE_19_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=J8;
+#NET "LANE_19_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=J7;
+#NET "LANE_19_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=M7;
+#NET "LANE_19_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=M8;
+#NET "LANE_19_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=U8;
+#NET "LANE_19_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=U9;
+#NET "LANE_19_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=R9;
+#NET "LANE_19_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=T9;
+#NET "LANE_19_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=R7;
+#NET "LANE_19_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=R8;
+#NET "LANE_19_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=N9;
+#NET "LANE_19_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=N8;
+#NET "LANE_19_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=T10;
+#NET "LANE_19_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=T11;
+#NET "LANE_19_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=U11;
+#NET "LANE_19_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=V11;
+#
+## LVDS IO LANE 20 FPGA 1 IO bank 5
+#NET "LANE_20_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=K27;
+#NET "LANE_20_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=L26;
+#NET "LANE_20_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=K25;
+#NET "LANE_20_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=J25;
+#NET "LANE_20_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=H26;
+#NET "LANE_20_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=J26;
+#NET "LANE_20_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=G27;
+#NET "LANE_20_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=F27;
+#NET "LANE_20_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=J18;
+#NET "LANE_20_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=H18;
+#NET "LANE_20_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=G18;
+#NET "LANE_20_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=G17;
+#NET "LANE_20_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=M18;
+#NET "LANE_20_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=N18;
+#NET "LANE_20_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=G16;
+#NET "LANE_20_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=H16;
+#NET "LANE_20_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=E18;
+#NET "LANE_20_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=E17;
+#NET "LANE_20_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=F16;
+#NET "LANE_20_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=F17;
+#NET "LANE_20_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=M19;
+#NET "LANE_20_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=N19;
+#NET "LANE_20_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=K18;
+#NET "LANE_20_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=K19;
+#NET "LANE_20_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=L24;
+#NET "LANE_20_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=M24;
+#NET "LANE_20_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=L20;
+#NET "LANE_20_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=L19;
+#NET "LANE_20_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=K24;
+#NET "LANE_20_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=L25;
+#NET "LANE_20_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=G28;
+#NET "LANE_20_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=H28;
+#NET "LANE_20_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=G29;
+#NET "LANE_20_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=F29;
+#NET "LANE_20_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=J28;
+#NET "LANE_20_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=J27;
+
+# LVDS Lanes Adjacent
+# LVDS IO LANE 21 FPGA 1 IO bank 19
+#NET "LANE_21_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=V33;
+#NET "LANE_21_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=W33;
+#NET "LANE_21_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=E38;
+#NET "LANE_21_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=D37;
+#NET "LANE_21_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=Y32;
+#NET "LANE_21_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=AA32;
+#NET "LANE_21_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=F37;
+#NET "LANE_21_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=E37;
+#NET "LANE_21_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=U34;
+#NET "LANE_21_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=T35;
+#NET "LANE_21_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=F36;
+#NET "LANE_21_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=G36;
+#NET "LANE_21_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=R35;
+#NET "LANE_21_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=T36;
+#NET "LANE_21_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=H35;
+#NET "LANE_21_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=J36;
+#NET "LANE_21_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=R34;
+#NET "LANE_21_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=P35;
+#NET "LANE_21_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=K37;
+#NET "LANE_21_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=J37;
+#NET "LANE_21_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=K35;
+#NET "LANE_21_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=J35;
+#NET "LANE_21_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=N36;
+#NET "LANE_21_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=P36;
+#NET "LANE_21_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=L37;
+#NET "LANE_21_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=M37;
+#NET "LANE_21_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=L36;
+#NET "LANE_21_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=L35;
+#NET "LANE_21_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=N35;
+#NET "LANE_21_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=M36;
+#NET "LANE_21_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=Y33;
+#NET "LANE_21_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=W32;
+#NET "LANE_21_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=V35;
+#NET "LANE_21_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=V34;
+#NET "LANE_21_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=T34;
+#NET "LANE_21_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=U33;
+##NET "LANE_21_DP_P[19]" IOSTANDARD="LVDS_25" | LOC=U36;
+##NET "LANE_21_DP_N[19]" IOSTANDARD="LVDS_25" | LOC=V36;
+#
+## LVDS IO LANE 22 FPGA 1 IO bank 15
+#NET "LANE_22_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=R39;
+#NET "LANE_22_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=R38;
+#NET "LANE_22_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=G38;
+#NET "LANE_22_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=G39;
+#NET "LANE_22_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=T37;
+#NET "LANE_22_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=U38;
+#NET "LANE_22_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=E39;
+#NET "LANE_22_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=E40;
+#NET "LANE_22_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=T39;
+#NET "LANE_22_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=U39;
+#NET "LANE_22_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=H38;
+#NET "LANE_22_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=H39;
+#NET "LANE_22_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=V39;
+#NET "LANE_22_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=W38;
+#NET "LANE_22_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=F39;
+#NET "LANE_22_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=F40;
+#NET "LANE_22_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=AA35;
+#NET "LANE_22_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=AA36;
+#NET "LANE_22_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=H40;
+#NET "LANE_22_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=J40;
+#NET "LANE_22_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=K38;
+#NET "LANE_22_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=J38;
+#NET "LANE_22_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=Y35;
+#NET "LANE_22_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=W35;
+#NET "LANE_22_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=W36;
+#NET "LANE_22_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=W37;
+#NET "LANE_22_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=K40;
+#NET "LANE_22_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=K39;
+#NET "LANE_22_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=AA34;
+#NET "LANE_22_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=Y34;
+#NET "LANE_22_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=N39;
+#NET "LANE_22_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=M39;
+#NET "LANE_22_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=M38;
+#NET "LANE_22_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=L39;
+#NET "LANE_22_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=R37;
+#NET "LANE_22_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=P37;
+##NET "LANE_22_DP_P[19]" IOSTANDARD="LVDS_25" | LOC=P38;
+##NET "LANE_22_DP_N[19]" IOSTANDARD="LVDS_25" | LOC=N38;
+#
+## LVDS IO LANE 23 FPGA 1 IO bank 11
+#NET "LANE_23_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=P41;
+#NET "LANE_23_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=R40;
+#NET "LANE_23_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=L42;
+#NET "LANE_23_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=M41;
+#NET "LANE_23_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=AA42;
+#NET "LANE_23_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=AA41;
+#NET "LANE_23_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=J42;
+#NET "LANE_23_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=K42;
+#NET "LANE_23_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=W40;
+#NET "LANE_23_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=Y40;
+#NET "LANE_23_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=U42;
+#NET "LANE_23_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=V41;
+#NET "LANE_23_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=T40;
+#NET "LANE_23_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=T41;
+#NET "LANE_23_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=N40;
+#NET "LANE_23_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=P40;
+#NET "LANE_23_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=T42;
+#NET "LANE_23_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=U41;
+#NET "LANE_23_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=V40;
+#NET "LANE_23_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=W41;
+#NET "LANE_23_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=W42;
+#NET "LANE_23_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=Y42;
+#NET "LANE_23_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=M42;
+#NET "LANE_23_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=N41;
+#NET "LANE_23_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=H41;
+#NET "LANE_23_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=J41;
+#NET "LANE_23_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=Y37;
+#NET "LANE_23_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=AA37;
+#NET "LANE_23_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=F41;
+#NET "LANE_23_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=G41;
+#NET "LANE_23_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=Y39;
+#NET "LANE_23_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=Y38;
+#NET "LANE_23_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=F42;
+#NET "LANE_23_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=G42;
+#NET "LANE_23_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=AA40;
+#NET "LANE_23_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=AA39;
+##NET "LANE_23_DP_P[19]" IOSTANDARD="LVDS_25" | LOC=L40;
+##NET "LANE_23_DP_N[19]" IOSTANDARD="LVDS_25" | LOC=L41;
+#
+## LVDS IO LANE 24 FPGA 1 IO bank 13
+#NET "LANE_24_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=AR42;
+#NET "LANE_24_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=AT42;
+#NET "LANE_24_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=AB39;
+#NET "LANE_24_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=AC38;
+#NET "LANE_24_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=AU42;
+#NET "LANE_24_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=AV41;
+#NET "LANE_24_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=AB41;
+#NET "LANE_24_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=AB42;
+#NET "LANE_24_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=AT41;
+#NET "LANE_24_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=AU41;
+#NET "LANE_24_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=AC41;
+#NET "LANE_24_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=AD42;
+#NET "LANE_24_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=AP42;
+#NET "LANE_24_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=AP41;
+#NET "LANE_24_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=AE42;
+#NET "LANE_24_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=AD41;
+#NET "LANE_24_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=AM41;
+#NET "LANE_24_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=AN41;
+#NET "LANE_24_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=AB37;
+#NET "LANE_24_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=AB38;
+#NET "LANE_24_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=AC40;
+#NET "LANE_24_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=AC39;
+#NET "LANE_24_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=AJ42;
+#NET "LANE_24_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=AJ41;
+#NET "LANE_24_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=AL42;
+#NET "LANE_24_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=AM42;
+#NET "LANE_24_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=AE40;
+#NET "LANE_24_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=AD40;
+#NET "LANE_24_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=AF40;
+#NET "LANE_24_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=AG41;
+#NET "LANE_24_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=AF41;
+#NET "LANE_24_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=AF42;
+#NET "LANE_24_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=AH40;
+#NET "LANE_24_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=AJ40;
+#NET "LANE_24_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=AG42;
+#NET "LANE_24_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=AH41;
+#NET "LANE_24_DP_P[19]" IOSTANDARD="LVDS_25" | LOC=AL41;
+#NET "LANE_24_DP_N[19]" IOSTANDARD="LVDS_25" | LOC=AK42;
+
+## LVDS IO LANE 25 FPGA 1 IO bank 17
+#NET "LANE_25_DP_P[1]" IOSTANDARD="LVDS_25" | LOC=AN39;
+#NET "LANE_25_DP_N[1]" IOSTANDARD="LVDS_25" | LOC=AP38;
+#NET "LANE_25_DP_P[2]" IOSTANDARD="LVDS_25" | LOC=AB34;
+#NET "LANE_25_DP_N[2]" IOSTANDARD="LVDS_25" | LOC=AC34;
+#NET "LANE_25_DP_P[3]" IOSTANDARD="LVDS_25" | LOC=AT39;
+#NET "LANE_25_DP_N[3]" IOSTANDARD="LVDS_25" | LOC=AR39;
+#NET "LANE_25_DP_P[4]" IOSTANDARD="LVDS_25" | LOC=AC35;
+#NET "LANE_25_DP_N[4]" IOSTANDARD="LVDS_25" | LOC=AB36;
+#NET "LANE_25_DP_P[5]" IOSTANDARD="LVDS_25" | LOC=AR40;
+#NET "LANE_25_DP_N[5]" IOSTANDARD="LVDS_25" | LOC=AT40;
+#NET "LANE_25_DP_P[6]" IOSTANDARD="LVDS_25" | LOC=AD36;
+#NET "LANE_25_DP_N[6]" IOSTANDARD="LVDS_25" | LOC=AD37;
+#NET "LANE_25_DP_P[7]" IOSTANDARD="LVDS_25" | LOC=AV40;
+#NET "LANE_25_DP_N[7]" IOSTANDARD="LVDS_25" | LOC=AU39;
+#NET "LANE_25_DP_P[8]" IOSTANDARD="LVDS_25" | LOC=AE37;
+#NET "LANE_25_DP_N[8]" IOSTANDARD="LVDS_25" | LOC=AD38;
+#NET "LANE_25_DP_P[9]" IOSTANDARD="LVDS_25" | LOC=AK38;
+#NET "LANE_25_DP_N[9]" IOSTANDARD="LVDS_25" | LOC=AK37;
+#NET "LANE_25_DP_P[10]" IOSTANDARD="LVDS_25" | LOC=AC36;
+#NET "LANE_25_DP_N[10]" IOSTANDARD="LVDS_25" | LOC=AD35;
+#NET "LANE_25_DP_P[11]" IOSTANDARD="LVDS_25" | LOC=AE39;
+#NET "LANE_25_DP_N[11]" IOSTANDARD="LVDS_25" | LOC=AE38;
+#NET "LANE_25_DP_P[12]" IOSTANDARD="LVDS_25" | LOC=AM37;
+#NET "LANE_25_DP_N[12]" IOSTANDARD="LVDS_25" | LOC=AL37;
+#NET "LANE_25_DP_P[13]" IOSTANDARD="LVDS_25" | LOC=AN40;
+#NET "LANE_25_DP_N[13]" IOSTANDARD="LVDS_25" | LOC=AP40;
+#NET "LANE_25_DP_P[14]" IOSTANDARD="LVDS_25" | LOC=AF39;
+#NET "LANE_25_DP_N[14]" IOSTANDARD="LVDS_25" | LOC=AG38;
+#NET "LANE_25_DP_P[15]" IOSTANDARD="LVDS_25" | LOC=AN38;
+#NET "LANE_25_DP_N[15]" IOSTANDARD="LVDS_25" | LOC=AM38;
+#NET "LANE_25_DP_P[16]" IOSTANDARD="LVDS_25" | LOC=AG37;
+#NET "LANE_25_DP_N[16]" IOSTANDARD="LVDS_25" | LOC=AF37;
+#NET "LANE_25_DP_P[17]" IOSTANDARD="LVDS_25" | LOC=AL39;
+#NET "LANE_25_DP_N[17]" IOSTANDARD="LVDS_25" | LOC=AM39;
+#NET "LANE_25_DP_P[18]" IOSTANDARD="LVDS_25" | LOC=AJ38;
+#NET "LANE_25_DP_N[18]" IOSTANDARD="LVDS_25" | LOC=AK39;
+#NET "LANE_25_DP_P[19]" IOSTANDARD="LVDS_25" | LOC=AJ37;
+#NET "LANE_25_DP_N[19]" IOSTANDARD="LVDS_25" | LOC=AH38;
+
+## Constraints that should be automatically included in the module UCF, but
+## XST dies with an error if you do...
+
+## Receive RX-to-TX Domain Flow Control Feedback FSL
+#INST "inst_m2_fsl_if_ad/inst_m2_fsl_if_ad/inst_rxtop/inst_fsl_fb/Using_FIFO.Async_FIFO_Gen.Use_Control.Use_DPRAM1.Async_FIFO_I1/Mram*" TNM = "TNM_inst_m2_fsl_if_ad_rxfb";
+#TIMESPEC "TS_inst_m2_fsl_if_ad_rxfb" = FROM "TNM_inst_m2_fsl_if_ad_rxfb" TO FFS 7000 ps DATAPATHONLY;
+#
+### Receive RX-to-TX Domain Data FSL
+#INST "inst_m2_fsl_if_ad/inst_m2_fsl_if_ad/inst_rxtop/inst_rx_dp/inst_fsl_rx/Using_FIFO.Async_FIFO_Gen.Use_Control.Use_DPRAM1.Async_FIFO_I1/Mram*" TNM = "TNM_inst_m2_fsl_if_ad_rxdata";
+#TIMESPEC "TS_inst_m2_fsl_if_ad_rxdata" = FROM "TNM_inst_m2_fsl_if_ad_rxdata" TO FFS 7000 ps DATAPATHONLY;
+#
+### Receive RX-to-TX Domain FHT FSL
+#INST "inst_m2_fsl_if_ad/inst_m2_fsl_if_ad/inst_rxtop/inst_fsl_fht/Using_FIFO.Async_FIFO_Gen.Use_Data.Use_DPRAM0.Async_FIFO_I1/Mram*" TNM = "TNM_inst_m2_fsl_if_ad_rxfht";
+#TIMESPEC "TS_inst_m2_fsl_if_ad_rxfht" = FROM "TNM_inst_m2_fsl_if_ad_rxfht" TO FFS 7000 ps DATAPATHONLY;
+#
+### Receive RX-to-TX Domain Flow Control Feedback FSL
+#INST "inst_m2_fsl_if_ad2/inst_m2_fsl_if_ad2/inst_rxtop/inst_fsl_fb/Using_FIFO.Async_FIFO_Gen.Use_Control.Use_DPRAM1.Async_FIFO_I1/Mram*" TNM = "TNM_inst_m2_fsl_if_ad2_rxfb";
+#TIMESPEC "TS_inst_m2_fsl_if_ad2_rxfb" = FROM "TNM_inst_m2_fsl_if_ad2_rxfb" TO FFS 7000 ps DATAPATHONLY;
+#
+### Receive RX-to-TX Domain Data FSL
+#INST "inst_m2_fsl_if_ad2/inst_m2_fsl_if_ad2/inst_rxtop/inst_rx_dp/inst_fsl_rx/Using_FIFO.Async_FIFO_Gen.Use_Control.Use_DPRAM1.Async_FIFO_I1/Mram*" TNM = "TNM_inst_m2_fsl_if_ad2_rxdata";
+#TIMESPEC "TS_inst_m2_fsl_if_ad2_rxdata" = FROM "TNM_inst_m2_fsl_if_ad2_rxdata" TO FFS 7000 ps DATAPATHONLY;
+#
+### Receive RX-to-TX Domain FHT FSL
+#INST "inst_m2_fsl_if_ad2/inst_m2_fsl_if_ad2/inst_rxtop/inst_fsl_fht/Using_FIFO.Async_FIFO_Gen.Use_Data.Use_DPRAM0.Async_FIFO_I1/Mram*" TNM = "TNM_inst_m2_fsl_if_ad2_rxfht";
+#TIMESPEC "TS_inst_m2_fsl_if_ad2_rxfht" = FROM "TNM_inst_m2_fsl_if_ad2_rxfht" TO FFS 7000 ps DATAPATHONLY;
+
+## Receive RX-to-TX Domain Flow Control Feedback FSL
+INST "m_pi_llpint_phys_plat_arches_mpi_device_prim_device/inst_m2_fsl_if_l1/inst_m2_fsl_if_l1/inst_rxtop/inst_fsl_fb/Using_FIFO.Async_FIFO_Gen.Use_Control.Use_DPRAM1.Async_FIFO_I1/Mram*" TNM = "TNM_inst_m2_fsl_if_l1_rxfb";
+TIMESPEC "TS_inst_m2_fsl_if_l1_rxfb" = FROM "TNM_inst_m2_fsl_if_l1_rxfb" TO FFS 7000 ps DATAPATHONLY;
+
+## Receive RX-to-TX Domain Data FSL
+INST "m_pi_llpint_phys_plat_arches_mpi_device_prim_device/inst_m2_fsl_if_l1/inst_m2_fsl_if_l1/inst_rxtop/inst_rx_dp/inst_fsl_rx/Using_FIFO.Async_FIFO_Gen.Use_Control.Use_DPRAM1.Async_FIFO_I1/Mram*" TNM = "TNM_inst_m2_fsl_if_l1_rxdata";
+TIMESPEC "TS_inst_m2_fsl_if_l1_rxdata" = FROM "TNM_inst_m2_fsl_if_l1_rxdata" TO FFS 7000 ps DATAPATHONLY;
+
+## Receive RX-to-TX Domain FHT FSL
+INST "m_pi_llpint_phys_plat_arches_mpi_device_prim_device/inst_m2_fsl_if_l1/inst_m2_fsl_if_l1/inst_rxtop/inst_fsl_fht/Using_FIFO.Async_FIFO_Gen.Use_Data.Use_DPRAM0.Async_FIFO_I1/Mram*" TNM = "TNM_inst_m2_fsl_if_l1_rxfht";
+TIMESPEC "TS_inst_m2_fsl_if_l1_rxfht" = FROM "TNM_inst_m2_fsl_if_l1_rxfht" TO FFS 7000 ps DATAPATHONLY;
