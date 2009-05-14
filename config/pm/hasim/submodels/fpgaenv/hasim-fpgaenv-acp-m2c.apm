@@ -95,7 +95,7 @@ File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/null/null-debug
 Packagehint=platforms
 
 [ACP M2 Compute Module]
-File=modules/bluespec/fpgaenv/physical-platform/acp-m2c/acp-m2c.awb
+File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c/acp-m2c.awb
 Packagehint=platform-acp
 
 [ACP M2 Compute Module/Requires]
@@ -104,12 +104,12 @@ clocks_device=Single-Ended Crystal Clocks Device
 physical_platform_utils=Common Physical Platform Utilities
 
 [Arches MPI Physical Device]
-File=modules/bluespec/fpgaenv/physical-platform/physical-devices/arches-mpi/arches-mpi-device.awb
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arches-mpi/arches-mpi-device.awb
 Packagehint=platform-acp
 
 [Arches MPI Physical Channel]
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/arches-mpi/arches-mpi-channel.awb
-Packagehint=platforms
+Packagehint=platform-acp
 
 [NULL Local Memory Interface/Params]
 LOCAL_MEM_WORDS_PER_LINE=4

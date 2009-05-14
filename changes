@@ -274,3 +274,13 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arc
  srl_sel_256bit.vhd        Locally Added               0 
 
 Moved fpgaenv to its correct location.
+
+----------
+aparasha    Date: Thu May 14 15:52:48 EDT 2009  CSN: CSN-platform-acp-5
+                  Thu May 14 19:52:48 UTC 2009
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Modified            3 
+
+Updated config to point to new AWB module locations in fpgaenv
