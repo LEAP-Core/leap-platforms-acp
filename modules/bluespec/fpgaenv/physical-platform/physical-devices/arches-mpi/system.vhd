@@ -1513,11 +1513,11 @@ architecture STRUCTURE of system is
   signal LANE_7_DP_N_TRUNC : std_logic_vector(18 downto 1);
 
   attribute BOX_TYPE : STRING;
-  attribute BOX_TYPE of inst_m2_dualcompute_infrastructure_wrapper : component is "black_box";
+  -- attribute BOX_TYPE of inst_m2_dualcompute_infrastructure_wrapper : component is "black_box";
   attribute BOX_TYPE of inst_util_srl_reset_clk0_wrapper : component is "black_box";
   attribute BOX_TYPE of inst_util_clk100_pll_wrapper : component is "black_box";
   attribute BOX_TYPE of inst_util_clk0_pll_wrapper : component is "black_box";
-  attribute BOX_TYPE of inst_m2_fsl_if_l1_wrapper : component is "black_box";
+  -- attribute BOX_TYPE of inst_m2_fsl_if_l1_wrapper : component is "black_box";
   attribute BOX_TYPE of fsl_mpe_to_l1_wrapper : component is "black_box";
   attribute BOX_TYPE of fsl_l1_to_mpe_wrapper : component is "black_box";
   attribute BOX_TYPE of fsl_mpecmd_to_vacc_wrapper : component is "black_box";

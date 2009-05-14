@@ -68,3 +68,99 @@ Directory modules/bluespec
 
 - Added a new ACP M2 Compute Physical Platform
 - Added a new Arches MPI Physical Device (does not work yet)
+
+----------
+aparasha    Date: Thu May 14 15:39:37 EDT 2009  CSN: CSN-platform-acp-3
+                  Thu May 14 19:39:37 UTC 2009
+
+
+Directory modules/bluespec/fpgaenv
+ virtual-platform/         Locally Added               0 
+
+Directory modules/bluespec/fpgaenv/virtual-platform
+ channelio/                Locally Added               0 
+
+Directory modules/bluespec/fpgaenv/virtual-platform/channelio
+ physical-channel/         Locally Added               0 
+
+Directory modules/bluespec/fpgaenv/virtual-platform/channelio/physical-channel
+ arches-mpi/               Locally Added               0 
+
+Directory modules/bluespec/fpgaenv/virtual-platform/channelio/physical-channel/arches-mpi
+ arches-mpi-channel.cpp    Locally Added               0 
+ arches-mpi-channel.h      Locally Added               0 
+ arches-mpi-channel.awb    Locally Added               0 
+ arches-mpi-channel.bsv    Locally Added               0 
+
+Directory modules/bluespec/fpgaenv/physical-platform/physical-devices/arches-mpi
+ m2_fsl_rx_phy.v           Locally Added               0 
+ inst_m2_dualcompute_infrastructure_wrapper.v Locally Added               0 
+ m2_fsl_tx_phy.v           Locally Added               0 
+ param_delay.v             Locally Added               0 
+ metasync.v                Locally Added               0 
+ cmp_signed_10bit.vhd      Locally Added               0 
+ arches-mpi-device.awb     Locally Modified            2 
+ inst_m2_fsl_if_l1_wrapper.v Locally Added               0 
+ fht_top.v                 Locally Added               0 
+ m2_fsl_rx_top.v           Locally Added               0 
+ inst_m2_dualcompute_infrastructure_wrapper.ngc Locally Removed             2 
+ m2_fsl_tx_top.v           Locally Added               0 
+ m2_dualcompute_infrastructure.v Locally Added               0 
+ m2_fsl_tx_ctrl.v          Locally Added               0 
+ gen_sync_bram.vhd         Locally Added               0 
+ m2_fsl_rx_data.v          Locally Added               0 
+ fht_module.v              Locally Added               0 
+ m2_fsl_tx_data.v          Locally Added               0 
+ fsl_v20.vhd               Locally Added               0 
+ m2_fsl_rx_pn.v            Locally Added               0 
+ walsh_tx.v                Locally Added               0 
+ inst_m2_fsl_if_l1_wrapper.ngc Locally Removed             2 
+ sync_fifo.vhd             Locally Added               0 
+ async_fifo.vhd            Locally Added               0 
+ m2_fsl_rx_clklock.v       Locally Added               0 
+ param_delay_1bit.v        Locally Added               0 
+ async_fifo_bram.vhd       Locally Added               0 
+ system.vhd                Locally Modified            2 
+ m2_fsl_if.v               Locally Added               0 
+ gen_sync_dpram.vhd        Locally Added               0 
+ gen_srlfifo.vhd           Locally Added               0 
+ srl_sel_256bit.vhd        Locally Added               0 
+
+Directory config/pm
+ hasim/                    Locally Added               0 
+
+Directory config/pm/hasim
+ submodels/                Locally Added               0 
+
+Directory config/pm/hasim/submodels
+ fpgaenv/                  Locally Added               0 
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Added               0 
+
+Directory config/pm
+ bluespec/                 Locally Added               0 
+
+Directory config/pm/bluespec
+ demos/                    Locally Added               0 
+
+Directory config/pm/bluespec/demos
+ rrrtest/                  Locally Added               0 
+
+Directory config/pm/bluespec/demos/rrrtest
+ rrrtest_hybrid_acp.apm    Locally Added               0 
+
+- Updated Arches MPI device. It now successfully generates a bitfile
+  for the ACP M2 Compute module. Since the software side of the stack
+  is not ready yet, there's no evidence that this works.
+
+  To generate the bitfile correctly, some SConstruct flags need to be
+  added. These will be added in a hasim commit coming shortly.
+
+  The entire fpgaenv directory is slightly mislocated in this
+  repository. I will move it as part of the next checkin.
+
+- Added an fpgaenv/virtual platform for the ACP module
+
+- Added a Physical Channel for the ACP module. Implementation for this
+  is not yet complete.

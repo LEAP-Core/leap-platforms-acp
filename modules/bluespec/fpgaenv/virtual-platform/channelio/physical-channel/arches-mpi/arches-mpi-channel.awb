@@ -1,0 +1,9 @@
+
+%name Arches MPI Physical Channel
+%desc Arches MPI Physical Channel
+
+%provides physical_channel
+
+%sources -t BSV     -v PUBLIC   arches-mpi-channel.bsv
+%sources -t H       -v PUBLIC   arches-mpi-channel.h
+%sources -t CPP     -v PRIVATE  arches-mpi-channel.cpp

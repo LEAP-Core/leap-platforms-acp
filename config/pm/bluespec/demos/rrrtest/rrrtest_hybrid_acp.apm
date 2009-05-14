@@ -1,0 +1,42 @@
+
+[Global]
+SaveParameters=0
+Description=RRR Test and Benchmarking Program for ACP M2C
+File=rrrtest_hybrid_acp
+Version=2.1
+Name=RRR Test and Benchmarking Program for ACP M2C
+Type=HAsim
+Class=Asim::Model
+
+[Model]
+DefaultAttributes=hybrid htg bluespec
+model=Pure Bluespec Hybrid Model Foundation
+
+[FPGA Environment]
+File=config/pm/hasim/submodels/fpgaenv/hasim-fpgaenv-acp-m2c.apm
+Packagehint=platforms
+
+[Pure Bluespec Hybrid Model Foundation]
+File=modules/model/pure_bluespec_hybrid_model.awb
+Packagehint=hasim
+
+[Pure Bluespec Hybrid Model Foundation/Requires]
+bluespec_system=Bluespec RRR Test and Benchmarking Program
+fpgaenv=FPGA Environment
+hasim_controller=Hybrid Pure Bluespec Controller
+bluespec_common=Bluespec Null Library
+
+[Pure Bluespec Hybrid Model Foundation/Params]
+MAKE_ALL_TARGET=bit
+
+[Bluespec RRR Test and Benchmarking Program]
+File=modules/bluespec/system/demos/rrrtest/rrrtest.awb
+Packagehint=hasim
+
+[Bluespec Null Library]
+File=modules/bluespec/common/null/bluespec_null.awb
+Packagehint=hasim
+
+[Hybrid Pure Bluespec Controller]
+File=config/pm/hasim/submodels/controller/hybrid_pure_bluespec_controller.apm
+Packagehint=hasim

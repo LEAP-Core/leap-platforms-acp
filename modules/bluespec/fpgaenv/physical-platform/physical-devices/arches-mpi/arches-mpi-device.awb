@@ -21,8 +21,47 @@
 %sources -t NGC -v PRIVATE ilmb_cntlr_mba_wrapper.ngc
 %sources -t NGC -v PRIVATE ilmb_mba_wrapper.ngc
 
-%sources -t NGC -v PRIVATE inst_m2_dualcompute_infrastructure_wrapper.ngc
-%sources -t NGC -v PRIVATE inst_m2_fsl_if_l1_wrapper.ngc
+######################################################
+##  inst_m2_dualcompute_infrastructure_wrapper.ngc  ##
+######################################################
+
+%sources -t VERILOG -v PRIVATE inst_m2_dualcompute_infrastructure_wrapper.v
+%sources -t VERILOG -v PRIVATE m2_dualcompute_infrastructure.v
+
+#####################################
+##  inst_m2_fsl_if_l1_wrapper.ngc  ##
+#####################################
+
+%sources -t VERILOG -v PRIVATE fht_module.v
+%sources -t VERILOG -v PRIVATE m2_fsl_if.v 
+%sources -t VERILOG -v PRIVATE m2_fsl_rx_top.v
+%sources -t VERILOG -v PRIVATE metasync.v
+%sources -t VERILOG -v PRIVATE fht_top.v                                     
+%sources -t VERILOG -v PRIVATE m2_fsl_rx_clklock.v  
+%sources -t VERILOG -v PRIVATE m2_fsl_tx_ctrl.v  
+%sources -t VERILOG -v PRIVATE param_delay.v
+%sources -t VERILOG -v PRIVATE m2_fsl_rx_data.v     
+%sources -t VERILOG -v PRIVATE m2_fsl_tx_data.v  
+%sources -t VERILOG -v PRIVATE param_delay_1bit.v
+%sources -t VERILOG -v PRIVATE inst_m2_fsl_if_l1_wrapper.v                   
+%sources -t VERILOG -v PRIVATE m2_fsl_rx_phy.v      
+%sources -t VERILOG -v PRIVATE m2_fsl_tx_phy.v   
+%sources -t VERILOG -v PRIVATE walsh_tx.v
+%sources -t VERILOG -v PRIVATE m2_fsl_rx_pn.v
+%sources -t VERILOG -v PRIVATE m2_fsl_tx_top.v
+%sources -t VHD     -v PRIVATE cmp_signed_10bit.vhd
+%sources -t VHD     -v PRIVATE srl_sel_256bit.vhd
+
+## sources -t PRJ     -v PRIVATE inst_m2_fsl_if_l1_wrapper_xst.prj
+
+%sources -t VHD     -v PRIVATE async_fifo.vhd       
+%sources -t VHD     -v PRIVATE gen_srlfifo.vhd    
+%sources -t VHD     -v PRIVATE gen_sync_dpram.vhd  
+%sources -t VHD     -v PRIVATE sync_fifo.vhd
+%sources -t VHD     -v PRIVATE async_fifo_bram.vhd  
+%sources -t VHD     -v PRIVATE fsl_v20.vhd           
+%sources -t VHD     -v PRIVATE gen_sync_bram.vhd
+
 %sources -t NGC -v PRIVATE inst_proc_sys_reset_wrapper.ngc
 %sources -t NGC -v PRIVATE inst_util_clk0_pll_wrapper.ngc
 %sources -t NGC -v PRIVATE inst_util_clk100_pll_wrapper.ngc
