@@ -284,3 +284,15 @@ Directory config/pm/hasim/submodels/fpgaenv
  hasim-fpgaenv-acp-m2c.apm Locally Modified            3 
 
 Updated config to point to new AWB module locations in fpgaenv
+
+----------
+aparasha    Date: Thu May 14 16:58:02 EDT 2009  CSN: CSN-platform-acp-6
+                  Thu May 14 20:58:02 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arches-mpi
+ arches-mpi-device.awb     Locally Modified            4 
+ srl_sel_256bit.ngc        Locally Added               0 
+ cmp_signed_10bit.ngc      Locally Added               0 
+
+Missed some files in the last checkin.

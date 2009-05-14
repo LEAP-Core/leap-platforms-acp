@@ -51,6 +51,8 @@
 %sources -t VERILOG -v PRIVATE m2_fsl_tx_top.v
 %sources -t VHD     -v PRIVATE cmp_signed_10bit.vhd
 %sources -t VHD     -v PRIVATE srl_sel_256bit.vhd
+%sources -t NGC     -v PRIVATE cmp_signed_10bit.ngc
+%sources -t NGC     -v PRIVATE srl_sel_256bit.ngc
 
 ## sources -t PRJ     -v PRIVATE inst_m2_fsl_if_l1_wrapper_xst.prj
 
