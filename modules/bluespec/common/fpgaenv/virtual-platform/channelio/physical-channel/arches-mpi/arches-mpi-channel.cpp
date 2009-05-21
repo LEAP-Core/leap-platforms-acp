@@ -30,8 +30,8 @@
 
 #include "asim/provides/physical_channel.h"
 
-// TEMPORARY HACK needed because we aren't using the UNIX Pipe device
-#define BLOCK_SIZE 512
+// TEMPORARY
+#define BLOCK_SIZE UMF_CHUNK_BYTES
 
 using namespace std;
 
@@ -82,10 +82,35 @@ PHYSICAL_CHANNEL_CLASS::Read()
 UMF_MESSAGE
 PHYSICAL_CHANNEL_CLASS::TryRead()
 {
-    // if there's fresh data on the pipe, update
-    if (archesMPIDevice->Probe())
+    // see if we already have a complete message
+    if (incomingMessage && !incomingMessage->CanAppend())
     {
-        readPipe();
+        UMF_MESSAGE msg = incomingMessage;
+        incomingMessage = NULL;
+        return msg;
+    }
+
+    // try to read a chunk from the device
+    unsigned char chunk[UMF_CHUNK_BYTES];
+
+    if (archesMPIDevice->TryRead(chunk, UMF_CHUNK_BYTES))
+    {
+        // determine if we are starting a new message
+        if (incomingMessage == NULL)
+        {
+            // create a new message
+            incomingMessage = UMF_MESSAGE_CLASS::New();
+            incomingMessage->DecodeHeader(chunk);
+        }
+        else if (!incomingMessage->CanAppend())
+        {
+            // can't be here
+        }
+        else
+        {
+            // append read bytes into message
+            incomingMessage->AppendBytes(UMF_CHUNK_BYTES, chunk);
+        }
     }
 
     // now see if we have a complete message

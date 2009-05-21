@@ -296,3 +296,38 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arc
  cmp_signed_10bit.ngc      Locally Added               0 
 
 Missed some files in the last checkin.
+
+----------
+aparasha    Date: Thu May 21 18:22:24 EDT 2009  CSN: CSN-platform-acp-7
+                  Thu May 21 22:22:24 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arches-mpi
+ mpi_headers.h             Locally Added               0 
+ mpi.c                     Locally Added               0 
+ mpi_constants.h           Locally Added               0 
+ mpi.h                     Locally Added               0 
+ arches-mpi-device.h       Locally Modified            5 
+ GeneratedConstants.h      Locally Added               0 
+ arches-mpi-device.cpp     Locally Modified            5 
+ arches-mpi-device.awb     Locally Modified            6 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
+ acp-m2c.awb               Locally Modified            5 
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/arches-mpi
+ arches-mpi-channel.cpp    Locally Modified            5 
+ arches-mpi-channel.bsv    Locally Modified            5 
+
+Directory .
+ libmpi_x86_threadmpe_linux.a Locally Added               0 
+ libacp.a                  Locally Added               0 
+
+Completed implementation of Arches MPI Device and a new Physical Channel
+based on the device. An RRRTest model can now be built for the ACP
+Platform, but a slight hacking of the SCons script is needed to link
+the two libraries libacp.a and libmpi_xxx.a correctly into the host
+software executable.
+
+The platform currently does not have a clock divider/multiplier, so only
+simple models that can run at 133MHz will work.

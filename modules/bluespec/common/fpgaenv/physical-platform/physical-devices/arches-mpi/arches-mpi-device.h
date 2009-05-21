@@ -20,6 +20,9 @@
 #define __ARCHES_MPI_DEVICE__
 
 #include <asim/syntax.h>
+
+#include "asim/provides/umf.h"
+#include "mpi.h"
 #include "platforms-module.h"
 
 // ===============================================
@@ -30,15 +33,27 @@ typedef class ARCHES_MPI_DEVICE_CLASS* ARCHES_MPI_DEVICE;
 class ARCHES_MPI_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
 {
   private:
-    
+
+    int mpiSize;
+    int mpiRank;
+
+    bool          outstandingRequest;
+    MPI_Request   outstandingReqHandle;
+    unsigned char outstandingReqBuffer[UMF_CHUNK_BYTES];
+
+    bool          outstandingSend;
+    MPI_Request   outstandingSendHandle;
+    unsigned char outstandingSendBuffer[UMF_CHUNK_BYTES];
+
   public:
+
     ARCHES_MPI_DEVICE_CLASS(PLATFORMS_MODULE);
     ~ARCHES_MPI_DEVICE_CLASS();
     
     void Cleanup();
     void Uninit();
 
-    bool Probe();                      // probe for data
+    bool TryRead(unsigned char*, int); // non-blocking read
     void Read(unsigned char*, int);    // blocking read
     void Write(unsigned char*, int);   // write
 

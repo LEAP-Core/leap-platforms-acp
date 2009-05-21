@@ -81,4 +81,16 @@
 %sources -t H   -v PUBLIC  arches-mpi-device.h
 %sources -t CPP -v PRIVATE arches-mpi-device.cpp
 
+%sources -t H   -v PUBLIC  GeneratedConstants.h
+%sources -t H   -v PUBLIC  mpi.h
+%sources -t H   -v PUBLIC  mpi_constants.h
+%sources -t H   -v PUBLIC  mpi_headers.h
+%sources -t CPP -v PRIVATE mpi.c
+
+%library libmpi_x86_threadmpe_linux.a
+
 %sources -t UCF -v PRIVATE m2c_f1.ucf
+
+#############################################
+##  Constants generated my Arches Scripts  ##
+#############################################

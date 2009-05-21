@@ -14,5 +14,7 @@
 %sources -t XST -v PRIVATE xilinx.xst
 %sources -t DOWNLOAD -v PRIVATE xilinx.download
 
+%library libacp.a
+
 %param FPGA_PART     "xc5vlx330tff1738-2" "FPGA Part ID"
 %param FPGA_POSITION 2                    "FPGA Position (in Xilinx iMPACT)"
