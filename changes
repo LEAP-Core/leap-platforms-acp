@@ -369,3 +369,22 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arc
   This is currently buggy and only works with a 1:1 transformation.
 
 - Added synchronizers to the Arches MPI device.
+
+----------
+aparasha    Date: Fri May 22 18:23:13 EDT 2009  CSN: CSN-platform-acp-9
+                  Fri May 22 22:23:13 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arches-mpi
+ arches-mpi-device.awb     Locally Modified            8 
+ arches-mpi-device.bsv     Locally Modified            8 
+ arches-mpi-vhdl-import.bsv Locally Modified            8 
+ system.vhd                Locally Modified            8 
+
+Arches MPI Device now uses a raw 100MHz FPGA clock to derive the model clock
+from, instead of using the MPE clock.
+
+Model Clock transformations work now.
+
+The default mult/div ratios have been set to 3:4, thus giving a 75MHz model
+clock.

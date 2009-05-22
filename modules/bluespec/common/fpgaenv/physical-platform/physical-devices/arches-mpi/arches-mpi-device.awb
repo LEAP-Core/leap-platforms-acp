@@ -100,7 +100,7 @@
 ##             Other Parameters            ##
 #############################################
 
-%param CRYSTAL_CLOCK_FREQ 133 "Input Clock Frequency"
+%param CRYSTAL_CLOCK_FREQ 100 "Input Clock Frequency"
 
-%param --global MODEL_CLOCK_MULTIPLIER 1   "Clock multiplier (integer).  Model clock freq = crystal freq * (multiplier / divider)."
-%param --global MODEL_CLOCK_DIVIDER    1   "Clock divider (integer).  Model clock freq = crystal freq * (multiplier / divider)."
+%param --global MODEL_CLOCK_MULTIPLIER 3   "Clock multiplier (integer).  Model clock freq = crystal freq * (multiplier / divider)."
+%param --global MODEL_CLOCK_DIVIDER    4   "Clock divider (integer).  Model clock freq = crystal freq * (multiplier / divider)."

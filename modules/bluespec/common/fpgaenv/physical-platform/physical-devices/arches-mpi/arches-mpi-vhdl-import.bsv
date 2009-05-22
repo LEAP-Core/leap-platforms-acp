@@ -121,6 +121,9 @@ interface PRIMITIVE_ARCHES_MPI_DEVICE;
     interface Clock clock;
     interface Reset reset;
     
+    interface Clock rawClock;
+    interface Reset rawReset;
+    
     //
     // Wires to be sent to the top level
     //
@@ -163,6 +166,9 @@ import "BVI" system = module mkPrimitiveArchesMPIDevice
     output_clock clock (CLK_OUT);
     output_reset reset (RST_N_OUT) clocked_by(clock);
   
+    output_clock rawClock (RAW_CLK_100_OUT);
+    output_reset rawReset (RAW_RST_N_100_OUT) clocked_by (rawClock);
+
     //
     // Wires to be sent to the top level
     //

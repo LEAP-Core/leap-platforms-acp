@@ -73,6 +73,9 @@ entity system is
     clk_out   : out std_logic;
     rst_n_out : out std_logic;
 
+    raw_clk_100_out : out std_logic;
+    raw_rst_n_100_out : out std_logic;
+    
     fsl_mpecmd_to_vacc_FSL_S_Control : out std_logic;
     fsl_mpecmd_to_vacc_FSL_S_Data : out std_logic_vector(0 to 31);
     fsl_mpecmd_to_vacc_FSL_S_Exists : out std_logic;
@@ -1544,6 +1547,9 @@ begin
   clk_out   <= sys_clk_133mhz;
   rst_n_out <= not sys_rst_133mhz;
 
+  raw_clk_100_out   <= fpga1_clk100_raw;
+  raw_rst_n_100_out <= net_vcc0;
+  
   -- other transformations
 
   fsl_vacc_to_mpecmd_FSL_M_NotFull <= not fsl_vacc_to_mpecmd_FSL_M_Full;

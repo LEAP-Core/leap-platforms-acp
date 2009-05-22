@@ -77,9 +77,12 @@ module mkArchesMPIDevice
 
     // Get the Clock and Reset, and do the required multiplication/division
     
-    Clock rawClock = prim_device.clock;
-    Reset rawReset = prim_device.reset;
-
+    Clock mpeClock = prim_device.clock;
+    Reset mpeReset = prim_device.reset;
+    
+    Clock rawClock = prim_device.rawClock;
+    Reset rawReset = prim_device.rawReset;
+    
     let userClockPackage <- mkUserClock(`CRYSTAL_CLOCK_FREQ,
                                         `MODEL_CLOCK_MULTIPLIER,
                                         `MODEL_CLOCK_DIVIDER,
@@ -87,21 +90,23 @@ module mkArchesMPIDevice
                                         reset_by   rawReset);
     
     Clock modelClock = userClockPackage.clk;
-    Reset modelReset = userClockPackage.rst;
+
+    Reset transReset <- mkAsyncReset(0, mpeReset, modelClock);
+    Reset modelReset <- mkResetEither(transReset, userClockPackage.rst, clocked_by modelClock);
 
     // Synchronizers
     
     SyncFIFOIfc#(Tuple2#(MPI_DATA, MPI_CONTROL)) sync_data_in_q
-                                              <- mkSyncFIFO(2, rawClock, rawReset, modelClock);
+                                              <- mkSyncFIFO(2, mpeClock, mpeReset, modelClock);
         
     SyncFIFOIfc#(Tuple2#(MPI_DATA, MPI_CONTROL)) sync_cmd_in_q
-                                              <- mkSyncFIFO(2, rawClock, rawReset, modelClock);
+                                              <- mkSyncFIFO(2, mpeClock, mpeReset, modelClock);
         
     SyncFIFOIfc#(Tuple2#(MPI_DATA, MPI_CONTROL)) sync_data_out_q
-                                              <- mkSyncFIFO(2, modelClock, modelReset, rawClock);
+                                              <- mkSyncFIFO(2, modelClock, modelReset, mpeClock);
     
     SyncFIFOIfc#(Tuple2#(MPI_DATA, MPI_CONTROL)) sync_cmd_out_q
-                                              <- mkSyncFIFO(2, modelClock, modelReset, rawClock);
+                                              <- mkSyncFIFO(2, modelClock, modelReset, mpeClock);
     
 
     //
