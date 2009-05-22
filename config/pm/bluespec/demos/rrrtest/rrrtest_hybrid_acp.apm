@@ -14,7 +14,7 @@ model=Pure Bluespec Hybrid Model Foundation
 
 [FPGA Environment]
 File=config/pm/hasim/submodels/fpgaenv/hasim-fpgaenv-acp-m2c.apm
-Packagehint=platforms
+Packagehint=platform-acp
 
 [Pure Bluespec Hybrid Model Foundation]
 File=modules/model/pure_bluespec_hybrid_model.awb
@@ -40,3 +40,4 @@ Packagehint=hasim
 [Hybrid Pure Bluespec Controller]
 File=config/pm/hasim/submodels/controller/hybrid_pure_bluespec_controller.apm
 Packagehint=hasim
+

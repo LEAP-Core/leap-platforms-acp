@@ -34,8 +34,8 @@ import Clocks::*;
 
 interface PHYSICAL_DRIVERS;
 
-    interface CLOCKS_DRIVER              clocksDriver;
-    interface ARCHES_MPI_DRIVER          archesMPIDriver;
+    interface CLOCKS_DRIVER     clocksDriver;
+    interface ARCHES_MPI_DRIVER archesMPIDriver;
 
 endinterface
 
@@ -49,7 +49,7 @@ endinterface
 interface TOP_LEVEL_WIRES;
 
     (* prefix = "" *)
-    interface ARCHES_MPI_WIRES          archesMPIWires;
+    interface ARCHES_MPI_WIRES archesMPIWires;
     
 endinterface
 
@@ -87,9 +87,6 @@ module mkPhysicalPlatform
     
     ARCHES_MPI_DEVICE arches_mpi_device <- mkArchesMPIDevice();
     
-    Clock clk = arches_mpi_device.clocks_driver.clock;
-    Reset rst = arches_mpi_device.clocks_driver.reset;
-
     // Instantiate all other physical devices
     
     // Aggregate the drivers
@@ -105,7 +102,7 @@ module mkPhysicalPlatform
     
     interface TOP_LEVEL_WIRES topLevelWires;
     
-        interface archesMPIWires  = arches_mpi_device.mpi_wires;
+        interface archesMPIWires  = arches_mpi_device.wires;
 
     endinterface
                

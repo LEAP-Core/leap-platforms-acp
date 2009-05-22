@@ -46,6 +46,8 @@ ARCHES_MPI_DEVICE_CLASS::ARCHES_MPI_DEVICE_CLASS(
     MPI_Comm_size(MPI_COMM_WORLD, &mpiSize);
     MPI_Comm_rank(MPI_COMM_WORLD, &mpiRank);
 
+    cout << "MPI_Init() done.\n" << flush;
+
     outstandingRequest = false;
     outstandingSend = false;
 

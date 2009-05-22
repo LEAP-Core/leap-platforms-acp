@@ -72,7 +72,7 @@ physical_platform=ACP M2 Compute Module
 channelio=Basic Virtual Channel Multiplexer
 rrr=RRR Clients and Servers
 physical_platform_debugger=Null Physical Platform Debugger
-local_mem=NULL Local Memory Interface
+local_mem=Local Memory Interface using BRAM
 
 [Little-Endian 32-bit Unified Message Format]
 File=modules/bluespec/common/fpgaenv/virtual-platform/umf/little-32/umf-little-32.awb
@@ -100,8 +100,8 @@ Packagehint=platform-acp
 
 [ACP M2 Compute Module/Requires]
 arches_mpi_device=Arches MPI Physical Device
-clocks_device=Single-Ended Crystal Clocks Device
 physical_platform_utils=Common Physical Platform Utilities
+clocks_device=Null Clocks Device
 
 [Arches MPI Physical Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arches-mpi/arches-mpi-device.awb
@@ -111,20 +111,17 @@ Packagehint=platform-acp
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/arches-mpi/arches-mpi-channel.awb
 Packagehint=platform-acp
 
-[NULL Local Memory Interface/Params]
-LOCAL_MEM_WORDS_PER_LINE=4
-LOCAL_MEM_WORD_BITS=64
-LOCAL_MEM_ADDR_BITS=26
-
-[NULL Local Memory Interface]
-File=modules/bluespec/common/fpgaenv/low-level-platform-interface/local-mem/local-mem-null.awb
-Packagehint=platforms
-
 [Common Physical Platform Utilities]
 File=modules/bluespec/common/fpgaenv/physical-platform/utils/utils.awb
 Packagehint=platforms
 
-[Single-Ended Crystal Clocks Device]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/clocks/single-ended/single-ended-clocks-device.awb
+[Local Memory Interface using BRAM/Params]
+LOCAL_MEM_ADDR_BITS=12
+
+[Local Memory Interface using BRAM]
+File=modules/bluespec/common/fpgaenv/low-level-platform-interface/local-mem/local-mem-bram.awb
 Packagehint=platforms
 
+[Null Clocks Device]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/clocks/null/null-clocks-device.awb
+Packagehint=platforms

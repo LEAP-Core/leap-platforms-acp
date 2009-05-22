@@ -331,3 +331,41 @@ software executable.
 
 The platform currently does not have a clock divider/multiplier, so only
 simple models that can run at 133MHz will work.
+
+----------
+aparasha    Date: Fri May 22 16:21:46 EDT 2009  CSN: CSN-platform-acp-8
+                  Fri May 22 20:21:46 UTC 2009
+
+
+Directory config/pm/hasim
+ demos/                    Locally Added               0 
+
+Directory config/pm/hasim/demos
+ test/                     Locally Added               0 
+
+Directory config/pm/hasim/demos/test
+ mem_test/                 Locally Added               0 
+
+Directory config/pm/hasim/demos/test/mem_test
+ mem_test_hybrid_nopvt_acp.apm Locally Added               0 
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Modified            7 
+
+Directory config/pm/bluespec/demos/rrrtest
+ rrrtest_hybrid_acp.apm    Locally Modified            7 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
+ xilinx.download           Locally Modified            7 
+ acp-m2c.awb               Locally Modified            7 
+ acp-m2c.bsv               Locally Modified            7 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arches-mpi
+ arches-mpi-device.awb     Locally Modified            7 
+ arches-mpi-device.bsv     Locally Modified            7 
+ arches-mpi-device.cpp     Locally Modified            7 
+
+- Added support for user-specified clock transformations to the ACP platform.
+  This is currently buggy and only works with a 1:1 transformation.
+
+- Added synchronizers to the Arches MPI device.
