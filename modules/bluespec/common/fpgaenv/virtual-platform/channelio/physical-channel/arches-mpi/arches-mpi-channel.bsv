@@ -117,9 +117,9 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         
         case (initStage)
             
-            0: mpiDriver.cmd_enq({ `C_MPE_RECV_OPCODE, `HOST_RANK, `MSG_SIZE_ZERO }, 1);
+            0: mpiDriver.cmd_enq({ `C_MPE_RECV_OPCODE, `HOST_RANK, `MSG_SIZE_ZERO }, 1, False);
         
-            1: mpiDriver.cmd_enq(`C_MPE_ANY_TAG, 0);
+            1: mpiDriver.cmd_enq(`C_MPE_ANY_TAG, 0, False);
             
             2: begin
                    
@@ -159,7 +159,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
             
             0: begin
                    
-                   mpiDriver.cmd_enq({ `C_MPE_RECV_OPCODE, `HOST_RANK, `MSG_SIZE_ONE }, 1);
+                   mpiDriver.cmd_enq({ `C_MPE_RECV_OPCODE, `HOST_RANK, `MSG_SIZE_ONE }, 1, False);
                    recvReqStage <= 1;
 
                    // lock the queue
@@ -169,7 +169,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         
             1: begin
 
-                   mpiDriver.cmd_enq(`C_MPE_ANY_TAG, 0);
+                   mpiDriver.cmd_enq(`C_MPE_ANY_TAG, 0, False);
                    recvReqStage <= 0;
                    
                    // recv server is now busy and cannot accept any more
@@ -252,7 +252,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
             
             0: begin
                    
-                   mpiDriver.cmd_enq({ `C_MPE_SEND_OPCODE, `HOST_RANK, `MSG_SIZE_ONE }, 1);
+                   mpiDriver.cmd_enq({ `C_MPE_SEND_OPCODE, `HOST_RANK, `MSG_SIZE_ONE }, 1, True);
 
                    mpiDriver.data_enq(writeBuffer.first(), 0);
                    writeBuffer.deq();        
@@ -266,7 +266,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         
             1: begin
 
-                   mpiDriver.cmd_enq(`C_MPE_DATA_TAG, 0);
+                   mpiDriver.cmd_enq(`C_MPE_DATA_TAG, 0, False);
 
                    // send server is now busy and cannot accept any more requests
                    // until we get an ACK from software

@@ -39,7 +39,7 @@ interface ARCHES_MPI_DRIVER;
     method Action      cmd_deq();
     
     method Action      data_enq(MPI_DATA data, MPI_CONTROL control);
-    method Action      cmd_enq (MPI_DATA data, MPI_CONTROL control);
+    method Action      cmd_enq (MPI_DATA data, MPI_CONTROL control, Bool withData);
         
 endinterface
 
@@ -91,7 +91,7 @@ module mkArchesMPIDevice
     
     Clock modelClock = userClockPackage.clk;
 
-    Reset transReset <- mkAsyncReset(0, mpeReset, modelClock);
+    Reset transReset <- mkAsyncReset(5, mpeReset, modelClock);
     Reset modelReset <- mkResetEither(transReset, userClockPackage.rst, clocked_by modelClock);
 
     // Synchronizers
@@ -105,7 +105,7 @@ module mkArchesMPIDevice
     SyncFIFOIfc#(Tuple2#(MPI_DATA, MPI_CONTROL)) sync_data_out_q
                                               <- mkSyncFIFO(2, modelClock, modelReset, mpeClock);
     
-    SyncFIFOIfc#(Tuple2#(MPI_DATA, MPI_CONTROL)) sync_cmd_out_q
+    SyncFIFOIfc#(Tuple3#(MPI_DATA, MPI_CONTROL, Bool)) sync_cmd_out_q
                                               <- mkSyncFIFO(2, modelClock, modelReset, mpeClock);
     
 
@@ -131,22 +131,19 @@ module mkArchesMPIDevice
     // Rules for synchronizing from Model to Arches domain
     //
     
-    // WARNING: see warning note below.
-    
-    rule sync_data_out (True);
-            
-        match { .v, .c } = sync_data_out_q.first();
-        sync_data_out_q.deq();
-        prim_device.data_enq(v, c);
-        
-    endrule
-        
     rule sync_cmd_out (True);
             
-        match { .v, .c } = sync_cmd_out_q.first();
+        match { .v, .c, .with_data } = sync_cmd_out_q.first();
         sync_cmd_out_q.deq();
         prim_device.cmd_enq(v, c);
         
+        if (with_data)
+        begin
+            match { .v, .c } = sync_data_out_q.first();
+            sync_data_out_q.deq();
+            prim_device.data_enq(v, c);
+        end
+
     endrule
         
     //
@@ -210,9 +207,9 @@ module mkArchesMPIDevice
             
         endmethod
 
-        method Action cmd_enq (MPI_DATA data, MPI_CONTROL control);
+        method Action cmd_enq (MPI_DATA data, MPI_CONTROL control, Bool withData);
             
-            sync_cmd_out_q.enq(tuple2(data, control));
+            sync_cmd_out_q.enq(tuple3(data, control, withData));
             
         endmethod
         
