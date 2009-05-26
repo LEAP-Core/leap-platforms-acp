@@ -116,7 +116,7 @@ File=modules/bluespec/common/fpgaenv/physical-platform/utils/utils.awb
 Packagehint=platforms
 
 [Local Memory Interface using BRAM/Params]
-LOCAL_MEM_ADDR_BITS=12
+LOCAL_MEM_ADDR_BITS=16
 
 [Local Memory Interface using BRAM]
 File=modules/bluespec/common/fpgaenv/low-level-platform-interface/local-mem/local-mem-bram.awb

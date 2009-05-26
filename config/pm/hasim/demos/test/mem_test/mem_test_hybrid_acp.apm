@@ -1,10 +1,10 @@
 
 [Global]
 SaveParameters=0
-Description=Hybrid Virtual Memory Test Model without Private Caches for ACP
-File=mem_test_hybrid_nopvt_acp
+Description=Hybrid Virtual Memory Test Model with Private Caches for ACP
+File=mem_test_hybrid_acp
 Version=2.1
-Name=Hybrid Virtual Memory Test Model without Private Caches for ACP
+Name=Hybrid Virtual Memory Test Model with Private Caches for ACP
 Type=HAsim
 Class=Asim::Model
 
@@ -40,9 +40,6 @@ Packagehint=hasim
 [Hybrid Basic Controller]
 File=config/pm/hasim/submodels/controller/hybrid_basic_controller.apm
 Packagehint=hasim
-
-[HAsim Scratchpad Memory Test System/Params]
-MEM_TEST_PRIVATE_CACHES=0
 
 [Hasim Common Library/Params]
 TERM_VDEV_STREAMS=0
