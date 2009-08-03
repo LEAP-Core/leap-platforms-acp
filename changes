@@ -420,3 +420,13 @@ Fix timing problems that show up even when the timing score is 0:
 - Keep FPGA-side channel I/O send command and data messages in sync across the
   clock crossing.
 - Hold model reset for multiple cycles.
+
+----------
+mcadler     Date: Mon Aug  3 07:49:32 EDT 2009  CSN: CSN-platform-acp-12
+                  Mon Aug  3 11:49:32 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
+ acp-m2c.awb               Locally Modified           11 
+
+Add MAP_OPTION required by recent SCons script change.

@@ -18,3 +18,4 @@
 
 %param FPGA_PART     "xc5vlx330tff1738-2" "FPGA Part ID"
 %param FPGA_POSITION 3                    "FPGA Position (in Xilinx iMPACT)"
+%param MAP_OPTIONS   "-global_opt on"     "Extra Xilinx Map Options"
