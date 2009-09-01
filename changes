@@ -430,3 +430,13 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
  acp-m2c.awb               Locally Modified           11 
 
 Add MAP_OPTION required by recent SCons script change.
+
+----------
+emer        Date: Tue Sep  1 13:50:41 EDT 2009  CSN: CSN-platform-acp-13
+                  Tue Sep  1 17:50:41 UTC 2009
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Modified           12 
+
+Filling in missing modules in acp fpgaenv.
