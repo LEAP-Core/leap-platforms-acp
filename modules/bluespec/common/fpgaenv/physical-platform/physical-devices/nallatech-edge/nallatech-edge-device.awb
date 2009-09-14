@@ -1,0 +1,29 @@
+%name Nallatech Edge Physical Device
+%desc Nallatech Edge Physical Device
+
+%provides nallatech_edge_device
+
+%sources -t BSV -v PUBLIC  nallatech-edge-vhdl-import.bsv
+%sources -t BSV -v PUBLIC  nallatech-edge-device.bsv
+
+%sources -t VHD -v PRIVATE nallatech-edge-device.vhd
+%sources -t VHD -v PRIVATE usr_reg_slave_if_bram_example.vhd
+%sources -t VHD -v PRIVATE usr_reg_slave_if_io_example.vhd
+
+%sources -t NGC -v PRIVATE fsb_compute_edge_2rx2tx.ngc
+
+%sources -t H   -v PUBLIC  nallatech-edge-device.h
+%sources -t CPP -v PRIVATE nallatech-edge-device.cpp
+
+%sources -t UCF -v PRIVATE nallatech-edge-device.ucf
+
+#############################################
+##                Parameters               ##
+#############################################
+
+%param CRYSTAL_CLOCK_FREQ 100 "Input Clock Frequency"
+
+%param --global MODEL_CLOCK_MULTIPLIER 3   "Clock multiplier (integer).  Model clock freq = crystal freq * (multiplier / divider)."
+%param --global MODEL_CLOCK_DIVIDER    4   "Clock divider (integer).  Model clock freq = crystal freq * (multiplier / divider)."
+
+%param ACP_FSB_SOCKET 2 "Motherboard Socket ID the ACP stack is plugged into"

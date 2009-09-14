@@ -1,0 +1,20 @@
+
+%name ACP M2 Compute Module (Nallatech)
+%desc ACP M2 Compute Module (Nallatech)
+
+%provides physical_platform
+
+%requires clocks_device nallatech_edge_device physical_platform_utils
+
+%sources -t BSV -v PUBLIC  acp-m2c.bsv
+%sources -t H   -v PUBLIC  acp-m2c.h
+%sources -t CPP -v PRIVATE acp-m2c.cpp
+%sources -t UCF -v PRIVATE acp-m2c.ucf
+%sources -t UT  -v PRIVATE xilinx.ut
+%sources -t XST -v PRIVATE xilinx.xst
+%sources -t DOWNLOAD -v PRIVATE xilinx.download
+
+%library libacp.a
+
+%param FPGA_PART     "xc5vlx330tff1738-2" "FPGA Part ID"
+%param FPGA_POSITION 3                    "FPGA Position (in Xilinx iMPACT)"

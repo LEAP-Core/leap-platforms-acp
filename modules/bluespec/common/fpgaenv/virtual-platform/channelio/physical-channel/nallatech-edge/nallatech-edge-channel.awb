@@ -1,0 +1,18 @@
+
+%name Nallatech Edge Physical Channel
+%desc Nallatech Edge Physical Channel
+
+%provides physical_channel
+
+%sources -t BSV     -v PUBLIC   nallatech-edge-channel.bsv
+%sources -t H       -v PUBLIC   nallatech-edge-channel.h
+%sources -t CPP     -v PRIVATE  nallatech-edge-channel.cpp
+%sources -t BSV     -v PUBLIC   npc-marshaller.bsv
+%sources -t BSV     -v PUBLIC   npc-demarshaller.bsv
+
+%param CHANNEL_REQUEST_H2F   0  "Request ID for H2F transfer"
+%param CHANNEL_REQUEST_F2H   1  "Request ID for F2H transfer"
+
+%param CHANNEL_RESPONSE_ACK    0  "H2F Write Acknowledgement"
+%param CHANNEL_RESPONSE_DATA   1  "F2H Read Data available"
+%param CHANNEL_RESPONSE_NODATA 2  "No F2H Read Data available"

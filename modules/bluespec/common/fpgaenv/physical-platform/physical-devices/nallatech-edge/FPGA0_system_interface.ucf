@@ -1,0 +1,47 @@
+# SYSTEM INTERFACE 
+
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AJ26;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK27;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[2]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AM14;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN14;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK29;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK28;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[6]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP13;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[7]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN13;
+
+NET "REG_RDY_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL29;
+NET "REG_CLK" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL30;
+NET "REG_RESET_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK15;
+NET "REG_RD_WR_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK14;
+
+NET "REG_UDS_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AJ30;
+NET "REG_LDS_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK30;
+NET "REG_ADS_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK13;
+NET "REG_EN_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK12;
+
+NET "SYS_LED_OUT[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN30;
+NET "SYS_LED_OUT[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP30;
+NET "SYS_LED_OUT[2]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK17;
+NET "SYS_LED_OUT[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL17;
+NET "SYS_LED_OUT[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN28;
+NET "SYS_LED_OUT[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP27;
+NET "RAM_LEDS[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN29;
+NET "RAM_LEDS[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP28;
+
+NET "EEPROM_SCL" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP16;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_EEPROM_SDA" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP15;
+
+NET "CLK100P" IOSTANDARD = "LVDS_25" | LOC = AL27 | DIFF_TERM = "TRUE";
+NET "CLK100N" IOSTANDARD = "LVDS_25" | LOC = AL26 | DIFF_TERM = "TRUE";
+
+# NET "RAM_PWR_ON " IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL14;
+
+###############################################################################
+# Timing Constraints
+###############################################################################
+
+# NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/osc_clk" TNM_NET = "CLK";
+# TIMESPEC "TS_CLK"  = PERIOD "CLK" 100.00 MHz HIGH 50 % ;
+
+NET "CLK100P" TNM_NET = "CLK";
+TIMESPEC "TS_CLK"  = PERIOD "CLK" 100.00 MHz;

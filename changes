@@ -461,3 +461,65 @@ platforms the default is set appropriately, e.g., exe for simulation,
 bit for real hardware. In the physical_platform module, MAKE_ALL_TARGET
 is declared as a 'global' parameter so it can be overridden in the
 model that requires an fpgaenv.
+
+----------
+aparasha    Date: Mon Sep 14 10:58:12 EDT 2009  CSN: CSN-platform-acp-15
+                  Mon Sep 14 14:58:12 UTC 2009
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech.apm Locally Added               0 
+
+Directory config/pm/bluespec/demos/rrrtest
+ rrrtest_hybrid_acp_nallatech.apm Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel
+ nallatech-edge/           Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ npc-marshaller.bsv        Locally Added               0 
+ nallatech-edge-channel.cpp Locally Added               0 
+ nallatech-edge-channel.h  Locally Added               0 
+ npc-demarshaller.bsv      Locally Added               0 
+ nallatech-edge-channel.awb Locally Added               0 
+ nallatech-edge-channel.bsv Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform
+ acp-m2c-nallatech/        Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
+ xilinx.download           Locally Added               0 
+ xilinx.ut                 Locally Added               0 
+ acp-m2c.cpp               Locally Added               0 
+ acp-m2c.h                 Locally Added               0 
+ xilinx.xst                Locally Added               0 
+ acp-m2c.awb               Locally Added               0 
+ acp-m2c.bsv               Locally Added               0 
+ acp-m2c.ucf               Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices
+ nallatech-edge/           Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ usr_reg_slave_if_io_example.vhd Locally Added               0 
+ nallatech-edge-device.h   Locally Added               0 
+ FPGA0_lvds_to_lower_module.ucf Locally Added               0 
+ nallatech-edge-device.awb Locally Added               0 
+ nallatech-edge-device.bsv Locally Added               0 
+ nallatech-edge-device.ucf Locally Added               0 
+ nallatech-edge-vhdl-import.bsv Locally Added               0 
+ fsb_compute_edge_2rx2tx.ngc Locally Added               0 
+ nallatech-edge-device.vhd Locally Added               0 
+ usr_reg_slave_if_bram_example.vhd Locally Added               0 
+ nallatech-edge-device.cpp Locally Added               0 
+ FPGA0_system_interface.ucf Locally Added               0 
+
+- Added a new ACP M2C Platform based on Nallatech's API. The current
+  implementation only works with designs that can synthesize at 100MHz because
+  instantiating DCMs introduces huge clock skews. This is being worked on.
+
+- Added a new physical channel implementation using the Nallatech API.
+
+- Added a new ACP M2C fpgaenv submodel for the Nallatech-based platform.
+
+- Added a new RRRTest demo model config using the new ACP M2C fpgaenv.
