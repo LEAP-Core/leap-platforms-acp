@@ -32,8 +32,6 @@
 
 using namespace std;
 
-char bitfile[255] = ".xilinx/rrrtest_hybrid_acp_nallatech_par.bit";
-
 // ============================================
 //              Nallatech EDGE Device
 // ============================================
@@ -81,6 +79,9 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
 
 	// Configure
 	printf("Configuring compute FPGA...               ");
+
+    char bitfile[255];
+    sprintf(bitfile, ".xilinx/%s_par.bit", APM_NAME);
 
 	ret = ACP_ConfigureFPGA(hsocket, bitfile, DEVICE_ID(1,0,0));
 
