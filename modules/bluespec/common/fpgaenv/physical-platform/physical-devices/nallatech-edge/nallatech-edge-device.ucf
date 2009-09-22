@@ -344,3 +344,21 @@ net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst
 ## Angshuman's additions
 net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/bretime_inst2/q_i[*]" TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q_dD_OUT[*]"     TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/Mram_fifoMem*" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q_dD_OUT[*]"      TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/sGEnqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/dSyncReg1[*]"  TIG;
+
+net "IF_m_vp_llpi_phys_plat_nallatech_edge_device_s_ETC__q43<0>" TIG;
+net "IF_m_vp_llpi_phys_plat_nallatech_edge_device_s_ETC__q46<0>" TIG;
+net "IF_m_vp_llpi_phys_plat_nallatech_edge_device_s_ETC__q44<0>" TIG;
+net "IF_m_vp_llpi_phys_plat_nallatech_edge_device_s_ETC__q41<0>" TIG;
+net "IF_m_vp_llpi_phys_plat_nallatech_edge_device_s_ETC__q47<0>" TIG;
+net "IF_m_vp_llpi_phys_plat_nallatech_edge_device_s_ETC__q45<0>" TIG;
+net "IF_m_vp_llpi_phys_plat_nallatech_edge_device_s_ETC__q42<0>" TIG;
+net "IF_m_vp_llpi_phys_plat_nallatech_edge_device_s_ETC__q48<0>" TIG;

@@ -75,26 +75,18 @@ module mkNallatechEdgeDevice
     Clock rawClock = prim_device.rawClock;
     Reset rawReset = noReset;
     
-    // Clock bufferedClock <- mkClockInputBuffer(rawClock);
-    Clock bufferedClock = rawClock;
-    
-    /*
-    let userClockPackage <- mkUserClock(`CRYSTAL_CLOCK_FREQ,
+    let userClockPackage <- mkUserClock_PLL(`CRYSTAL_CLOCK_FREQ,
                                         `MODEL_CLOCK_MULTIPLIER,
                                         `MODEL_CLOCK_DIVIDER,
-                                        clocked_by bufferedClock,
+                                        clocked_by rawClock,
                                         reset_by   rawReset);
     
     Clock modelClock = userClockPackage.clk;
 
-    Reset transReset <- mkAsyncReset(5, edgeReset, modelClock);
-    Reset modelReset <- mkResetEither(transReset, userClockPackage.rst, clocked_by modelClock);
-    // Reset modelReset = userClockPackage.rst;
-    */
-    Clock modelClock = edgeClock;
-    Reset modelReset = edgeReset;
-
-
+    // Reset transReset <- mkAsyncReset(5, edgeReset, modelClock);
+    // Reset modelReset <- mkResetEither(transReset, userClockPackage.rst, clocked_by modelClock);
+    Reset modelReset = userClockPackage.rst;
+      
     // Synchronizers
     
     SyncFIFOIfc#(NALLATECH_FIFO_DATA) sync_read_q

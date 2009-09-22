@@ -21,9 +21,9 @@
 ##                Parameters               ##
 #############################################
 
-%param CRYSTAL_CLOCK_FREQ 100 "Input Clock Frequency"
+%param CRYSTAL_CLOCK_FREQ 200 "Input Clock Frequency"
 
 %param --global MODEL_CLOCK_MULTIPLIER 3   "Clock multiplier (integer).  Model clock freq = crystal freq * (multiplier / divider)."
-%param --global MODEL_CLOCK_DIVIDER    4   "Clock divider (integer).  Model clock freq = crystal freq * (multiplier / divider)."
+%param --global MODEL_CLOCK_DIVIDER    8   "Clock divider (integer).  Model clock freq = crystal freq * (multiplier / divider)."
 
 %param ACP_FSB_SOCKET 2 "Motherboard Socket ID the ACP stack is plugged into"

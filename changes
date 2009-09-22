@@ -523,3 +523,23 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 - Added a new ACP M2C fpgaenv submodel for the Nallatech-based platform.
 
 - Added a new RRRTest demo model config using the new ACP M2C fpgaenv.
+
+----------
+aparasha    Date: Tue Sep 22 14:36:17 EDT 2009  CSN: CSN-platform-acp-16
+                  Tue Sep 22 18:36:17 UTC 2009
+
+
+Directory config/pm/bluespec/demos/rrrtest
+ rrrtest_hybrid_acp_nallatech.apm Locally Modified           15 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ FPGA0_lvds_to_lower_module.ucf Locally Removed            15 
+ nallatech-edge-device.awb Locally Modified           15 
+ nallatech-edge-device.bsv Locally Modified           15 
+ nallatech-edge-device.ucf Locally Modified           15 
+ FPGA0_system_interface.ucf Locally Removed            15 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
+ acp-m2c.awb               Locally Modified           15 
+
+Updated Nallatech ACP platform to support user-specified clock frequencies.

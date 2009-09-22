@@ -15,7 +15,7 @@ model=HW/SW Hybrid Project Foundation
 
 [FPGA Environment]
 File=config/pm/hasim/submodels/fpgaenv/fpgaenv-acp-m2c-nallatech.apm
-Packagehint=platforms
+Packagehint=platform-acp
 
 [Bluespec RRR Test and Benchmarking Program]
 File=modules/bluespec/system/demos/rrrtest/rrrtest.awb
@@ -30,7 +30,6 @@ File=modules/application-env/hybrid/base/application-env-hybrid-base.awb
 Packagehint=platforms
 
 [HW/SW Hybrid Project Foundation/Params]
-MAKE_ALL_TARGET=bit
 WAIT_FOR_HARDWARE=0
 
 [HW/SW Hybrid Project Foundation/Requires]
