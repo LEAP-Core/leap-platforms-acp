@@ -554,3 +554,22 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 Updated device to construct the name of the FPGA bitfile from the APM_NAME
 parameter passed down by the SCons script (this was hardcoded earlier).
+
+----------
+mcadler     Date: Wed Sep 23 10:05:40 EDT 2009  CSN: CSN-platform-acp-18
+                  Wed Sep 23 14:05:40 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
+ xilinx.xst                Locally Modified           17 
+ acp-m2c.awb               Locally Modified           17 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
+ xilinx.download           Locally Removed            17 
+ xilinx.xst                Locally Modified           17 
+ acp-m2c.awb               Locally Modified           17 
+
+- Use Elliott's new FPGA_PART_XILINX instead of FPGA_PART.
+- Don't need an FPGA_POSITION for Nallatech firmware since not loading bit
+  file with impact.
+- Enable -global_opt in map.  Don't know if it works yet.

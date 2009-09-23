@@ -12,7 +12,6 @@
 %sources -t UCF -v PRIVATE acp-m2c.ucf
 %sources -t UT  -v PRIVATE xilinx.ut
 %sources -t XST -v PRIVATE xilinx.xst
-%sources -t DOWNLOAD -v PRIVATE xilinx.download
 
 %library /nfs/site/disks/hasim1/local/nallatechAAL/latest/libs.gcc.3.4.4/libacp.so
 %library /nfs/site/disks/hasim1/local/nallatechAAL/latest/libs.gcc.3.4.4/libACP_API.a
@@ -20,5 +19,5 @@
 
 %param --global MAKE_ALL_TARGET    bit       "Target of 'make all'.  Most likely bit, exe or vexe."
 
-%param FPGA_PART     "xc5vlx330tff1738-2" "FPGA Part ID"
-%param FPGA_POSITION 3                    "FPGA Position (in Xilinx iMPACT)"
+%param FPGA_PART_XILINX "xc5vlx330tff1738-2" "FPGA Part ID"
+%param MAP_OPTIONS      "-global_opt on"     "Extra Xilinx Map Options"
