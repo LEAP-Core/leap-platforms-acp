@@ -616,3 +616,23 @@ Directory config/pm/hasim
  demos/                    Locally Removed            19 
 
 Moved to hasim repository.
+
+----------
+mcadler     Date: Thu Sep 24 17:35:19 EDT 2009  CSN: CSN-platform-acp-22
+                  Thu Sep 24 21:35:19 UTC 2009
+
+
+Directory config/pm/bluespec
+ demos/                    Locally Removed            20 
+
+Directory config/pm/bluespec/demos
+ rrrtest/                  Locally Removed            20 
+
+Directory config/pm/bluespec/demos/rrrtest
+ rrrtest_hybrid_acp_nallatech.apm Locally Removed            20 
+ rrrtest_hybrid_acp.apm    Locally Removed            20 
+
+Directory config/pm
+ bluespec/                 Locally Removed            20 
+
+Moved to hasim repository.
