@@ -586,3 +586,23 @@ Removed a set of TIG constraints in the UCF that were hard-coded to
 particular net-names that the Bluespec compiler was generating for
 a certain design. These have been replaced with a wildcard net-name
 that should apply to all Bluespec-generated names.
+
+----------
+mcadler     Date: Thu Sep 24 17:25:05 EDT 2009  CSN: CSN-platform-acp-20
+                  Thu Sep 24 21:25:05 UTC 2009
+
+
+Directory config/pm/hasim/demos/test/mem_test
+ mem_test_hybrid_nopvt_acp.apm Locally Modified           19 
+ mem_test_hybrid_acp.apm   Locally Modified           19 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.awb Locally Modified           19 
+ nallatech-edge-device.bsv Locally Modified           19 
+ nallatech-edge-device.cpp Locally Modified           19 
+
+- Nallatech code now finds the bit file to load using the FPGA_BIT_FILE
+  environment variable.
+- Default PLL output clock is still 75MHz but with "better" parameters,
+  using an input divider.
+- mem_test for ACP now uses Nallatech.

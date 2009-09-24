@@ -80,8 +80,12 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
 	// Configure
 	printf("Configuring compute FPGA...               ");
 
-    char bitfile[255];
-    sprintf(bitfile, ".xilinx/%s_par.bit", APM_NAME);
+    char *bitfile = getenv("FPGA_BIT_FILE");
+    if (bitfile == NULL)
+    {
+        printf("\nERROR:  FPGA_BIT_FILE environment variable must be defined!\n");
+        CallbackExit(1);
+    }
 
 	ret = ACP_ConfigureFPGA(hsocket, bitfile, DEVICE_ID(1,0,0));
 
