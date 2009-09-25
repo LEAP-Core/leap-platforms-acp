@@ -26,7 +26,11 @@
 #include "asim/provides/umf.h"
 #include "platforms-module.h"
 
+#if (NALLATECH_WORD_SIZE == 32)
 typedef UINT32 NALLATECH_WORD;
+#else
+#error "NALLATECH_WORD must be 32 bits"
+#endif
 
 // ===============================================
 //               Nallatech EDGE Device
@@ -44,7 +48,6 @@ class NALLATECH_EDGE_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
     // workspace
     NALLATECH_WORD* workspace;
     UINT64          workspacePA;
-    int             workspaceSize;
 
   public:
 
@@ -56,7 +59,9 @@ class NALLATECH_EDGE_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
     void Uninit();
 
     // interface to device
-    UINT32* GetWorkspace()                  { return workspace; }
+    NALLATECH_WORD* GetInputWindow();
+    NALLATECH_WORD* GetOutputWindow();
+
     void    DoAALTransaction(int m, int n);
 };
 

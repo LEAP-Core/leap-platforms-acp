@@ -30,10 +30,9 @@
 
 #include "asim/provides/physical_channel.h"
 
-using namespace std;
+#define MAX_MESSAGE_SIZE 32   // MUST be less than or equal to Nallatech Window Size
 
-#define NALLATECH_WINDOW_SIZE   256
-#define NALLATECH_TRANSFER_SIZE 256
+using namespace std;
 
 // ============================================
 //               Physical Channel              
@@ -47,6 +46,9 @@ PHYSICAL_CHANNEL_CLASS::PHYSICAL_CHANNEL_CLASS(
 {
     nallatechEdgeDevice  = d->GetNallatechEdgeDevice();
     incomingMessage = NULL;
+
+    writeWindow = NULL;
+    readWindow = NULL;
 
     alive = true; // LLPI bugfix
 
@@ -68,6 +70,12 @@ PHYSICAL_CHANNEL_CLASS::Init()
         ASIMERROR("UMF_CHUNK and NALLATECH_WORD size mismatch");
         CallbackExit(1);
     }    
+
+    // assume Physical Device has been initialized by now
+    writeWindow = nallatechEdgeDevice->GetInputWindow();
+    readWindow = nallatechEdgeDevice->GetOutputWindow();
+
+    ASSERTX(writeWindow != NULL && readWindow != NULL);
 }
 
 // non-blocking read
@@ -82,16 +90,13 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
 
     pthread_mutex_lock(&deviceLock);
 
-    NALLATECH_WORD* workspace = nallatechEdgeDevice->GetWorkspace();
-    ASSERTX(workspace != NULL);
+    writeWindow[0] = CHANNEL_REQUEST_F2H;
 
-    workspace[0] = CHANNEL_REQUEST_F2H;
-
-    // talk to FPGA via Nallatech device, making sure to use complete input and output windows
-    nallatechEdgeDevice->DoAALTransaction(NALLATECH_TRANSFER_SIZE, NALLATECH_TRANSFER_SIZE);
+    // talk to FPGA via Nallatech device
+    nallatechEdgeDevice->DoAALTransaction(1, MAX_MESSAGE_SIZE);
     
     // see if we actually read any data
-    NALLATECH_WORD resp = workspace[NALLATECH_WINDOW_SIZE];
+    NALLATECH_WORD resp = readWindow[0];
 
     if (resp == CHANNEL_RESPONSE_NODATA)
     {
@@ -117,11 +122,11 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
     }
 
     incomingMessage = UMF_MESSAGE_CLASS::New();
-    incomingMessage->DecodeHeader(workspace[NALLATECH_WINDOW_SIZE + 1]);
+    incomingMessage->DecodeHeader(readWindow[1]);
 
     // copy buffer data into message data
     incomingMessage->AppendChunks(incomingMessage->GetLength() / sizeof(UMF_CHUNK),
-                                  (UMF_CHUNK*) &workspace[NALLATECH_WINDOW_SIZE + 2]);
+                                  (UMF_CHUNK*) &readWindow[2]);
 
     // done with the device, release it
     pthread_mutex_unlock(&deviceLock);
@@ -172,29 +177,26 @@ PHYSICAL_CHANNEL_CLASS::Write(
     if ((message->GetLength()    +   // raw message length
          sizeof(UMF_CHUNK)       +   // header
          sizeof(NALLATECH_WORD))     // channel command
-        > NALLATECH_TRANSFER_SIZE * 8)
+        > (MAX_MESSAGE_SIZE * sizeof(NALLATECH_WORD)))
     {
-        ASIMERROR("message too large to fit in AAL workspace\n");
+        ASIMERROR("message larger than maximum allowed length\n");
         message->Print(cout);
         CallbackExit(1);
     }
 
     //
-    // copy the message into the workspace's input window
+    // copy the message into the write window
     //
 
     pthread_mutex_lock(&deviceLock);
 
-    NALLATECH_WORD* workspace = nallatechEdgeDevice->GetWorkspace();
-    ASSERTX(workspace != NULL);
-
     int index = 0;
 
     // write the channel command
-    workspace[index++] = CHANNEL_REQUEST_H2F;
+    writeWindow[index++] = CHANNEL_REQUEST_H2F;
 
     // construct header
-    message->EncodeHeader((unsigned char*) &workspace[index++]);
+    message->EncodeHeader((unsigned char*) &writeWindow[index++]);
 
     // write message data to buffer
     // NOTE: hardware demarshaller expects chunk pattern to start from most
@@ -204,14 +206,14 @@ PHYSICAL_CHANNEL_CLASS::Write(
     while (message->CanReverseExtract())
     {
         UMF_CHUNK chunk = message->ReverseExtractChunk();
-        workspace[index++] = chunk;
+        writeWindow[index++] = chunk;
     }
 
-    // ask the Nallatech device to send the message, and use the complete window
-    nallatechEdgeDevice->DoAALTransaction(NALLATECH_TRANSFER_SIZE, NALLATECH_TRANSFER_SIZE);
+    // ask the Nallatech device to send the message
+    nallatechEdgeDevice->DoAALTransaction(index, 1);
 
     // verify that we received the ack correctly
-    NALLATECH_WORD ack = workspace[NALLATECH_WINDOW_SIZE];
+    NALLATECH_WORD ack = readWindow[0];
     if (ack != CHANNEL_RESPONSE_ACK)
     {
         pthread_mutex_unlock(&deviceLock);

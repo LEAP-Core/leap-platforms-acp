@@ -43,6 +43,11 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
     // lock
     pthread_mutex_t deviceLock;
 
+    // cache pointers to I/O windows
+    NALLATECH_WORD* readWindow;
+    NALLATECH_WORD* writeWindow;
+
+    // misc
     bool alive;
 
   public:

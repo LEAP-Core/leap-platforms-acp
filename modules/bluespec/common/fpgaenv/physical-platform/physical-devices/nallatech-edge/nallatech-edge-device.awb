@@ -28,3 +28,5 @@
 %param --global MODEL_CLOCK_OUT_DIVIDER 16  "PLL Output clock divider (integer).  (CLKOUT0_DIVIDE)"
 
 %param ACP_FSB_SOCKET 2 "Motherboard Socket ID the ACP stack is plugged into"
+
+%param NALLATECH_WORD_SIZE       32 "Size of NALLATECH_WORD (in bits)"
