@@ -158,7 +158,7 @@ PHYSICAL_CHANNEL_CLASS::Read()
     {
         msg = TryRead();
     }
-    while (msg != NULL);
+    while (msg == NULL);
 
     return msg;
 }

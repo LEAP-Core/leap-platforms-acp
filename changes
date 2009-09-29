@@ -658,3 +658,14 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 - Abstracted the Nallatech device workspace into distinct input and output
   windows (as visible from the channel layer).
+
+----------
+mcadler     Date: Tue Sep 29 15:01:36 EDT 2009  CSN: CSN-platform-acp-24
+                  Tue Sep 29 19:01:36 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified           23 
+
+The test in the PHYSICAL_CHANNEL_CLASS::Read() loop was inverted, causing a
+SEGV due to indirection through a NULL pointer in the caller.
