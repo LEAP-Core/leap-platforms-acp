@@ -23,9 +23,7 @@
 
 %param CRYSTAL_CLOCK_FREQ 200 "Input Clock Frequency"
 
-%param --global MODEL_CLOCK_IN_DIVIDER   1  "PLL Input clock divider (integer).  (DIVCLK_DIVIDE)"
-%param --global MODEL_CLOCK_MULTIPLIER   6  "PLL Clock multiplier (integer).  (CLKFBOUT_MULT)"
-%param --global MODEL_CLOCK_OUT_DIVIDER 16  "PLL Output clock divider (integer).  (CLKOUT0_DIVIDE)"
+%param --global MODEL_CLOCK_FREQ 75  "Desired model clock frequency (integer)."
 
 %param ACP_FSB_SOCKET 2 "Motherboard Socket ID the ACP stack is plugged into"
 

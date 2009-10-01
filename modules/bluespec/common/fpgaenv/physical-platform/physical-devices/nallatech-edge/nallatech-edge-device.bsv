@@ -76,9 +76,7 @@ module mkNallatechEdgeDevice
     Reset rawReset = noReset;
     
     let userClockPackage <- mkUserClock_PLL(`CRYSTAL_CLOCK_FREQ,
-                                            `MODEL_CLOCK_IN_DIVIDER,
-                                            `MODEL_CLOCK_MULTIPLIER,
-                                            `MODEL_CLOCK_OUT_DIVIDER,
+                                            `MODEL_CLOCK_FREQ,
                                             clocked_by rawClock,
                                             reset_by   rawReset);
     
