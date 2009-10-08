@@ -30,8 +30,6 @@
 
 #include "asim/provides/physical_channel.h"
 
-#define MAX_MESSAGE_SIZE 32   // MUST be less than or equal to Nallatech Window Size
-
 using namespace std;
 
 // ============================================
@@ -93,7 +91,7 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
     writeWindow[0] = CHANNEL_REQUEST_F2H;
 
     // talk to FPGA via Nallatech device
-    nallatechEdgeDevice->DoAALTransaction(1, MAX_MESSAGE_SIZE);
+    nallatechEdgeDevice->DoAALTransaction(NALLATECH_TRANSFER_SIZE, NALLATECH_TRANSFER_SIZE);
     
     // see if we actually read any data
     NALLATECH_WORD resp = readWindow[0];
@@ -123,6 +121,17 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
 
     incomingMessage = UMF_MESSAGE_CLASS::New();
     incomingMessage->DecodeHeader(readWindow[1]);
+
+    // sanity check on message length
+    if ((incomingMessage->GetLength()    +   // raw message length
+         sizeof(UMF_CHUNK)               +   // header
+         sizeof(NALLATECH_WORD))             // channel command
+        > (NALLATECH_TRANSFER_SIZE * sizeof(NALLATECH_WORD)))
+    {
+        pthread_mutex_unlock(&deviceLock);
+        ASIMERROR("tryread: message larger than maximum allowed length\n");
+        CallbackExit(1);
+    }
 
     // copy buffer data into message data
     incomingMessage->AppendChunks(incomingMessage->GetLength() / sizeof(UMF_CHUNK),
@@ -177,7 +186,7 @@ PHYSICAL_CHANNEL_CLASS::Write(
     if ((message->GetLength()    +   // raw message length
          sizeof(UMF_CHUNK)       +   // header
          sizeof(NALLATECH_WORD))     // channel command
-        > (MAX_MESSAGE_SIZE * sizeof(NALLATECH_WORD)))
+        > (NALLATECH_TRANSFER_SIZE * sizeof(NALLATECH_WORD)))
     {
         ASIMERROR("message larger than maximum allowed length\n");
         message->Print(cout);
@@ -210,7 +219,7 @@ PHYSICAL_CHANNEL_CLASS::Write(
     }
 
     // ask the Nallatech device to send the message
-    nallatechEdgeDevice->DoAALTransaction(index, 1);
+    nallatechEdgeDevice->DoAALTransaction(NALLATECH_TRANSFER_SIZE, NALLATECH_TRANSFER_SIZE);
 
     // verify that we received the ack correctly
     NALLATECH_WORD ack = readWindow[0];

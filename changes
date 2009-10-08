@@ -681,3 +681,19 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 PLL generator no longer requires low level timing parameters.  Just pass in
 a target frequency.
+
+----------
+aparasha    Date: Thu Oct  8 16:50:03 EDT 2009  CSN: CSN-platform-acp-33
+                  Thu Oct  8 20:50:03 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified           32 
+ nallatech-edge-channel.awb Locally Modified           32 
+ nallatech-edge-channel.bsv Locally Modified           32 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.cpp Locally Modified           32 
+
+- Decreased message transfer window size from 1024 bytes to 128 bytes.
+- Reorganized some code between Channel and Device.

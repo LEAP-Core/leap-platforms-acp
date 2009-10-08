@@ -16,3 +16,5 @@
 %param CHANNEL_RESPONSE_ACK    0  "H2F Write Acknowledgement"
 %param CHANNEL_RESPONSE_DATA   1  "F2H Read Data available"
 %param CHANNEL_RESPONSE_NODATA 2  "No F2H Read Data available"
+
+%param NALLATECH_TRANSFER_SIZE 32 "Size of each container message (in words)"

@@ -36,8 +36,6 @@
 #define INPUT_WINDOW_SIZE   NALLATECH_WINDOW_SPLIT
 #define OUTPUT_WINDOW_SIZE (NALLATECH_WORKSPACE_SIZE - NALLATECH_WINDOW_SPLIT)
 
-#define TRANSFER_SIZE 256
-
 using namespace std;
 
 // ============================================
@@ -213,19 +211,16 @@ NALLATECH_EDGE_DEVICE_CLASS::DoAALTransaction(
 
     //
     // BUG: the Nallatech stack cannot handle transactions less than 64 bytes
-    //      in length, so transfer at leaset 64 bytes both ways
+    //      in length, so transfer at least 64 bytes both ways
     //
 
     int window = NALLATECH_WINDOW_SPLIT * sizeof(NALLATECH_WORD);
 
-    if (m > TRANSFER_SIZE || n > TRANSFER_SIZE)
+    if (m_bytes < 64 || n_bytes < 64)
     {
-        cout << "AAL transaction size exceeds transfer size";
+        cout << "AAL transaction smaller than minimum transfer size";
         CallbackExit(1);
     }
-
-    m_bytes = TRANSFER_SIZE * sizeof(NALLATECH_WORD);
-    n_bytes = TRANSFER_SIZE * sizeof(NALLATECH_WORD);
 
 	ACP_MemCopy(hafu, workspacePA, m_bytes, workspacePA + window, n_bytes);
 }

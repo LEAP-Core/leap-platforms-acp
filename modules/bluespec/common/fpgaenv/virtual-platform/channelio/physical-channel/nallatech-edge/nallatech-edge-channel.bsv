@@ -23,8 +23,6 @@ import Vector::*;
 `include "physical_platform.bsh"
 `include "umf.bsh"
 
-`define NALLATECH_TRANSFER_SIZE 256
-
 //
 // Types
 //
