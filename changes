@@ -697,3 +697,24 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 - Decreased message transfer window size from 1024 bytes to 128 bytes.
 - Reorganized some code between Channel and Device.
+
+----------
+mcadler     Date: Fri Oct 23 15:23:11 EDT 2009  CSN: CSN-platform-acp-34
+                  Fri Oct 23 19:23:11 UTC 2009
+
+
+Directory drivers
+ nallatech/                Locally Added               0 
+
+Directory drivers/nallatech
+ linux/                    Locally Added               0 
+
+Directory drivers/nallatech/linux
+ acpdriver.c               Locally Added               0 
+ acp.h                     Locally Added               0 
+ Makefile                  Locally Added               0 
+
+Directory .
+ drivers/                  Locally Added               0 
+
+Add Nallatech ACP driver.
