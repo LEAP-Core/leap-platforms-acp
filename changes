@@ -731,3 +731,13 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
  xilinx.xst                Locally Modified           34 
 
 Changes for new parallel Xst builds.
+
+----------
+mcadler     Date: Wed Nov 11 14:07:45 EST 2009  CSN: CSN-platform-acp-36
+                  Wed Nov 11 19:07:45 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
+ acp-m2c.awb               Locally Modified           35 
+
+Find ACP libraries through the "latest" link, not a version-specific path.

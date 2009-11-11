@@ -13,8 +13,8 @@
 %sources -t UT  -v PRIVATE xilinx.ut
 %sources -t XST -v PRIVATE xilinx.xst
 
-%library /nfs/site/disks/hasim1/local/nallatechAAL/latest/libs.gcc.3.4.4/libacp.so
-%library /nfs/site/disks/hasim1/local/nallatechAAL/latest/libs.gcc.3.4.4/libACP_API.a
+%library /nfs/site/disks/hasim1/local/nallatechAAL/latest/lib64/libacp.so
+%library /nfs/site/disks/hasim1/local/nallatechAAL/latest/lib64/libACP_API.a
 %include /nfs/site/disks/hasim1/local/nallatechAAL/latest/include
 
 %param --global MAKE_ALL_TARGET    bit       "Target of 'make all'.  Most likely bit, exe or vexe."
