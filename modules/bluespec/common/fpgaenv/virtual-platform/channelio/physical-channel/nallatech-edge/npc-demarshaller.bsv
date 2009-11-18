@@ -1,5 +1,6 @@
 import Vector::*;
 import FIFO::*;
+import SpecialFIFOs::*;
 
 
 // DeMarshaller
@@ -18,13 +19,6 @@ interface NPC_DEMARSHALLER#(parameter type in_T, parameter type out_T);
 
     // dequeue the completed value
     method Action deq();
-    
-    // fill the entire output width with the given data
-    method Action fill(out_T data);
-        
-    // if the demarshaller already has some data, pad it out
-    // and prepare the output
-    method Action flush();
 
 endinterface
 
@@ -35,147 +29,71 @@ module mkNPCDeMarshaller
     provisos
         (Bits#(in_T, in_SZ),
          Bits#(out_T, out_SZ),
-         Div#(out_SZ, in_SZ, k__),
-         Log#(k__, idx_SZ),
+         Div#(out_SZ, in_SZ, n_CHUNKS),
+         Log#(n_CHUNKS, idx_SZ),
          PrimSelectable#(out_T, Bit#(1)));
     
     // =============== state ================
     
     // degree (max number of chunks) of our shift register
-    Integer degree = valueof(k__);
+    Integer degree = valueof(n_CHUNKS);
     
     // shift register we fill up as chunks come in.
-    Vector#(k__, Reg#(Bit#(in_SZ))) chunks = newVector();
-    
-    // fill in the vector
-    for (Integer x = degree - 1; x >= 0; x = x - 1)
-    begin
-        chunks[x] <- mkReg(0);
-    end
+    Reg#(Vector#(n_CHUNKS, Bit#(in_SZ))) partialData <- mkRegU();
     
     // number of chunks remaining in current sequence
-    Reg#(Bit#(TAdd#(idx_SZ, 1))) chunksRemaining <- mkReg(fromInteger(degree));
+    Reg#(Bit#(idx_SZ)) nextChunk <- mkReg(0);
     
-    // demarshaller state
-    Reg#(Bool) flushing <- mkReg(False);
-    
-    // =============== rules ===============
-    
-    rule do_flush (flushing && chunksRemaining != 0);
-        
-        // newer chunks are closer to the MSB.
-        if (degree != 0)
-        begin
-            chunks[degree-1] <= 0;
-        end
-      
-        // Do the shift with a for loop
-        for (Integer x = 0; x < degree-1; x = x+1)
-        begin
-            chunks[x] <= chunks[x+1];
-        end
-        
-        // decrement chunks remaining
-        chunksRemaining <= chunksRemaining - 1;        
-        
-        if (chunksRemaining == 1)
-        begin
-        
-            flushing <= False;
-            
-        end
-        
-    endrule
-
+    // Output FIFO.
+    FIFO#(out_T) outQ <- mkBypassFIFO();
 
     // =============== methods ===============
     
     // add the chunk to the first place in the vector and
     // shift the other elements.
-    method Action enq(in_T chunk) if (!flushing && chunksRemaining != 0);
+
+    method Action enq(in_T new_chunk);
     
         // newer chunks are closer to the MSB.
-        if (degree != 0)
-        begin
-            chunks[degree-1] <= pack(chunk);
-        end
-      
-        // Do the shift with a for loop
-        for (Integer x = 0; x < degree-1; x = x+1)
-        begin
-            chunks[x] <= chunks[x+1];
-        end
-        
-        // decrement chunks remaining
-        chunksRemaining <= chunksRemaining - 1;
-        
-    endmethod
-    
-    // dequeue the output register and prepare to accept a new sequence
-    method Action deq() if (chunksRemaining == 0);
-    
-        chunksRemaining <= fromInteger(degree);
-    
-    endmethod
+        Vector#(n_CHUNKS, Bit#(in_SZ)) chunks = partialData;
+        chunks[nextChunk] = pack(new_chunk);
 
-    // return the entire vector
-    method out_T first() if (chunksRemaining == 0);
-    
-        Bit#(out_SZ) final_val = 0;
-      
-        // this is where the good stuff happens
-        // fill in the result one bit at a time
-        for (Integer x = 0; x < valueof(out_SZ); x = x + 1)
+        if (nextChunk == fromInteger(valueOf(TSub#(n_CHUNKS, 1))))
         begin
-        
-            Integer j = x / valueof(in_SZ);
-            Integer k = x % valueof(in_SZ);
-            final_val[x] = chunks[j][k];
-      
-        end
-        
-        // return
-        return unpack(final_val);
-    
-    endmethod
+            // Output chunk is ready
+            Bit#(out_SZ) final_val = 0;
 
-    // fill the entire output width with the given data
-    method Action fill(out_T data) if (!flushing && chunksRemaining == fromInteger(degree));
-    
-        // split input data into chunks
-        Vector#(k__, Bit#(in_SZ)) split = newVector();
-    
-        // fill in the vector
-        for (Integer x = 0; x < valueof(out_SZ); x = x + 1)
+            // this is where the good stuff happens
+            // fill in the result one bit at a time
+            for (Integer x = 0; x < valueof(out_SZ); x = x + 1)
+            begin
+
+                Integer j = x / valueof(in_SZ);
+                Integer k = x % valueof(in_SZ);
+                final_val[x] = chunks[j][k];
+
+            end
+
+            outQ.enq(unpack(final_val));
+            nextChunk <= 0;
+        end
+        else
         begin
-        
-            Integer j = x / valueof(in_SZ);
-            Integer k = x % valueof(in_SZ);
-            split[j][k] = data[x];
-      
+            // More chunks to collect remain
+            partialData <= chunks;
+            nextChunk <= nextChunk + 1;
         end
         
-        // copy the split into the chunks register
-        for (Integer x = degree - 1; x >= 0; x = x - 1)
-        begin
-            chunks[x] <= split[x];
-        end
+    endmethod
     
-        chunksRemaining <= 0;
+
+    method Action deq();
+
+        outQ.deq();
 
     endmethod
-        
-    // if the demarshaller already has some data, pad it out
-    // and prepare the output
-    method Action flush();
-        
-        if (chunksRemaining != 0 && chunksRemaining != fromInteger(degree))
-        begin
-                
-            flushing <= True;
 
-        end
-        
-    endmethod
+
+    method out_T first() = outQ.first();
 
 endmodule

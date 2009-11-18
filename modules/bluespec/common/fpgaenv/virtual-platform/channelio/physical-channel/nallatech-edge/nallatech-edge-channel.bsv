@@ -29,19 +29,42 @@ import Vector::*;
 
 typedef enum
 {
-    STATE_init,
-    STATE_ready,
+    RSTATE_READY,
 
-    STATE_h2f_start_read,
-    STATE_h2f_cont_read,
-    STATE_h2f_write,
+    RSTATE_H2F_START_READ0,
+    RSTATE_H2F_START_READ1,
+    RSTATE_H2F_CONT_READ,
 
-    STATE_f2h_read,
-    STATE_f2h_start_write,
-    STATE_f2h_cont_write
+    RSTATE_F2H_READ0,
+    RSTATE_F2H_READ1,
+    RSTATE_F2H_READ_DUMMY
 }
-STATE
+READ_STATE
     deriving (Bits, Eq);
+
+typedef enum
+{
+    WSTATE_READY,
+
+    WSTATE_H2F_WRITE,
+
+    WSTATE_F2H_TRY_WRITE,
+    WSTATE_F2H_START_WRITE,
+    WSTATE_F2H_CONT_WRITE,
+    WSTATE_F2H_DONE
+}
+WRITE_STATE
+    deriving (Bits, Eq);
+
+
+//
+// Nallatech edge channel buffer index.
+//
+typedef Bit#(TLog#(TAdd#(`NALLATECH_MAX_MSG_WORDS, 1))) NALLATECH_BUF_IDX;
+
+function NALLATECH_BUF_IDX chunkToBufIdx(UMF_CHUNK c) = truncate(c);
+function UMF_CHUNK bufIdxToChunk(NALLATECH_BUF_IDX i) = zeroExtend(i);
+
 
 // physical channel interface
 interface PHYSICAL_CHANNEL;
@@ -63,40 +86,25 @@ endinterface
 // physical channel module
 module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     // interface
-                  (PHYSICAL_CHANNEL);
+    (PHYSICAL_CHANNEL);
     
     // channel state
-    Reg#(STATE) state <- mkReg(STATE_init);
+    Reg#(READ_STATE) readState <- mkReg(RSTATE_READY);
+    Reg#(WRITE_STATE) writeState <- mkReg(WSTATE_READY);
 
     // link to nallatech driver
     NALLATECH_EDGE_DRIVER edgeDriver = drivers.nallatechEdgeDriver;
 
-    // data (de)marshallers
+
+    // ====================================================================
+    //
+    // Marshaller and DeMarshaller
+    //
+    // ====================================================================
+    
     NPC_MARSHALLER#(NALLATECH_FIFO_DATA, UMF_CHUNK)   dataFromHost <- mkNPCMarshaller();
     NPC_DEMARSHALLER#(UMF_CHUNK, NALLATECH_FIFO_DATA) dataToHost   <- mkNPCDeMarshaller();
 
-    // buffers
-    FIFOF#(UMF_CHUNK)  readBuffer <- mkFIFOF();
-    FIFOF#(UMF_CHUNK) writeBuffer <- mkFIFOF();
-
-    // other state
-    Reg#(UMF_MSG_LENGTH) chunksRemaining     <- mkReg(0);
-    Reg#(UMF_MSG_LENGTH) dataChunksRemaining <- mkReg(0);
-
-    //
-    // Initialization
-    //
-    
-    rule cmd_init (state == STATE_init);
-        
-        state <= STATE_ready;
-        
-    endrule
-    
-    //
-    // Attach Marshaller and DeMarshaller
-    //
-    
     rule marshall_from_device (True);
         
         dataFromHost.enq(edgeDriver.first());
@@ -111,32 +119,62 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         
     endrule
 
+
+    // ====================================================================
     //
-    // Accept a new request from software
+    // Accept a new request from software that starts a transfer.
     //
+    // ====================================================================
  
-    rule accept_request (state == STATE_ready);
-        
+    rule accept_request (readState == RSTATE_READY);
+
         let cmd = dataFromHost.first();
         dataFromHost.deq();
-        
+
         case (cmd)
-            
-            `CHANNEL_REQUEST_H2F : state <= STATE_h2f_start_read;
-            `CHANNEL_REQUEST_F2H : state <= STATE_f2h_read;
-            
+
+            `CHANNEL_REQUEST_H2F :
+            begin
+                readState <= RSTATE_H2F_START_READ0;
+            end
+
+            `CHANNEL_REQUEST_F2H :
+            begin
+                readState <= RSTATE_F2H_READ0;
+            end
+
         endcase
-        
-        chunksRemaining <= `NALLATECH_TRANSFER_SIZE - 1;
-        
+
     endrule
     
+
+    // ====================================================================
     //
     // Host to FPGA transfer. Read Stage transfers the real data + pad,
     // Write stage writes out an ACK + pad.
     //
+    // ====================================================================
 
-    rule h2f_start_read (state == STATE_h2f_start_read);
+    Reg#(NALLATECH_BUF_IDX) rawReadChunksRemaining <- mkReg(0);
+    Reg#(UMF_MSG_LENGTH) readDataChunksRemaining <- mkReg(0);
+
+    Reg#(NALLATECH_BUF_IDX) dummyWriteChunksRemaining <- mkReg(0);
+
+    FIFOF#(UMF_CHUNK) readBuffer <- mkFIFOF();
+
+    // First stage -- read size of remaining raw message
+    rule h2f_start_read0 (readState == RSTATE_H2F_START_READ0);
+        
+        rawReadChunksRemaining <= chunkToBufIdx(dataFromHost.first());
+        dataFromHost.deq();
+        
+        readState <= RSTATE_H2F_START_READ1;
+        
+    endrule
+
+    // Second stage -- read the message header
+    rule h2f_start_read1 ((readState == RSTATE_H2F_START_READ1) &&
+                          (writeState == WSTATE_READY));
         
         UMF_CHUNK header = dataFromHost.first();
         dataFromHost.deq();
@@ -145,150 +183,260 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         
         readBuffer.enq(header);
 
-        dataChunksRemaining  <= packet.UMF_PACKET_header.numChunks;
+        readDataChunksRemaining  <= packet.UMF_PACKET_header.numChunks;
         
-        chunksRemaining <= chunksRemaining - 1;
-        state <= STATE_h2f_cont_read;
+        rawReadChunksRemaining <= rawReadChunksRemaining - 1;
+        readState <= RSTATE_H2F_CONT_READ;
+
+        // Prepare required response
+        dataToHost.enq(`CHANNEL_RESPONSE_ACK);
+        dummyWriteChunksRemaining <= `NALLATECH_MIN_MSG_WORDS - 1;
+        writeState <= WSTATE_H2F_WRITE;
         
     endrule
         
-    rule h2f_cont_read (state == STATE_h2f_cont_read);
+    // Iterate over incoming message data
+    rule h2f_cont_read (readState == RSTATE_H2F_CONT_READ);
         
         UMF_CHUNK chunk = dataFromHost.first();
         dataFromHost.deq();
         
-        if (dataChunksRemaining != 0)
+        if (readDataChunksRemaining != 0)
         begin
                 
             readBuffer.enq(chunk);
-            dataChunksRemaining <= dataChunksRemaining - 1;
+            readDataChunksRemaining <= readDataChunksRemaining - 1;
             
         end
 
-        if (chunksRemaining == 1)
+        if (rawReadChunksRemaining == 1)
         begin
     
-            dataToHost.enq(`CHANNEL_RESPONSE_ACK);
-            state <= STATE_h2f_write;
-            chunksRemaining <= `NALLATECH_TRANSFER_SIZE - 1;
+            readState <= RSTATE_READY;
             
         end
-        else
-        begin
-        
-            chunksRemaining <= chunksRemaining - 1;
-            
-        end
+
+        rawReadChunksRemaining <= rawReadChunksRemaining - 1;
         
     endrule
     
-    rule h2f_write (state == STATE_h2f_write);
+    // Iterate, emitting the dummy write message
+    rule h2f_write (writeState == WSTATE_H2F_WRITE);
         
         dataToHost.enq(0);
         
-        if (chunksRemaining == 1)
+        if (dummyWriteChunksRemaining == 1)
         begin
             
-            state <= STATE_ready;
+            writeState <= WSTATE_READY;
             
         end
 
-        chunksRemaining <= chunksRemaining - 1;
+        dummyWriteChunksRemaining <= dummyWriteChunksRemaining - 1;
         
     endrule
         
+
+    // ====================================================================
     //
     // FPGA to Host transfer. Read Stage transfers the padding,
     // Write stage writes out the message + pad.
     //
+    // ====================================================================
 
-    rule f2h_read (state == STATE_f2h_read);
-        
+    Reg#(NALLATECH_BUF_IDX) writeBufferSize <- mkReg(0);
+    Reg#(UMF_MSG_LENGTH) writeDataChunksRemaining <- mkReg(0);
+
+    Reg#(NALLATECH_BUF_IDX) dummyReadChunksRemaining <- mkReg(0);
+
+    // The last chunk of every buffer returned to the software holds a pointer
+    // to the last useful chunk in the message.  This helps the software avoid
+    // searching through an array of NODATA messages.
+    Reg#(NALLATECH_BUF_IDX) numUsefulWriteChunks <- mkReg(0);
+    Reg#(NALLATECH_BUF_IDX) numWrittenChunks <- mkReg(0);
+
+    // Spin for some time waiting for a message to arrive for the host
+    Reg#(UMF_CHUNK) spinCycles <- mkRegU();
+
+    // Outbound data arriving from the write() method below
+    FIFOF#(UMF_CHUNK) writeDataQ <- mkFIFOF();
+
+    // First stage -- get the length of the outgoing write buffer.
+    rule f2h_read0 (readState == RSTATE_F2H_READ0);
+
+        writeBufferSize <= chunkToBufIdx(dataFromHost.first());
         dataFromHost.deq();
-        
-        if (chunksRemaining == 1)
-        begin
-                
-            chunksRemaining <= `NALLATECH_TRANSFER_SIZE - 1;
+        readState <= RSTATE_F2H_READ1;
 
-            if (writeBuffer.notEmpty())
-            begin
-                
-                dataToHost.enq(`CHANNEL_RESPONSE_DATA);
-                state <= STATE_f2h_start_write;
-                
-            end
-            else
-            begin
-                
-                dataToHost.enq(`CHANNEL_RESPONSE_NODATA);
-                dataChunksRemaining <= 0;
-                state <= STATE_f2h_cont_write;
-                
-            end
-            
-        end
-        else
+    endrule
+
+    // Second stage -- find out how many spin cycles are permitted
+    rule f2h_read1 ((readState == RSTATE_F2H_READ1) &&
+                    (writeState == WSTATE_READY));
+
+        spinCycles <= truncate(dataFromHost.first());
+        dataFromHost.deq();
+
+        // Ready to try writing
+        writeState <= WSTATE_F2H_TRY_WRITE;
+
+        // No more interesting read data
+        dummyReadChunksRemaining <= `NALLATECH_MIN_MSG_WORDS - 3;
+        readState <= RSTATE_F2H_READ_DUMMY;
+
+    endrule
+
+
+    // Dispatch to write states depending on available data
+    rule f2h_try_write (writeState == WSTATE_F2H_TRY_WRITE);
+
+        // Any data left over from the last message?
+        if (writeDataChunksRemaining != 0)
         begin
 
-            chunksRemaining <= chunksRemaining - 1;
-            
+            // Yes.  Keep writing.
+            numUsefulWriteChunks <= 0;
+            numWrittenChunks <= 0;
+            writeState <= WSTATE_F2H_CONT_WRITE;
+
         end
-        
+        else if (writeDataQ.notEmpty())
+        begin
+
+            // Start a new message.
+            dataToHost.enq(`CHANNEL_RESPONSE_DATA);
+            numUsefulWriteChunks <= 1;
+            numWrittenChunks <= 1;
+            writeState <= WSTATE_F2H_START_WRITE;
+
+        end
+        else if (spinCycles == 0)
+        begin
+
+            // Give up: no message.  Must fill the buffer to respond.
+            dataToHost.enq(`CHANNEL_RESPONSE_NODATA);
+            numUsefulWriteChunks <= 1;
+            numWrittenChunks <= 1;
+            writeState <= WSTATE_F2H_CONT_WRITE;
+
+        end
+
+        spinCycles <= spinCycles - 1;
+
+    endrule
+
+    // Consume the rest of the useless read request.  This can be done in
+    // parallel with the write.
+    rule f2h_read_dummy (readState == RSTATE_F2H_READ_DUMMY);
+
+        dataFromHost.deq();
+
+        if (dummyReadChunksRemaining == 1)
+        begin
+            readState <= RSTATE_READY;
+        end
+
+        dummyReadChunksRemaining <= dummyReadChunksRemaining - 1;
+
     endrule
         
-    rule f2h_start_write (state == STATE_f2h_start_write);
+    // Start a new message
+    rule f2h_start_write (writeState == WSTATE_F2H_START_WRITE);
 
-        UMF_CHUNK header = writeBuffer.first();
-        writeBuffer.deq();
+        UMF_CHUNK header = writeDataQ.first();
+        writeDataQ.deq();
         
         UMF_PACKET packet = tagged UMF_PACKET_header unpack(header);
         
         dataToHost.enq(header);
 
-        dataChunksRemaining  <= packet.UMF_PACKET_header.numChunks;
+        writeDataChunksRemaining <= packet.UMF_PACKET_header.numChunks;
         
-        chunksRemaining <= chunksRemaining - 1;
-        state <= STATE_f2h_cont_write;
+        let written_chunks = numWrittenChunks + 1;
+        if (writeBufferSize == written_chunks)
+        begin
+
+            // No more room in this packet for the rest of the message.  The
+            // rest will go in the next packet.
+            writeState <= WSTATE_F2H_DONE;
+
+        end
+        else
+        begin
+
+            writeState <= WSTATE_F2H_CONT_WRITE;
+
+        end
+
+        numUsefulWriteChunks <= written_chunks;
+        numWrittenChunks <= written_chunks;
 
     endrule
 
-    rule f2h_cont_write (state == STATE_f2h_cont_write);
+    // Emit write data or fill the write buffer with NODATA messages
+    rule f2h_cont_write (writeState == WSTATE_F2H_CONT_WRITE);
         
-        if (dataChunksRemaining != 0)
+        let written_chunks = numWrittenChunks + 1;
+
+        if (writeDataChunksRemaining != 0)
         begin
         
-            dataToHost.enq(writeBuffer.first());
-            writeBuffer.deq();
+            dataToHost.enq(writeDataQ.first());
+            writeDataQ.deq();
             
-            dataChunksRemaining <= dataChunksRemaining - 1;
+            writeDataChunksRemaining <= writeDataChunksRemaining - 1;
+            numUsefulWriteChunks <= written_chunks;
             
         end
         else
         begin
                 
-            dataToHost.enq(0);
-            
+            // Is there a new message in the write buffer?  We can switch from
+            // filling the channel with garbage at any time to a new message
+            // as long as there is at least room for the CHANNEL_RESPONSE_DATA
+            // flag and the packet header word.
+            if (writeDataQ.notEmpty() && (writeBufferSize != written_chunks))
+            begin
+
+                dataToHost.enq(`CHANNEL_RESPONSE_DATA);
+                numUsefulWriteChunks <= written_chunks;
+                writeState <= WSTATE_F2H_START_WRITE;
+
+            end
+            else
+            begin
+
+                dataToHost.enq(`CHANNEL_RESPONSE_NODATA);
+
+            end
+
         end
 
-        if (chunksRemaining == 1)
+        if (writeBufferSize == written_chunks)
         begin
-    
-            state <= STATE_ready;
-            
+
+            writeState <= WSTATE_F2H_DONE;
+
         end
-        else
-        begin
-        
-            chunksRemaining <= chunksRemaining - 1;
-            
-        end
-        
+
+        numWrittenChunks <= written_chunks;
+
+    endrule
+
+
+    // Final write stage -- emit a pointer to the last useful chunk in the message
+    rule f2h_complete_write (writeState == WSTATE_F2H_DONE);
+
+        dataToHost.enq(bufIdxToChunk(numUsefulWriteChunks));
+        writeState <= WSTATE_READY;
+
     endrule
     
+    // ====================================================================
     //
     // Methods
     //
+    // ====================================================================
     
     // read
     method ActionValue#(UMF_CHUNK) read();
@@ -303,7 +451,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     // write
     method Action write(UMF_CHUNK chunk);
         
-        writeBuffer.enq(chunk);
+        writeDataQ.enq(chunk);
         
     endmethod
 

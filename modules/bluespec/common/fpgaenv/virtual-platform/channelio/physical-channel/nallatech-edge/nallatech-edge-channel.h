@@ -37,9 +37,6 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
     // cached links to useful physical devices
     NALLATECH_EDGE_DEVICE nallatechEdgeDevice;
     
-    // incomplete incoming read message
-    UMF_MESSAGE incomingMessage;
-
     // lock
     pthread_mutex_t deviceLock;
 
@@ -49,6 +46,20 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
 
     // misc
     bool alive;
+
+    // Count writes -- used for tuning read buffer size
+    int writeCount;
+
+    // Stream of data coming from the FPGA
+    int nextRawReadPos;
+    int maxRawReadPos;
+    int rawReadBufferSize;
+    int BufferedWordsRemaining();
+    NALLATECH_WORD RawReadNextWord(bool newMsg);
+
+    // Return nWords words from the current buffer.  nWords must be <=
+    // BufferedWordsRemaining().
+    const NALLATECH_WORD *RawReadBufferedWords(int nWords);
 
   public:
 

@@ -353,5 +353,3 @@ net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dGDeqPtr[*]"    TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sSyncReg1[*]"   TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/sGEnqPtr[*]"   TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/dSyncReg1[*]"  TIG;
-
-net "IF_m_vp_llpi_phys_plat_nallatech_edge_device_s_ETC__*" TIG;

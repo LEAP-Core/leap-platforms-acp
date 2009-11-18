@@ -741,3 +741,47 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
  acp-m2c.awb               Locally Modified           35 
 
 Find ACP libraries through the "latest" link, not a version-specific path.
+
+----------
+mcadler     Date: Wed Nov 18 11:48:49 EST 2009  CSN: CSN-platform-acp-37
+                  Wed Nov 18 16:48:49 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ npc-marshaller.bsv        Locally Modified           36 
+ nallatech-edge-channel.cpp Locally Modified           36 
+ nallatech-edge-channel.h  Locally Modified           36 
+ npc-demarshaller.bsv      Locally Modified           36 
+ nallatech-edge-channel.awb Locally Modified           36 
+ nallatech-edge-channel.bsv Locally Modified           36 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.h   Locally Modified           36 
+ nallatech-edge-device.awb Locally Modified           36 
+ nallatech-edge-device.ucf Locally Modified           36 
+ nallatech-edge-device.cpp Locally Modified           36 
+
+Performance improvements to Nallatech channel I/O:
+
+- FPGA-side: read and write for a single transaction in parallel.  (Still only
+  one read or write transaction at a time due to Nallatech limitations.)
+  The dummy buffer is now read/written while the real work is done.
+
+- Variable message sizes.  Software attempts to pick an optimal size during
+  the run.  This can probably still be tuned more.
+
+- Software controlled spin loop on the HW side waiting for data to arrive
+  from the model during HW -> SW data request.  This seems to have surprisingly
+  little effect.
+
+- Unlimited HW -> SW message size (at least by Channel I/O).
+
+- SW -> HW message limit raised to 8KB.
+
+- Marshaller and demarshaller can now enq() and deq() in the same cycle.
+
+Performance is about 2.5x - 3x better, so it has gone from unbelievably terrible
+to merely unacceptable.  RRR test reports about 9MB/s for one way HW->SW.
+
+With the current tuning a variety of RRR patterns appear to hit near optimal
+buffer sizes.

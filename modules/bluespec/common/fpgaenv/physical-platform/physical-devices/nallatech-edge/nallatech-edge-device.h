@@ -62,7 +62,40 @@ class NALLATECH_EDGE_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
     NALLATECH_WORD* GetInputWindow();
     NALLATECH_WORD* GetOutputWindow();
 
-    void    DoAALTransaction(int m, int n);
+    // Write followed by read transaction
+    void DoAALTransaction(int writeWords, int readWords);
+
+    // Write only transaction.  Nallatech firmware requires a read response.
+    // The dummyReadWords response will be written to a scratch buffer.
+    //
+    // The function returns the first word of the read response -- useful
+    // for returning a status flag from the FPGA.
+    NALLATECH_WORD DoAALWriteTransaction(int writeWords, int dummyReadWords);
+
+    // Convert a request size to a legal buffer size
+    inline int LegalBufSize(int words) const;
 };
+
+
+inline int
+NALLATECH_EDGE_DEVICE_CLASS::LegalBufSize(int words) const
+{
+    // Messages are transferred in 256 bit chunks but consumed as
+    // NALLATECH_WORD_SIZE values.  Message size must be a full group of
+    // chunks.
+    //
+    // *** Writes from the FPGA to the host appear to pass incorrect values
+    // *** unless they are in 512 bit chunks!
+    int words_per_chunk = 512 / NALLATECH_WORD_SIZE;
+
+    // Round up -- assume powers of 2.
+    int r = words_per_chunk - 1;
+    ASSERTX((words_per_chunk & r) == 0);
+
+    int msg_size = (words + r) & ~r;
+
+    // Must meet min/max message sizes
+    return min(max(msg_size, NALLATECH_MIN_MSG_WORDS), NALLATECH_MAX_MSG_WORDS);
+}
 
 #endif

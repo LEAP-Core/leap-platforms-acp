@@ -30,11 +30,12 @@
 
 #include "asim/provides/nallatech_edge_device.h"
 
-#define NALLATECH_WORKSPACE_SIZE 512 // "Size of the Nallatech workspace in NALLATECH_WORD units"
-#define NALLATECH_WINDOW_SPLIT   256 // "Index where the workspace input and output windows are split"
+// Total window size has a write region, a read region, and a read scratch
+// region for dummy data.
+#define NALLATECH_WORKSPACE_SIZE (2 * NALLATECH_MAX_MSG_WORDS + NALLATECH_MIN_MSG_WORDS)
 
-#define INPUT_WINDOW_SIZE   NALLATECH_WINDOW_SPLIT
-#define OUTPUT_WINDOW_SIZE (NALLATECH_WORKSPACE_SIZE - NALLATECH_WINDOW_SPLIT)
+#define INPUT_WINDOW_SIZE   NALLATECH_MAX_MSG_WORDS
+#define OUTPUT_WINDOW_SIZE  NALLATECH_MAX_MSG_WORDS
 
 using namespace std;
 
@@ -63,7 +64,7 @@ NALLATECH_EDGE_DEVICE_CLASS::GetInputWindow()
 NALLATECH_WORD*
 NALLATECH_EDGE_DEVICE_CLASS::GetOutputWindow()
 {
-    return (workspace + NALLATECH_WINDOW_SPLIT);
+    return (workspace + NALLATECH_MAX_MSG_WORDS);
 }
 
 // initialize hardware
@@ -193,34 +194,67 @@ NALLATECH_EDGE_DEVICE_CLASS::Cleanup()
 // transaction.
 void
 NALLATECH_EDGE_DEVICE_CLASS::DoAALTransaction(
-    int m,
-    int n)
+    int writeWords,
+    int readWords)
 {
-    int m_bytes = m * sizeof (NALLATECH_WORD);
-    int n_bytes = n * sizeof (NALLATECH_WORD);
+    int write_bytes = writeWords * sizeof (NALLATECH_WORD);
+    int read_bytes = readWords * sizeof (NALLATECH_WORD);
 
     // size checks
-    if (m > INPUT_WINDOW_SIZE || n > OUTPUT_WINDOW_SIZE)
+    if (writeWords > INPUT_WINDOW_SIZE || readWords > OUTPUT_WINDOW_SIZE)
     {
         cout << "AAL transaction size exceeds size of workspace\n";
         CallbackExit(1);
     }
-
-	// Send m words of data to SPL interface from workspace
-	// Read n words from SPL interface to workspace offset by m bytes
 
     //
     // BUG: the Nallatech stack cannot handle transactions less than 64 bytes
     //      in length, so transfer at least 64 bytes both ways
     //
 
-    int window = NALLATECH_WINDOW_SPLIT * sizeof(NALLATECH_WORD);
+    int window = NALLATECH_MAX_MSG_WORDS * sizeof(NALLATECH_WORD);
 
-    if (m_bytes < 64 || n_bytes < 64)
+    if (write_bytes < 64 || read_bytes < 64)
     {
         cout << "AAL transaction smaller than minimum transfer size";
         CallbackExit(1);
     }
 
-	ACP_MemCopy(hafu, workspacePA, m_bytes, workspacePA + window, n_bytes);
+	ACP_MemCopy(hafu, workspacePA, write_bytes, workspacePA + window, read_bytes);
+}
+
+
+//
+// Same as a normal DoAALTransaction except the required read response is
+// written to a scratch buffer where it won't overwrite potentially valid
+// data in the real read buffer.
+//
+// Return value is the first word of the read response.
+//
+NALLATECH_WORD
+NALLATECH_EDGE_DEVICE_CLASS::DoAALWriteTransaction(
+    int writeWords,
+    int dummyReadWords)
+{
+    int write_bytes = writeWords * sizeof (NALLATECH_WORD);
+    int read_bytes = dummyReadWords * sizeof (NALLATECH_WORD);
+
+    // size checks
+    if (writeWords > INPUT_WINDOW_SIZE || dummyReadWords > OUTPUT_WINDOW_SIZE)
+    {
+        cout << "AAL transaction size exceeds size of workspace\n";
+        CallbackExit(1);
+    }
+
+    int window = 2 * NALLATECH_MAX_MSG_WORDS * sizeof(NALLATECH_WORD);
+
+    if (write_bytes < 64 || read_bytes < 64)
+    {
+        cout << "AAL transaction smaller than minimum transfer size";
+        CallbackExit(1);
+    }
+
+	ACP_MemCopy(hafu, workspacePA, write_bytes, workspacePA + window, read_bytes);
+
+    return *(workspace + 2 * NALLATECH_MAX_MSG_WORDS);
 }
