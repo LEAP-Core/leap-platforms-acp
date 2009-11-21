@@ -214,7 +214,8 @@ NALLATECH_EDGE_DEVICE_CLASS::DoAALTransaction(
 
     int window = NALLATECH_MAX_MSG_WORDS * sizeof(NALLATECH_WORD);
 
-    if (write_bytes < 64 || read_bytes < 64)
+    if ((write_bytes < NALLATECH_MIN_MSG_BYTES) ||
+        (read_bytes < NALLATECH_MIN_MSG_BYTES))
     {
         cout << "AAL transaction smaller than minimum transfer size";
         CallbackExit(1);
@@ -248,7 +249,8 @@ NALLATECH_EDGE_DEVICE_CLASS::DoAALWriteTransaction(
 
     int window = 2 * NALLATECH_MAX_MSG_WORDS * sizeof(NALLATECH_WORD);
 
-    if (write_bytes < 64 || read_bytes < 64)
+    if ((write_bytes < NALLATECH_MIN_MSG_BYTES) ||
+        (read_bytes < NALLATECH_MIN_MSG_BYTES))
     {
         cout << "AAL transaction smaller than minimum transfer size";
         CallbackExit(1);

@@ -26,7 +26,7 @@ Packagehint=platforms
 [Standard Virtual Platform/Requires]
 virtual_devices=Standard Virtual Devices
 low_level_platform_interface=Low Level Platform Interface Hybrid
-umf=Little-Endian 32-bit Unified Message Format
+umf=Little-Endian Unified Message Format
 
 [FPGA Environment]
 File=modules/bluespec/common/fpgaenv/fpga-environment.awb
@@ -36,13 +36,9 @@ Packagehint=platforms
 File=config/pm/hasim/submodels/fpgaenv/std-virtual-devices.apm
 Packagehint=platforms
 
-
-
-
 [RRR Clients and Servers]
 File=modules/bluespec/common/fpgaenv/virtual-platform/rrr/basic/basic-rrr.awb
 Packagehint=platforms
-
 
 [Basic Virtual Channel Multiplexer]
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/basic/basic-channelio.awb
@@ -63,15 +59,10 @@ physical_platform_debugger=Null Physical Platform Debugger
 local_mem=Local Memory Interface using BRAM
 remote_memory=Null Remote Memory
 
-[Little-Endian 32-bit Unified Message Format]
-File=modules/bluespec/common/fpgaenv/virtual-platform/umf/little-32/umf-little-32.awb
-Packagehint=platforms
 
 [RL Bluespec Library]
 File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
 Packagehint=platforms
-
-
 
 [Null Physical Platform Debugger]
 File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/null/null-debugger.awb
@@ -115,4 +106,8 @@ Packagehint=platforms
 
 [Null Remote Memory]
 File=modules/bluespec/common/fpgaenv/low-level-platform-interface/remote-memory/null/null-remote-memory.awb
+Packagehint=platforms
+
+[Little-Endian Unified Message Format]
+File=modules/bluespec/common/fpgaenv/virtual-platform/umf/little-endian/umf-little-endian.awb
 Packagehint=platforms

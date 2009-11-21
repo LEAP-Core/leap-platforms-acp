@@ -50,7 +50,7 @@ PHYSICAL_CHANNEL_CLASS::PHYSICAL_CHANNEL_CLASS(
     alive = true; // LLPI bugfix
 
     rawReadBufferSize = NALLATECH_MIN_MSG_WORDS;
-    nextRawReadPos = NALLATECH_MIN_MSG_WORDS;
+    nextRawReadPos = rawReadBufferSize;
     maxRawReadPos = 0;
 
     writeCount = 0;
@@ -100,6 +100,10 @@ PHYSICAL_CHANNEL_CLASS::RawReadNextWord(bool newMsg)
         return readWindow[nextRawReadPos++];
     }
 
+    //
+    // Need to get another chunk from the FPGA
+    //
+
     if (! newMsg)
     {
         // Overflowed the raw buffer in the middle of a message.
@@ -109,13 +113,14 @@ PHYSICAL_CHANNEL_CLASS::RawReadNextWord(bool newMsg)
         raw_read_cnt = 0;
     }
 
-    // Need to get another chunk from the FPGA
     pthread_mutex_lock(&deviceLock);
 
     // talk to FPGA via Nallatech device
     writeWindow[0] = CHANNEL_REQUEST_F2H;
 
-    // FPGA-side write buffer size
+    // FPGA-side write buffer size (read buffer on this side).  Subtract 1 from
+    // the size because the last entry will be used as a pointer to the last
+    // useful data in the buffer.
     writeWindow[1] = rawReadBufferSize - 1;
 
     // Maximum spin cycles to wait for FPGA-side write data.  This doesn't seem
@@ -136,10 +141,17 @@ PHYSICAL_CHANNEL_CLASS::RawReadNextWord(bool newMsg)
     // The last slot in the returned message indicates the useful data in the
     // buffer.
     maxRawReadPos = readWindow[rawReadBufferSize - 1];
-    VERIFYX((maxRawReadPos != 0) && (maxRawReadPos <= rawReadBufferSize));
+    VERIFYX(maxRawReadPos <= rawReadBufferSize);
+
+    if (maxRawReadPos >= (rawReadBufferSize - 2))
+    {
+        // Nearly filled the buffer.  Try bigger.
+        rawReadBufferSize = nallatechEdgeDevice->LegalBufSize(rawReadBufferSize +
+                                                              NALLATECH_MIN_MSG_WORDS);
+    }
 
     // Count failed read attempts
-    if (maxRawReadPos <= 2)
+    if (newMsg && (maxRawReadPos <= 1))
     {
         raw_read_empty_cnt += 1;
     }
@@ -209,7 +221,12 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
         return NULL;
     }
 
-    // see if we actually read any data
+    //
+    // See if we actually read any data.  The response will either be
+    // 0 (CHANNEL_RESPONSE_NODATA) or the header of the next UMF message.
+    // Headers are guaranteed non-zero by writing a 1 to the
+    // phyChannelPvt field in the header encoding.
+    //
     NALLATECH_WORD resp = RawReadNextWord(true);
 
     // Consume a chunk of NODATA responses to avoid looping through TryRead().
@@ -224,15 +241,8 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
         return NULL;
     }
 
-    // sanity check
-    if (resp != CHANNEL_RESPONSE_DATA)
-    {
-        fprintf(stderr, "channel: TryRead: received junk response code: 0x%X\n", resp);
-        CallbackExit(1);
-    }
-
     UMF_MESSAGE incomingMessage = UMF_MESSAGE_CLASS::New();
-    incomingMessage->DecodeHeader(RawReadNextWord(false));
+    incomingMessage->DecodeHeader(resp);
 
     // copy buffer data into message data
     int n_chunks = incomingMessage->GetLength() / sizeof(UMF_CHUNK);

@@ -13,8 +13,7 @@
 %param CHANNEL_REQUEST_H2F   0  "Request ID for H2F transfer"
 %param CHANNEL_REQUEST_F2H   1  "Request ID for F2H transfer"
 
-%param CHANNEL_RESPONSE_ACK    0  "H2F Write Acknowledgement"
-%param CHANNEL_RESPONSE_DATA   1  "F2H Read Data available"
-%param CHANNEL_RESPONSE_NODATA 2  "No F2H Read Data available"
+%param CHANNEL_RESPONSE_NODATA 0  "No F2H Read Data available -- MUST BE 0!"
+%param CHANNEL_RESPONSE_ACK    1  "H2F Write Acknowledgement"
 
 %param --global NALLATECH_HW_TO_SW_SPIN_CYCLES  100 "Wait cycles on the hardware for a message before giving up"

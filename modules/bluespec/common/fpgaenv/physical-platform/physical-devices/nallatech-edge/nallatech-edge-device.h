@@ -26,11 +26,11 @@
 #include "asim/provides/umf.h"
 #include "platforms-module.h"
 
-#if (NALLATECH_WORD_SIZE == 32)
-typedef UINT32 NALLATECH_WORD;
-#else
-#error "NALLATECH_WORD must be 32 bits"
-#endif
+typedef UMF_CHUNK NALLATECH_WORD;
+
+#define NALLATECH_MAX_MSG_WORDS (NALLATECH_MAX_MSG_BYTES / sizeof(NALLATECH_WORD))
+#define NALLATECH_MIN_MSG_WORDS (NALLATECH_MIN_MSG_BYTES / sizeof(NALLATECH_WORD))
+
 
 // ===============================================
 //               Nallatech EDGE Device
@@ -80,13 +80,13 @@ class NALLATECH_EDGE_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
 inline int
 NALLATECH_EDGE_DEVICE_CLASS::LegalBufSize(int words) const
 {
-    // Messages are transferred in 256 bit chunks but consumed as
+    // Messages are transferred in 32 byte chunks but consumed as
     // NALLATECH_WORD_SIZE values.  Message size must be a full group of
     // chunks.
     //
     // *** Writes from the FPGA to the host appear to pass incorrect values
-    // *** unless they are in 512 bit chunks!
-    int words_per_chunk = 512 / NALLATECH_WORD_SIZE;
+    // *** unless they are in NALLATECH_MIN_MSG_BYTES chunks!
+    int words_per_chunk = NALLATECH_MIN_MSG_BYTES / sizeof(NALLATECH_WORD);
 
     // Round up -- assume powers of 2.
     int r = words_per_chunk - 1;
@@ -95,7 +95,16 @@ NALLATECH_EDGE_DEVICE_CLASS::LegalBufSize(int words) const
     int msg_size = (words + r) & ~r;
 
     // Must meet min/max message sizes
-    return min(max(msg_size, NALLATECH_MIN_MSG_WORDS), NALLATECH_MAX_MSG_WORDS);
+    if (msg_size > NALLATECH_MAX_MSG_WORDS)
+    {
+        msg_size = NALLATECH_MAX_MSG_WORDS;
+    }
+    else if (msg_size < NALLATECH_MIN_MSG_WORDS)
+    {
+        msg_size = NALLATECH_MIN_MSG_WORDS;
+    }
+
+    return msg_size;
 }
 
 #endif

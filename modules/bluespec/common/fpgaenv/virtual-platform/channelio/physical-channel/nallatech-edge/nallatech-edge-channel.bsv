@@ -60,7 +60,7 @@ WRITE_STATE
 //
 // Nallatech edge channel buffer index.
 //
-typedef Bit#(TLog#(TAdd#(`NALLATECH_MAX_MSG_WORDS, 1))) NALLATECH_BUF_IDX;
+typedef Bit#(TLog#(TAdd#(TDiv#(`NALLATECH_MAX_MSG_BYTES, `UMF_CHUNK_BYTES), 1))) NALLATECH_BUF_IDX;
 
 function NALLATECH_BUF_IDX chunkToBufIdx(UMF_CHUNK c) = truncate(c);
 function UMF_CHUNK bufIdxToChunk(NALLATECH_BUF_IDX i) = zeroExtend(i);
@@ -190,7 +190,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
 
         // Prepare required response
         dataToHost.enq(`CHANNEL_RESPONSE_ACK);
-        dummyWriteChunksRemaining <= `NALLATECH_MIN_MSG_WORDS - 1;
+        dummyWriteChunksRemaining <= (`NALLATECH_MIN_MSG_BYTES / `UMF_CHUNK_BYTES) - 1;
         writeState <= WSTATE_H2F_WRITE;
         
     endrule
@@ -244,19 +244,19 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     //
     // ====================================================================
 
-    Reg#(NALLATECH_BUF_IDX) writeBufferSize <- mkReg(0);
+    Reg#(NALLATECH_BUF_IDX) writeBufferSize <- mkRegU();
     Reg#(UMF_MSG_LENGTH) writeDataChunksRemaining <- mkReg(0);
 
-    Reg#(NALLATECH_BUF_IDX) dummyReadChunksRemaining <- mkReg(0);
+    Reg#(NALLATECH_BUF_IDX) dummyReadChunksRemaining <- mkRegU();
 
     // The last chunk of every buffer returned to the software holds a pointer
     // to the last useful chunk in the message.  This helps the software avoid
     // searching through an array of NODATA messages.
-    Reg#(NALLATECH_BUF_IDX) numUsefulWriteChunks <- mkReg(0);
-    Reg#(NALLATECH_BUF_IDX) numWrittenChunks <- mkReg(0);
+    Reg#(NALLATECH_BUF_IDX) numUsefulWriteChunks <- mkRegU();
+    Reg#(NALLATECH_BUF_IDX) numWrittenChunks <- mkRegU();
 
     // Spin for some time waiting for a message to arrive for the host
-    Reg#(UMF_CHUNK) spinCycles <- mkRegU();
+    Reg#(Bit#(24)) spinCycles <- mkRegU();
 
     // Outbound data arriving from the write() method below
     FIFOF#(UMF_CHUNK) writeDataQ <- mkFIFOF();
@@ -277,11 +277,29 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         spinCycles <= truncate(dataFromHost.first());
         dataFromHost.deq();
 
-        // Ready to try writing
-        writeState <= WSTATE_F2H_TRY_WRITE;
+        // Initialize write state
+        numUsefulWriteChunks <= 0;
+        numWrittenChunks <= 0;
+
+        // Any data left over from the last message?
+        if (writeDataChunksRemaining != 0)
+        begin
+            // Yes.  Keep writing.
+            writeState <= WSTATE_F2H_CONT_WRITE;
+        end
+        else if (writeDataQ.notEmpty())
+        begin
+            // Start a new mesage
+            writeState <= WSTATE_F2H_START_WRITE;
+        end
+        else
+        begin
+            // Wait a bit for a new message.
+            writeState <= WSTATE_F2H_TRY_WRITE;
+        end
 
         // No more interesting read data
-        dummyReadChunksRemaining <= `NALLATECH_MIN_MSG_WORDS - 3;
+        dummyReadChunksRemaining <= (`NALLATECH_MIN_MSG_BYTES / `UMF_CHUNK_BYTES) - 3;
         readState <= RSTATE_F2H_READ_DUMMY;
 
     endrule
@@ -290,35 +308,15 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     // Dispatch to write states depending on available data
     rule f2h_try_write (writeState == WSTATE_F2H_TRY_WRITE);
 
-        // Any data left over from the last message?
-        if (writeDataChunksRemaining != 0)
+        if (writeDataQ.notEmpty())
         begin
-
-            // Yes.  Keep writing.
-            numUsefulWriteChunks <= 0;
-            numWrittenChunks <= 0;
-            writeState <= WSTATE_F2H_CONT_WRITE;
-
-        end
-        else if (writeDataQ.notEmpty())
-        begin
-
             // Start a new message.
-            dataToHost.enq(`CHANNEL_RESPONSE_DATA);
-            numUsefulWriteChunks <= 1;
-            numWrittenChunks <= 1;
             writeState <= WSTATE_F2H_START_WRITE;
-
         end
         else if (spinCycles == 0)
         begin
-
             // Give up: no message.  Must fill the buffer to respond.
-            dataToHost.enq(`CHANNEL_RESPONSE_NODATA);
-            numUsefulWriteChunks <= 1;
-            numWrittenChunks <= 1;
             writeState <= WSTATE_F2H_CONT_WRITE;
-
         end
 
         spinCycles <= spinCycles - 1;
@@ -340,17 +338,19 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
 
     endrule
         
-    // Start a new message
+    // Start a new message.
     rule f2h_start_write (writeState == WSTATE_F2H_START_WRITE);
 
-        UMF_CHUNK header = writeDataQ.first();
+        UMF_PACKET_HEADER header = unpack(pack(writeDataQ.first()));
         writeDataQ.deq();
         
-        UMF_PACKET packet = tagged UMF_PACKET_header unpack(header);
-        
-        dataToHost.enq(header);
+        // Guarantee that the header is non-zero to differentiate it from
+        // a no-data message.
+        header.phyChannelPvt = 1;
 
-        writeDataChunksRemaining <= packet.UMF_PACKET_header.numChunks;
+        dataToHost.enq(unpack(pack(header)));
+
+        writeDataChunksRemaining <= header.numChunks;
         
         let written_chunks = numWrittenChunks + 1;
         if (writeBufferSize == written_chunks)
@@ -376,15 +376,16 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     // Emit write data or fill the write buffer with NODATA messages
     rule f2h_cont_write (writeState == WSTATE_F2H_CONT_WRITE);
         
-        let written_chunks = numWrittenChunks + 1;
+        let written_chunks = numWrittenChunks;
 
         if (writeDataChunksRemaining != 0)
         begin
         
             dataToHost.enq(writeDataQ.first());
             writeDataQ.deq();
-            
+
             writeDataChunksRemaining <= writeDataChunksRemaining - 1;
+            written_chunks = written_chunks + 1;
             numUsefulWriteChunks <= written_chunks;
             
         end
@@ -392,14 +393,13 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         begin
                 
             // Is there a new message in the write buffer?  We can switch from
-            // filling the channel with garbage at any time to a new message
-            // as long as there is at least room for the CHANNEL_RESPONSE_DATA
-            // flag and the packet header word.
+            // filling the channel with garbage at any time to a new message.
+            //
+            // The second clause, testing writeBufferSize, is always true but
+            // is needed to keep the Bluespec scheduler happy.
             if (writeDataQ.notEmpty() && (writeBufferSize != written_chunks))
             begin
 
-                dataToHost.enq(`CHANNEL_RESPONSE_DATA);
-                numUsefulWriteChunks <= written_chunks;
                 writeState <= WSTATE_F2H_START_WRITE;
 
             end
@@ -407,6 +407,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
             begin
 
                 dataToHost.enq(`CHANNEL_RESPONSE_NODATA);
+                written_chunks = written_chunks + 1;
 
             end
 

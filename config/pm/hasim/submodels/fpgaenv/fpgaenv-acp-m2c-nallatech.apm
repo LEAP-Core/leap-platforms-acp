@@ -7,7 +7,8 @@ Version=2.1
 Type=HAsim
 Name=Hybrid ACP M2 Compute Environment (Nallatech)
 Class=Asim::Model
-DefaultBenchmark=0
+DefaultBenchmark=
+DefaultRunOpts=
 
 [Model]
 DefaultAttributes=bluespec acp-m2c
@@ -25,7 +26,7 @@ Packagehint=platforms
 [Standard Virtual Platform/Requires]
 virtual_devices=Standard Virtual Devices
 low_level_platform_interface=Low Level Platform Interface Hybrid
-umf=Little-Endian 32-bit Unified Message Format
+umf=Little-Endian Unified Message Format
 
 [FPGA Environment]
 File=modules/bluespec/common/fpgaenv/fpga-environment.awb
@@ -35,12 +36,9 @@ Packagehint=platforms
 File=config/pm/hasim/submodels/fpgaenv/std-virtual-devices.apm
 Packagehint=platforms
 
-
-
 [RRR Clients and Servers]
 File=modules/bluespec/common/fpgaenv/virtual-platform/rrr/basic/basic-rrr.awb
 Packagehint=platforms
-
 
 [Basic Virtual Channel Multiplexer]
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/basic/basic-channelio.awb
@@ -61,15 +59,9 @@ physical_platform_debugger=Null Physical Platform Debugger
 local_mem=Local Memory Interface using BRAM
 remote_memory=Null Remote Memory
 
-[Little-Endian 32-bit Unified Message Format]
-File=modules/bluespec/common/fpgaenv/virtual-platform/umf/little-32/umf-little-32.awb
-Packagehint=platforms
-
 [RL Bluespec Library]
 File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
 Packagehint=platforms
-
-
 
 [Null Physical Platform Debugger]
 File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/null/null-debugger.awb
@@ -94,15 +86,13 @@ Packagehint=platforms
 File=modules/bluespec/common/fpgaenv/fpga-components/hardware-fpga-components-virtex5.awb
 Packagehint=platforms
 
-
 [Null Remote Memory]
 File=modules/bluespec/common/fpgaenv/low-level-platform-interface/remote-memory/null/null-remote-memory.awb
 Packagehint=platforms
 
-
 [Nallatech Edge Physical Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device.awb
-Packagehint=platforms
+Packagehint=platform-acp
 
 [ACP M2 Compute Module (Nallatech)/Requires]
 clocks_device=Null Clocks Device
@@ -111,10 +101,15 @@ nallatech_edge_device=Nallatech Edge Physical Device
 
 [ACP M2 Compute Module (Nallatech)]
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech/acp-m2c.awb
-Packagehint=platforms
+Packagehint=platform-acp
 
 [Nallatech Edge Physical Channel]
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge/nallatech-edge-channel.awb
+Packagehint=platform-acp
+
+[Little-Endian Unified Message Format]
+File=modules/bluespec/common/fpgaenv/virtual-platform/umf/little-endian/umf-little-endian.awb
 Packagehint=platforms
 
-
+[Little-Endian Unified Message Format/Params]
+UMF_CHUNK_BYTES=8

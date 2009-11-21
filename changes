@@ -785,3 +785,34 @@ to merely unacceptable.  RRR test reports about 9MB/s for one way HW->SW.
 
 With the current tuning a variety of RRR patterns appear to hit near optimal
 buffer sizes.
+
+----------
+mcadler     Date: Fri Nov 20 19:51:03 EST 2009  CSN: CSN-platform-acp-38
+                  Sat Nov 21 00:51:03 UTC 2009
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Modified           37 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           37 
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified           37 
+ nallatech-edge-channel.awb Locally Modified           37 
+ nallatech-edge-channel.bsv Locally Modified           37 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.h   Locally Modified           37 
+ nallatech-edge-device.awb Locally Modified           37 
+ nallatech-edge-device.cpp Locally Modified           37 
+
+- Use 64 bit UMF chunks instead of 32.
+
+- Drop the wasted UMF chunk that used to signal the start of a new message.
+  Now the physical channel detects the "no message" flag as a CHUNK that is 0.
+  UMF header chunks are guaranteed non-zero by setting the phyChannelPvt
+  flag I added to the UMF header.
+
+- Tweak the automatic buffer sizing code for data flowing from the FPGA to
+  the host.  If a message was always exactly the size of the buffer the old
+  code never grew the buffer to see whether multiple messages could be
+  delivered together.
