@@ -34,10 +34,12 @@ typedef enum
     RSTATE_H2F_START_READ0,
     RSTATE_H2F_START_READ1,
     RSTATE_H2F_CONT_READ,
+    RSTATE_H2F_READ_DONE,
 
     RSTATE_F2H_READ0,
     RSTATE_F2H_READ1,
-    RSTATE_F2H_READ_DUMMY
+    RSTATE_F2H_READ_DUMMY,
+    RSTATE_F2H_READ_DONE
 }
 READ_STATE
     deriving (Bits, Eq);
@@ -47,6 +49,7 @@ typedef enum
     WSTATE_READY,
 
     WSTATE_H2F_WRITE,
+    WSTATE_H2F_WRITE_LAST,
 
     WSTATE_F2H_TRY_WRITE,
     WSTATE_F2H_START_WRITE,
@@ -212,7 +215,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         if (rawReadChunksRemaining == 1)
         begin
     
-            readState <= RSTATE_READY;
+            readState <= RSTATE_H2F_READ_DONE;
             
         end
 
@@ -225,14 +228,25 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         
         dataToHost.enq(0);
         
-        if (dummyWriteChunksRemaining == 1)
+        if (dummyWriteChunksRemaining == 2)
         begin
             
-            writeState <= WSTATE_READY;
+            writeState <= WSTATE_H2F_WRITE_LAST;
             
         end
 
         dummyWriteChunksRemaining <= dummyWriteChunksRemaining - 1;
+        
+    endrule
+        
+    // Last write.  Make sure it happens after last read.
+    rule h2f_done ((writeState == WSTATE_H2F_WRITE_LAST) &&
+                   (readState == RSTATE_H2F_READ_DONE));
+        
+        dataToHost.enq(0);
+        
+        writeState <= WSTATE_READY;
+        readState <= RSTATE_READY;
         
     endrule
         
@@ -277,26 +291,8 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         spinCycles <= truncate(dataFromHost.first());
         dataFromHost.deq();
 
-        // Initialize write state
-        numUsefulWriteChunks <= 0;
-        numWrittenChunks <= 0;
-
-        // Any data left over from the last message?
-        if (writeDataChunksRemaining != 0)
-        begin
-            // Yes.  Keep writing.
-            writeState <= WSTATE_F2H_CONT_WRITE;
-        end
-        else if (writeDataQ.notEmpty())
-        begin
-            // Start a new mesage
-            writeState <= WSTATE_F2H_START_WRITE;
-        end
-        else
-        begin
-            // Wait a bit for a new message.
-            writeState <= WSTATE_F2H_TRY_WRITE;
-        end
+        // Ready to try writing
+        writeState <= WSTATE_F2H_TRY_WRITE;
 
         // No more interesting read data
         dummyReadChunksRemaining <= (`NALLATECH_MIN_MSG_BYTES / `UMF_CHUNK_BYTES) - 3;
@@ -308,16 +304,33 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     // Dispatch to write states depending on available data
     rule f2h_try_write (writeState == WSTATE_F2H_TRY_WRITE);
 
-        if (writeDataQ.notEmpty())
+        // Any data left over from the last message?
+        if (writeDataChunksRemaining != 0)
         begin
+
+            // Yes.  Keep writing.
+            writeState <= WSTATE_F2H_CONT_WRITE;
+
+        end
+        else if (writeDataQ.notEmpty())
+        begin
+
             // Start a new message.
             writeState <= WSTATE_F2H_START_WRITE;
+
         end
         else if (spinCycles == 0)
         begin
+
             // Give up: no message.  Must fill the buffer to respond.
             writeState <= WSTATE_F2H_CONT_WRITE;
+
         end
+
+        numWrittenChunks <= 0;
+        // The software side requires at least one significant chunk.
+        // That is guaranteed, even if they are all NODATA chunks.
+        numUsefulWriteChunks <= 1;
 
         spinCycles <= spinCycles - 1;
 
@@ -331,14 +344,14 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
 
         if (dummyReadChunksRemaining == 1)
         begin
-            readState <= RSTATE_READY;
+            readState <= RSTATE_F2H_READ_DONE;
         end
 
         dummyReadChunksRemaining <= dummyReadChunksRemaining - 1;
 
     endrule
         
-    // Start a new message.
+    // Start a new message
     rule f2h_start_write (writeState == WSTATE_F2H_START_WRITE);
 
         UMF_PACKET_HEADER header = unpack(pack(writeDataQ.first()));
@@ -376,60 +389,60 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     // Emit write data or fill the write buffer with NODATA messages
     rule f2h_cont_write (writeState == WSTATE_F2H_CONT_WRITE);
         
-        let written_chunks = numWrittenChunks;
-
-        if (writeDataChunksRemaining != 0)
+        if ((writeDataChunksRemaining == 0) && writeDataQ.notEmpty())
         begin
-        
-            dataToHost.enq(writeDataQ.first());
-            writeDataQ.deq();
 
-            writeDataChunksRemaining <= writeDataChunksRemaining - 1;
-            written_chunks = written_chunks + 1;
-            numUsefulWriteChunks <= written_chunks;
-            
+            // Not doing anything useful here and there is a new message
+            // ready.  Start the new message.
+            writeState <= WSTATE_F2H_START_WRITE;
+
         end
         else
         begin
-                
-            // Is there a new message in the write buffer?  We can switch from
-            // filling the channel with garbage at any time to a new message.
-            //
-            // The second clause, testing writeBufferSize, is always true but
-            // is needed to keep the Bluespec scheduler happy.
-            if (writeDataQ.notEmpty() && (writeBufferSize != written_chunks))
+
+            let written_chunks = numWrittenChunks + 1;
+
+            if (writeDataChunksRemaining != 0)
             begin
 
-                writeState <= WSTATE_F2H_START_WRITE;
+                // Keep writing the current message
+                dataToHost.enq(writeDataQ.first());
+                writeDataQ.deq();
+
+                writeDataChunksRemaining <= writeDataChunksRemaining - 1;
+                numUsefulWriteChunks <= written_chunks;
 
             end
             else
             begin
 
+                // No data to write.  Fill the response buffer and give
+                // control back to the host.
                 dataToHost.enq(`CHANNEL_RESPONSE_NODATA);
-                written_chunks = written_chunks + 1;
 
             end
 
+            if (writeBufferSize == written_chunks)
+            begin
+
+                writeState <= WSTATE_F2H_DONE;
+
+            end
+
+            numWrittenChunks <= written_chunks;
+
         end
-
-        if (writeBufferSize == written_chunks)
-        begin
-
-            writeState <= WSTATE_F2H_DONE;
-
-        end
-
-        numWrittenChunks <= written_chunks;
 
     endrule
 
 
     // Final write stage -- emit a pointer to the last useful chunk in the message
-    rule f2h_complete_write (writeState == WSTATE_F2H_DONE);
+    rule f2h_complete_write ((writeState == WSTATE_F2H_DONE) &&
+                             (readState == RSTATE_F2H_READ_DONE));
 
         dataToHost.enq(bufIdxToChunk(numUsefulWriteChunks));
         writeState <= WSTATE_READY;
+        readState <= RSTATE_READY;
 
     endrule
     

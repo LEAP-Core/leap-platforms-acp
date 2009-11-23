@@ -125,7 +125,7 @@ PHYSICAL_CHANNEL_CLASS::RawReadNextWord(bool newMsg)
 
     // Maximum spin cycles to wait for FPGA-side write data.  This doesn't seem
     // to affect performance much.
-    if (writeCount > (raw_read_cnt >> 1))
+    if (writeCount < (raw_read_cnt >> 1))
     {
         // Not mixing reads and writes
         writeWindow[2] = NALLATECH_HW_TO_SW_SPIN_CYCLES;

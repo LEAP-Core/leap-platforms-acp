@@ -816,3 +816,19 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
   the host.  If a message was always exactly the size of the buffer the old
   code never grew the buffer to see whether multiple messages could be
   delivered together.
+
+----------
+mcadler     Date: Mon Nov 23 07:35:37 EST 2009  CSN: CSN-platform-acp-39
+                  Mon Nov 23 12:35:37 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified           38 
+ nallatech-edge-channel.bsv Locally Modified           38 
+
+- Fix a bug in which the channel can get stuck in an infinite loop when no
+  message is pending from the FPGA to the host.
+
+- Guarantee that the reads are completed before the last write on the FPGA side.
+  I don't know whether this matters, but it matches the ACP example code and
+  we don't know their buffering algorithm.
