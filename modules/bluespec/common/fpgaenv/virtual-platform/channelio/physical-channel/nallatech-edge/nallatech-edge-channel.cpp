@@ -113,28 +113,24 @@ PHYSICAL_CHANNEL_CLASS::RawReadNextWord(bool newMsg)
         raw_read_cnt = 0;
     }
 
-    pthread_mutex_lock(&deviceLock);
-
-    // talk to FPGA via Nallatech device
-    writeWindow[0] = CHANNEL_REQUEST_F2H;
-
-    // FPGA-side write buffer size (read buffer on this side).  Subtract 1 from
-    // the size because the last entry will be used as a pointer to the last
-    // useful data in the buffer.
-    writeWindow[1] = rawReadBufferSize - 1;
-
     // Maximum spin cycles to wait for FPGA-side write data.  This doesn't seem
     // to affect performance much.
+    int spin_cycles = 0;
     if (writeCount < (raw_read_cnt >> 1))
     {
         // Not mixing reads and writes
-        writeWindow[2] = NALLATECH_HW_TO_SW_SPIN_CYCLES;
+        spin_cycles = NALLATECH_HW_TO_SW_SPIN_CYCLES;
     }
-    else 
-    {
-        // Mixed reads and writes.  No waiting on the hardware side.
-        writeWindow[2] = 0;
-    }
+
+    pthread_mutex_lock(&deviceLock);
+
+    // Command in the first chunk
+    writeWindow[0] = GenH2FCommand(NALLATECH_MIN_MSG_WORDS, rawReadBufferSize,
+                                   spin_cycles,
+                                   true);
+
+    // Fill the write window with 0 so it isn't interpreted as host to FPGA data
+    memset(&writeWindow[1], 0, (NALLATECH_MIN_MSG_WORDS - 1) * sizeof(NALLATECH_WORD));
 
     nallatechEdgeDevice->DoAALTransaction(NALLATECH_MIN_MSG_WORDS, rawReadBufferSize);
 
@@ -241,7 +237,7 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
         return NULL;
     }
 
-    UMF_MESSAGE incomingMessage = UMF_MESSAGE_CLASS::New();
+    UMF_MESSAGE incomingMessage = new UMF_MESSAGE_CLASS;
     incomingMessage->DecodeHeader(resp);
 
     // copy buffer data into message data
@@ -324,14 +320,11 @@ PHYSICAL_CHANNEL_CLASS::Write(
 
     int index = 0;
 
-    // write the channel command
-    writeWindow[index++] = CHANNEL_REQUEST_H2F;
-
-    // buffer length will be written later
+    // Command will be written later
     index++;
 
     // construct header
-    message->EncodeHeader((unsigned char*) &writeWindow[index++]);
+    writeWindow[index++] = message->EncodeHeaderWithPhyChannelPvt(1);
 
     // write message data to buffer
     // NOTE: hardware demarshaller expects chunk pattern to start from most
@@ -348,8 +341,11 @@ PHYSICAL_CHANNEL_CLASS::Write(
     // can hold this message.
     int msg_size = nallatechEdgeDevice->LegalBufSize(index);
 
-    // Set the size in the message
-    writeWindow[1] = msg_size - 2;
+    // The rest of the buffer must be full of 0s
+    memset(&writeWindow[index], 0, (msg_size - index) * sizeof(NALLATECH_WORD));
+
+    // Write the channel command
+    writeWindow[0] = GenH2FCommand(msg_size, NALLATECH_MIN_MSG_WORDS, 0, false);
 
     // ask the Nallatech device to send the message
     NALLATECH_WORD ack = nallatechEdgeDevice->DoAALWriteTransaction(msg_size,
@@ -359,12 +355,35 @@ PHYSICAL_CHANNEL_CLASS::Write(
 
     pthread_mutex_unlock(&deviceLock);
 
-    // verify that we received the ack correctly
-    if (ack != CHANNEL_RESPONSE_ACK)
-    {
-        fprintf(stderr, "channel: Write: received incorrect Ack: 0x%X\n", ack);
-        CallbackExit(1);
-    }
+    delete message;
+}
 
-    message->Delete();
+
+//
+// GenH2FCommand --
+//     The command chunk at the head of a request to the FPGA.
+//
+inline NALLATECH_WORD
+PHYSICAL_CHANNEL_CLASS::GenH2FCommand(
+    int h2fRawBufChunks,
+    int f2hRawBufChunks,
+    int waitForDataSpinCycles,
+    bool f2hDataPermitted) const
+{
+    NALLATECH_WORD cmd;
+
+    cmd = waitForDataSpinCycles;
+
+    cmd <<= 1;
+    cmd |= (f2hDataPermitted ? 1 : 0);
+
+    cmd <<= 16;
+    // Count excludes the leading command chunk
+    cmd |= (h2fRawBufChunks - 1);
+
+    cmd <<= 16;
+    // Count excludes the trailing last useful data pointer
+    cmd |= (f2hRawBufChunks - 1);
+
+    return cmd;
 }

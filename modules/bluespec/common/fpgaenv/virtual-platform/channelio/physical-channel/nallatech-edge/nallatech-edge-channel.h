@@ -61,6 +61,12 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
     // BufferedWordsRemaining().
     const NALLATECH_WORD *RawReadBufferedWords(int nWords);
 
+    // Generate a H2F_CMD for passing to the FPGA.
+    NALLATECH_WORD GenH2FCommand(int h2fRawBufChunks,
+                                 int f2hRawBufChunks,
+                                 int waitForDataSpinCycles,
+                                 bool f2hDataPermitted) const;
+
   public:
 
     PHYSICAL_CHANNEL_CLASS(PLATFORMS_MODULE, PHYSICAL_DEVICES);

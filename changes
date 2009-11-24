@@ -832,3 +832,24 @@ Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-ch
 - Guarantee that the reads are completed before the last write on the FPGA side.
   I don't know whether this matters, but it matches the ACP example code and
   we don't know their buffering algorithm.
+
+----------
+mcadler     Date: Mon Nov 23 19:34:25 EST 2009  CSN: CSN-platform-acp-40
+                  Tue Nov 24 00:34:25 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified           39 
+ nallatech-edge-channel.h  Locally Modified           39 
+ nallatech-edge-channel.bsv Locally Modified           39 
+
+Refactor the FPGA-side pipelines:
+
+- Many fewer states and slightly shorter.
+
+- No more specialized read vs. write operations.  A transaction now has a
+  host to FPGA and an FPGA to host component, though the software doesn't yet
+  take advantage of this.
+
+- More than one host to FPGA message may be stored in the buffer, though software
+  doesn't do this, yet.
