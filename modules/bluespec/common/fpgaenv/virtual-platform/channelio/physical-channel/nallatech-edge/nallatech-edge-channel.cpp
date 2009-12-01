@@ -32,6 +32,17 @@
 
 using namespace std;
 
+//
+// pthreads entry point for channel I/O.
+//
+void *NALChannelIO_Main(void *argv)
+{
+    PHYSICAL_CHANNEL instance = PHYSICAL_CHANNEL(argv);
+    instance->IOThread();
+    return NULL;
+}
+
+
 // ============================================
 //               Physical Channel              
 // ============================================
@@ -42,26 +53,14 @@ PHYSICAL_CHANNEL_CLASS::PHYSICAL_CHANNEL_CLASS(
     PHYSICAL_DEVICES d) :
         PLATFORMS_MODULE_CLASS(p)
 {
-    nallatechEdgeDevice  = d->GetNallatechEdgeDevice();
-
-    writeWindow = NULL;
-    readWindow = NULL;
-
-    alive = true; // LLPI bugfix
-
-    rawReadBufferSize = NALLATECH_MIN_MSG_WORDS;
-    nextRawReadPos = rawReadBufferSize;
-    maxRawReadPos = 0;
-
-    writeCount = 0;
-
-    pthread_mutex_init(&deviceLock, NULL);
+    nallatechEdgeDevice = d->GetNallatechEdgeDevice();
 }
 
 // destructor
 PHYSICAL_CHANNEL_CLASS::~PHYSICAL_CHANNEL_CLASS()
 {
-    alive = false; // LLPI bugfix
+    pthread_cancel(ioThreadID);
+    pthread_join(ioThreadID, NULL);
 }
 
 // init
@@ -74,125 +73,78 @@ PHYSICAL_CHANNEL_CLASS::Init()
         CallbackExit(1);
     }    
 
-    // assume Physical Device has been initialized by now
-    writeWindow = nallatechEdgeDevice->GetInputWindow();
-    readWindow = nallatechEdgeDevice->GetOutputWindow();
+    //
+    // Initialize shared host/FPGA memory details.
+    //
+    for (int w = 0; w < NALLATECH_NUM_WRITE_WINDOWS; w++)
+    {
+        writeWindows[w].data = nallatechEdgeDevice->GetWriteWindow(w);
+        VERIFYX(writeWindows[w].data != NULL);
 
-    ASSERTX(writeWindow != NULL && readWindow != NULL);
+        writeWindows[w].lock = 0;
+        // Setting to 1 leaves space for the command word
+        writeWindows[w].nWords = 1;
+    }
+
+    for (int w = 0; w < NALLATECH_NUM_READ_WINDOWS; w++)
+    {
+        readWindows[w].data = nallatechEdgeDevice->GetReadWindow(w);
+        VERIFYX(readWindows[w].data != NULL);
+
+        readWindows[w].nWords = 0;
+        readWindows[w].nextReadWordIdx = 0;
+    }
+
+    curReadWindow = 0;
+
+    // Create the I/O thread
+    writeWindows[0].lock = 1;  // I/O thread starts with a write window locked
+    VERIFYX(pthread_create(&ioThreadID, NULL, &NALChannelIO_Main, (void *)this) == 0);
 }
 
 
-// Raw stream of data from the FPGA.  Pass True for newMsg if the read request
-// is for the start of a new read attempt.  It is used for managing the
-// raw buffer size.
-NALLATECH_WORD
-PHYSICAL_CHANNEL_CLASS::RawReadNextWord(bool newMsg)
+//
+// BufferedWordsRemaining has two main functions:
+//
+//     1.  Return the number of valid words left in the current read buffer.
+//
+//     2.  Detect an empty buffer and clear nWords.  This is the signal
+//         to the I/O thread that the buffer is no longer in use and should
+//         be filled again.  BufferedWordsRemaining() should be called only
+//         when no code is using a pointer to the buffer.  E.g., any
+//         pointers returned by RawReadBufferedWords() should no longer be
+//         in use.
+//
+inline
+UINT32
+PHYSICAL_CHANNEL_CLASS::BufferedWordsRemaining()
 {
-    // Internal counters used for reducing the buffer size if it appears
-    // too large.
-    static int raw_read_cnt = 0;
-    static int raw_read_empty_cnt = 0;
-    static int raw_read_max_actual_size = 0;
+    UINT32 n_words = readWindows[curReadWindow].nWords;
+    UINT32 next_idx = readWindows[curReadWindow].nextReadWordIdx;
 
-    if (nextRawReadPos < maxRawReadPos)
+    if (next_idx < n_words)
     {
-        // More data left from previous transaction
-        return readWindow[nextRawReadPos++];
+        return n_words - next_idx;
     }
-
-    //
-    // Need to get another chunk from the FPGA
-    //
-
-    if (! newMsg)
+    else if (n_words != 0)
     {
-        // Overflowed the raw buffer in the middle of a message.
-        // Grow the buffer.
-        rawReadBufferSize = nallatechEdgeDevice->LegalBufSize(rawReadBufferSize +
-                                                              NALLATECH_MIN_MSG_WORDS);
-        raw_read_cnt = 0;
-    }
+        //
+        // This is a key case:  no data remains and the number of valid words
+        // in the buffer is non-zero.  Set the number of valid words to 0.
+        // This tells the the I/O thread that the buffer is unused and should
+        // be filled again.
+        //
+        CompareAndExchange(&readWindows[curReadWindow].nWords, n_words, 0);
 
-    // Maximum spin cycles to wait for FPGA-side write data.  This doesn't seem
-    // to affect performance much.
-    int spin_cycles = 0;
-    if (writeCount < (raw_read_cnt >> 1))
-    {
-        // Not mixing reads and writes
-        spin_cycles = NALLATECH_HW_TO_SW_SPIN_CYCLES;
-    }
+        // Move on to the next read window
+        curReadWindow ^= 1;
 
-    pthread_mutex_lock(&deviceLock);
-
-    // Command in the first chunk
-    writeWindow[0] = GenH2FCommand(NALLATECH_MIN_MSG_WORDS, rawReadBufferSize,
-                                   spin_cycles,
-                                   true);
-
-    // Fill the write window with 0 so it isn't interpreted as host to FPGA data
-    memset(&writeWindow[1], 0, (NALLATECH_MIN_MSG_WORDS - 1) * sizeof(NALLATECH_WORD));
-
-    nallatechEdgeDevice->DoAALTransaction(NALLATECH_MIN_MSG_WORDS, rawReadBufferSize);
-
-    // The last slot in the returned message indicates the useful data in the
-    // buffer.
-    maxRawReadPos = readWindow[rawReadBufferSize - 1];
-    VERIFYX(maxRawReadPos <= rawReadBufferSize);
-
-    if (maxRawReadPos >= (rawReadBufferSize - 2))
-    {
-        // Nearly filled the buffer.  Try bigger.
-        rawReadBufferSize = nallatechEdgeDevice->LegalBufSize(rawReadBufferSize +
-                                                              NALLATECH_MIN_MSG_WORDS);
-    }
-
-    // Count failed read attempts
-    if (newMsg && (maxRawReadPos <= 1))
-    {
-        raw_read_empty_cnt += 1;
+        return 0;
     }
     else
     {
-        raw_read_cnt += 1;
+        return 0;
     }
-
-    nextRawReadPos = 1;
-
-    // Does the buffer appear to be too large?  If a large buffer hasn't been
-    // needed in a while, reduce it.
-    raw_read_max_actual_size = max(raw_read_max_actual_size, maxRawReadPos + 1);
-    if ((raw_read_cnt + writeCount) > 5000)
-    {
-        // A lot of empty reads could indicate a need for a smaller buffer
-        if ((raw_read_empty_cnt > 200) && (writeCount > 100))
-        {
-            rawReadBufferSize = nallatechEdgeDevice->LegalBufSize(rawReadBufferSize -
-                                                                  NALLATECH_MIN_MSG_WORDS);
-        }
-
-        // Must decrease by more than 1/16th of current value to be worth the risk
-        else if ((rawReadBufferSize - raw_read_max_actual_size) >
-                 (rawReadBufferSize >> 4))
-        {
-            rawReadBufferSize = nallatechEdgeDevice->LegalBufSize(raw_read_max_actual_size);
-        }
-
-        raw_read_cnt = 0;
-        raw_read_empty_cnt = 0;
-        writeCount = 0;
-    }
-
-    pthread_mutex_unlock(&deviceLock);
-    
-    return readWindow[0];
-}
-
-
-inline
-int
-PHYSICAL_CHANNEL_CLASS::BufferedWordsRemaining()
-{
-    return (maxRawReadPos - nextRawReadPos);
 }
 
 
@@ -200,10 +152,46 @@ inline
 const NALLATECH_WORD *
 PHYSICAL_CHANNEL_CLASS::RawReadBufferedWords(int nWords)
 {
-    const NALLATECH_WORD *r = &readWindow[nextRawReadPos];
-    nextRawReadPos += nWords;
+    UINT32 r_idx = readWindows[curReadWindow].nextReadWordIdx;
+    readWindows[curReadWindow].nextReadWordIdx = r_idx + nWords;
 
-    return r;
+    return &(readWindows[curReadWindow].data[r_idx]);
+}
+
+
+// Raw stream of data from the FPGA.  Pass True for newMsg if the read request
+// is for the start of a new read attempt.  It is used for managing the
+// raw buffer size.
+NALLATECH_WORD
+PHYSICAL_CHANNEL_CLASS::TryRawReadNextWord()
+{
+    if (BufferedWordsRemaining() != 0)
+    {
+        return *RawReadBufferedWords(1);
+    }
+
+    return CHANNEL_RESPONSE_NODATA;
+}
+
+
+// Raw stream of data from the FPGA.  Pass True for newMsg if the read request
+// is for the start of a new read attempt.  It is used for managing the
+// raw buffer size.
+NALLATECH_WORD
+PHYSICAL_CHANNEL_CLASS::RawReadNextWord()
+{
+    //
+    // Any data left in the current buffer?
+    //
+    while (true)
+    {
+        if (BufferedWordsRemaining() != 0)
+        {
+            return *RawReadBufferedWords(1);
+        }
+
+        CpuPause();
+    }
 }
 
 
@@ -211,24 +199,18 @@ PHYSICAL_CHANNEL_CLASS::RawReadBufferedWords(int nWords)
 UMF_MESSAGE
 PHYSICAL_CHANNEL_CLASS::TryRead()
 {
-    // LLPI bugfix
-    if (!alive)
-    {
-        return NULL;
-    }
-
     //
     // See if we actually read any data.  The response will either be
     // 0 (CHANNEL_RESPONSE_NODATA) or the header of the next UMF message.
     // Headers are guaranteed non-zero by writing a 1 to the
     // phyChannelPvt field in the header encoding.
     //
-    NALLATECH_WORD resp = RawReadNextWord(true);
+    NALLATECH_WORD resp = TryRawReadNextWord();
 
     // Consume a chunk of NODATA responses to avoid looping through TryRead().
     while ((resp == CHANNEL_RESPONSE_NODATA) && (BufferedWordsRemaining() != 0))
     {
-        resp = RawReadNextWord(true);
+        resp = RawReadNextWord();
     }
 
     if (resp == CHANNEL_RESPONSE_NODATA)
@@ -241,13 +223,14 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
     incomingMessage->DecodeHeader(resp);
 
     // copy buffer data into message data
-    int n_chunks = incomingMessage->GetLength() / sizeof(UMF_CHUNK);
+    UINT32 n_chunks = incomingMessage->GetLength() / sizeof(UMF_CHUNK);
     while (n_chunks != 0)
     {
-        if (BufferedWordsRemaining() != 0)
+        UINT32 w_remaining = BufferedWordsRemaining();
+        if (w_remaining != 0)
         {
             // Read as much data from the buffer as we can/want
-            int read_chunks = min(n_chunks, BufferedWordsRemaining());
+            UINT32 read_chunks = min(n_chunks, w_remaining);
             incomingMessage->AppendChunks(read_chunks,
                                           (UMF_CHUNK*) RawReadBufferedWords(read_chunks));
             n_chunks -= read_chunks;
@@ -255,11 +238,15 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
         else
         {
             // Incoming buffer is empty.  Get more data.
-            NALLATECH_WORD r = RawReadNextWord(false);
+            NALLATECH_WORD r = RawReadNextWord();
             incomingMessage->AppendChunks(1, (UMF_CHUNK*) &r);
             n_chunks -= 1;
         }
     }
+
+    // Call bufferedWordsRemaining() one last time for its side effects:
+    // release current read window if all data has been extracted.
+    BufferedWordsRemaining();
 
     // we should have a complete message by now
     if (incomingMessage->CanAppend())
@@ -275,11 +262,6 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
 UMF_MESSAGE
 PHYSICAL_CHANNEL_CLASS::Read()
 {
-    //
-    // TODO: Implement zero-copy by using the workspace storage directly
-    // as message data storage instead of copying back and forth
-    //
-
     UMF_MESSAGE msg;
     do
     {
@@ -295,76 +277,79 @@ void
 PHYSICAL_CHANNEL_CLASS::Write(
     UMF_MESSAGE message)
 {
-    //
-    // TODO: Implement zero-copy by using the workspace storage directly
-    // as message data storage instead of copying back and forth
-    //
+    // Message chunks is the header + the actual message
+    UINT32 msg_chunks = 1 + (message->GetLength() + sizeof(UMF_CHUNK) - 1) / sizeof(UMF_CHUNK);
 
     // sanity checks
-    if ((message->GetLength()    +   // raw message length
-         sizeof(UMF_CHUNK)       +   // header
-         sizeof(NALLATECH_WORD)  +   // buffer length following channel command
-         sizeof(NALLATECH_WORD))     // channel command
-        > (NALLATECH_MAX_MSG_WORDS * sizeof(NALLATECH_WORD)))
+    if (msg_chunks > NALLATECH_MAX_MSG_WORDS)
     {
-        ASIMERROR("message larger than maximum allowed length\n");
-        message->Print(cout);
+        ASIMWARNING("message larger than maximum allowed length");
         CallbackExit(1);
     }
+
+    //
+    // Spin until we get a write window.  The I/O thread holds and releases
+    // locks in an order that guarantees writes will stay in order.
+    //
+    int write_window = -1;
+    while (1)
+    {
+        for (int w = 0; w < NALLATECH_NUM_WRITE_WINDOWS; w++)
+        {
+            if (CompareAndExchange(&writeWindows[w].lock, 0, 2))
+            {
+                // Is there enough space in the window?
+                if (writeWindows[w].nWords + msg_chunks < NALLATECH_MAX_MSG_WORDS)
+                {
+                    // Looks good
+                    write_window = w;
+                    goto got_window;
+                }
+
+                // Give up the lock.  The message doesn't fit.  Either get
+                // the other window or wait for the I/O thread to empty this
+                // window.
+                CompareAndExchange(&writeWindows[w].lock, 2, 0);
+            }
+        }
+
+        CpuPause();
+    }
+
+  got_window:
 
     //
     // copy the message into the write window
     //
 
-    pthread_mutex_lock(&deviceLock);
-
-    int index = 0;
-
-    // Command will be written later
-    index++;
+    int index = writeWindows[write_window].nWords;
 
     // construct header
-    writeWindow[index++] = message->EncodeHeaderWithPhyChannelPvt(1);
+    NALLATECH_WORD* window_data = writeWindows[write_window].data;
+    window_data[index++] = message->EncodeHeaderWithPhyChannelPvt(1);
 
     // write message data to buffer
     // NOTE: hardware demarshaller expects chunk pattern to start from most
     //       significant chunk and end at least significant chunk, so we will
     //       send chunks in reverse order
-    message->StartReverseExtract();
-    while (message->CanReverseExtract())
-    {
-        UMF_CHUNK chunk = message->ReverseExtractChunk();
-        writeWindow[index++] = chunk;
-    }
+    index += message->ReverseExtractAllChunks(&window_data[index]);
 
-    // Messages are transferred in chunks.  Get the smallest legal chunk that
-    // can hold this message.
-    int msg_size = nallatechEdgeDevice->LegalBufSize(index);
+    writeWindows[write_window].nWords = index;
+    VERIFYX(index <= NALLATECH_MAX_MSG_WORDS);
 
-    // The rest of the buffer must be full of 0s
-    memset(&writeWindow[index], 0, (msg_size - index) * sizeof(NALLATECH_WORD));
-
-    // Write the channel command
-    writeWindow[0] = GenH2FCommand(msg_size, NALLATECH_MIN_MSG_WORDS, 0, false);
-
-    // ask the Nallatech device to send the message
-    NALLATECH_WORD ack = nallatechEdgeDevice->DoAALWriteTransaction(msg_size,
-                                                                    NALLATECH_MIN_MSG_WORDS);
-
-    writeCount += 1;
-
-    pthread_mutex_unlock(&deviceLock);
+    // Unlock the window
+    CompareAndExchange(&writeWindows[write_window].lock, 2, 0);
 
     delete message;
 }
 
 
 //
-// GenH2FCommand --
+// GenCommand --
 //     The command chunk at the head of a request to the FPGA.
 //
 inline NALLATECH_WORD
-PHYSICAL_CHANNEL_CLASS::GenH2FCommand(
+PHYSICAL_CHANNEL_CLASS::GenCommand(
     int h2fRawBufChunks,
     int f2hRawBufChunks,
     int waitForDataSpinCycles,
@@ -386,4 +371,192 @@ PHYSICAL_CHANNEL_CLASS::GenH2FCommand(
     cmd |= (f2hRawBufChunks - 1);
 
     return cmd;
+}
+
+
+//
+// IOThread -- Separate thread handling actual I/O to the hardware.
+//
+void
+PHYSICAL_CHANNEL_CLASS::IOThread()
+{
+    //
+    // This thread starts owning write window 0.
+    //
+    int active_write_window = 0;
+    int active_read_window = 0;
+
+    //
+    // Internal counters used for reducing the buffer size if it appears
+    // too large.
+    //
+    UINT32 raw_io_cnt = 0;
+    UINT32 raw_read_max_actual_size = 0;
+
+    //
+    // The size of the read window changes dynamically, depending on the size
+    // of incoming data.  Larger buffers are more efficient but waste time if
+    // they are just passing NULL.
+    //
+    UINT32 raw_read_buffer_size = NALLATECH_MIN_MSG_WORDS;
+
+    //
+    // Loop forever, managing all I/O to the FPGA.
+    //
+    while (true)
+    {
+        pthread_testcancel();
+
+        //
+        // Prepare the write window.  If data is in the write window it
+        // will be sent to the FPGA whether or not there is also space for
+        // reading data back at the same time.
+        //
+        UINT32 w_words = writeWindows[active_write_window].nWords;
+        int raw_write_buffer_size = nallatechEdgeDevice->LegalBufSize(w_words);
+        if (w_words < raw_write_buffer_size)
+        {
+            writeWindows[active_write_window].data[w_words] = 0;
+        }
+
+        // Clear the counter for the write window so the data is written
+        // to the FPGA only once.  (1 leaves space for the command word.)
+        writeWindows[active_write_window].nWords = 1;
+
+        if (readWindows[active_read_window].nWords != 0)
+        {
+            //
+            // The read window is busy.  Just write data to the FPGA.
+            //
+            writeWindows[active_write_window].data[0] =
+                GenCommand(raw_write_buffer_size,
+                           NALLATECH_MIN_MSG_WORDS,
+                           0,
+                           false);
+
+            // Use the dummy read window
+            nallatechEdgeDevice->DoAALTransaction(active_write_window,
+                                                  raw_write_buffer_size,
+                                                  2,
+                                                  NALLATECH_MIN_MSG_WORDS);
+
+            raw_io_cnt += 1;
+        }
+        else
+        {
+            //
+            // Bidirectional data transfer.
+            //
+
+            // Maximum spin cycles to wait for FPGA-side write data.  Spin
+            // when it appears only reads are happening.
+            int spin_cycles = 0;
+            if (w_words <= 1)
+            {
+                spin_cycles = NALLATECH_HW_TO_SW_SPIN_CYCLES;
+            }
+
+            //
+            // Now all the details for the command word are ready.
+            //
+            writeWindows[active_write_window].data[0] =
+                GenCommand(raw_write_buffer_size,
+                           raw_read_buffer_size,
+                           spin_cycles,
+                           true);
+
+            nallatechEdgeDevice->DoAALTransaction(active_write_window,
+                                                  raw_write_buffer_size,
+                                                  active_read_window,
+                                                  raw_read_buffer_size);
+
+            // The last slot in the returned message indicates the useful
+            // data in the buffer.
+            UINT32 n_words = readWindows[active_read_window].data[raw_read_buffer_size - 1];
+            VERIFYX(n_words <= raw_read_buffer_size);
+
+            if (n_words != 0)
+            {
+                //
+                // Data arrived from the FPGA.
+                //
+
+                // Hand the read window off to the thread that extracts messages.
+                readWindows[active_read_window].nextReadWordIdx = 0;
+                CompareAndExchange(&readWindows[active_read_window].nWords, 0, n_words);
+
+                // Was the buffer large enough?  If it was full then grow the
+                // read buffer.
+                if (n_words >= (raw_read_buffer_size - 1))
+                {
+                    raw_read_buffer_size = nallatechEdgeDevice->LegalBufSize(
+                        raw_read_buffer_size + 2 * NALLATECH_MIN_MSG_WORDS);
+                }
+
+                //
+                // Move on to the next read window.
+                //
+                active_read_window ^= 1;
+
+                // Track raw read sizes.  These will later be used to reduce
+                // the read buffer size, if appropriate.
+                raw_read_max_actual_size = max(raw_read_max_actual_size,
+                                               n_words + 1);
+
+                raw_io_cnt += 1;
+
+                //
+                // Short incoming messages indicate requests to RRR services
+                // that expect responses.  It appears to improve performance a
+                // bit to have this thread wait for a possible response from
+                // the service monitoring thread to send back to the ACP.
+                // This should be revisited.
+                //
+                if (n_words <= 2 * NALLATECH_MIN_MSG_WORDS)
+                {
+                    volatile int p = 100;
+                    while (--p)
+                    {
+                        CpuPause();
+                    }
+                }
+            }
+        }
+
+
+        //
+        // Try to swap write window.  If the other window is locked just
+        // stick with the current one.  It won't have any new write data
+        // but can be used to receive new read data from the FPGA on
+        // the next loop iteration.
+        //
+
+        // Grab the other window, so this thread owns both.
+        int other_write_window = active_write_window ^ 1;
+        if (CompareAndExchange(&writeWindows[other_write_window].lock, 0, 1))
+        {
+            // Got it.  Give up the old window.
+            CompareAndExchange(&writeWindows[active_write_window].lock, 1, 0);
+            active_write_window = other_write_window;
+        }
+
+
+        // Does the buffer appear to be too large?  If a large buffer hasn't
+        // been needed in a while, reduce it.
+        if (raw_io_cnt > 500)
+        {
+            // Must decrease by more than 1/16th of current value to be
+            // worth the risk
+            if ((raw_read_buffer_size - raw_read_max_actual_size) >
+                (raw_read_buffer_size >> 4))
+            {
+                raw_read_buffer_size = nallatechEdgeDevice->LegalBufSize(raw_read_max_actual_size);
+            }
+
+            raw_io_cnt = 0;
+            raw_read_max_actual_size = 0;
+        }
+
+        CpuPause();
+    }
 }

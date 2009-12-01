@@ -28,44 +28,54 @@
 //               Physical Channel              
 // ============================================
 
+typedef class PHYSICAL_CHANNEL_CLASS *PHYSICAL_CHANNEL;
+
 class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
                               public TRACEABLE_CLASS
 {
-
   private:
-
     // cached links to useful physical devices
     NALLATECH_EDGE_DEVICE nallatechEdgeDevice;
     
-    // lock
-    pthread_mutex_t deviceLock;
+    // thread management
+    pthread_t ioThreadID;
 
-    // cache pointers to I/O windows
-    NALLATECH_WORD* readWindow;
-    NALLATECH_WORD* writeWindow;
+    //
+    // System/FPGA shared memory window management
+    //
+    struct
+    {
+        NALLATECH_WORD* data;
+        UINT32 lock;
+        UINT32 nWords;
+    }
+    writeWindows[NALLATECH_NUM_WRITE_WINDOWS];
 
-    // misc
-    bool alive;
+    struct
+    {
+        NALLATECH_WORD* data;
+        UINT32 nWords;
+        UINT32 nextReadWordIdx;
+    }
+    readWindows[NALLATECH_NUM_READ_WINDOWS];
 
-    // Count writes -- used for tuning read buffer size
-    int writeCount;
+    // Current read window for RawReadNextWord(), etc.
+    int curReadWindow;
 
     // Stream of data coming from the FPGA
-    int nextRawReadPos;
-    int maxRawReadPos;
-    int rawReadBufferSize;
-    int BufferedWordsRemaining();
-    NALLATECH_WORD RawReadNextWord(bool newMsg);
+    UINT32 BufferedWordsRemaining();
+    NALLATECH_WORD TryRawReadNextWord();
+    NALLATECH_WORD RawReadNextWord();
 
     // Return nWords words from the current buffer.  nWords must be <=
     // BufferedWordsRemaining().
     const NALLATECH_WORD *RawReadBufferedWords(int nWords);
 
-    // Generate a H2F_CMD for passing to the FPGA.
-    NALLATECH_WORD GenH2FCommand(int h2fRawBufChunks,
-                                 int f2hRawBufChunks,
-                                 int waitForDataSpinCycles,
-                                 bool f2hDataPermitted) const;
+    // Generate a for passing to the FPGA.
+    NALLATECH_WORD GenCommand(int h2fRawBufChunks,
+                              int f2hRawBufChunks,
+                              int waitForDataSpinCycles,
+                              bool f2hDataPermitted) const;
 
   public:
 
@@ -78,6 +88,9 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
     UMF_MESSAGE Read();             // blocking read
     UMF_MESSAGE TryRead();          // non-blocking read
     void        Write(UMF_MESSAGE); // write
+
+    // I/O management, run as a separate thread
+    void IOThread();
 };
 
 #endif

@@ -853,3 +853,27 @@ Refactor the FPGA-side pipelines:
 
 - More than one host to FPGA message may be stored in the buffer, though software
   doesn't do this, yet.
+
+----------
+mcadler     Date: Tue Dec  1 16:54:39 EST 2009  CSN: CSN-platform-acp-41
+                  Tue Dec  1 21:54:39 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified           40 
+ nallatech-edge-channel.h  Locally Modified           40 
+ nallatech-edge-channel.bsv Locally Modified           40 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.h   Locally Modified           40 
+ nallatech-edge-device.cpp Locally Modified           40 
+
+Move all I/O to the FPGA to a tight loop in an I/O thread.  Multiple buffers
+are used to permit parallel host-side read/write on one set of buffers while
+another set of buffers are being used to read/write data from/to the FPGA.
+
+Performance is pretty good.  For large messages (128 bytes) RRR Test claims
+over 400MB/s for one-way messages and over 600MB/s for two-way pipelined
+messages.  Two-way non-pipelined messages and smaller messages are significantly
+slower due to channel I/O and software layer overhead.  My most recent
+check-in to platforms reduces the software overhead.

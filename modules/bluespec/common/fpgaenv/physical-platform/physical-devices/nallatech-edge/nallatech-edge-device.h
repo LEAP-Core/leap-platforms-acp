@@ -31,16 +31,19 @@ typedef UMF_CHUNK NALLATECH_WORD;
 #define NALLATECH_MAX_MSG_WORDS (NALLATECH_MAX_MSG_BYTES / sizeof(NALLATECH_WORD))
 #define NALLATECH_MIN_MSG_WORDS (NALLATECH_MIN_MSG_BYTES / sizeof(NALLATECH_WORD))
 
+#define NALLATECH_NUM_WRITE_WINDOWS 2
+#define NALLATECH_NUM_READ_WINDOWS 3
+
 
 // ===============================================
 //               Nallatech EDGE Device
 // ===============================================
 
 typedef class NALLATECH_EDGE_DEVICE_CLASS* NALLATECH_EDGE_DEVICE;
+
 class NALLATECH_EDGE_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
 {
   private:
-
     // ACP state
     ACP_SOCKET_HANDLE hsocket;
     ACP_AFU_HANDLE    hafu;
@@ -49,8 +52,9 @@ class NALLATECH_EDGE_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
     NALLATECH_WORD* workspace;
     UINT64          workspacePA;
 
-  public:
+    UINT64 WorkspaceBytes() const;
 
+  public:
     NALLATECH_EDGE_DEVICE_CLASS(PLATFORMS_MODULE);
     ~NALLATECH_EDGE_DEVICE_CLASS();
     
@@ -58,19 +62,17 @@ class NALLATECH_EDGE_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
     void Init();
     void Uninit();
 
-    // interface to device
-    NALLATECH_WORD* GetInputWindow();
-    NALLATECH_WORD* GetOutputWindow();
+    //
+    // Read and write windows are buffers for transferring data between the
+    // host and an FPGA.
+    //
+    // Pointers to read/write windows
+    NALLATECH_WORD* GetWriteWindow(int windowID) const;
+    NALLATECH_WORD* GetReadWindow(int windowID) const;
 
     // Write followed by read transaction
-    void DoAALTransaction(int writeWords, int readWords);
-
-    // Write only transaction.  Nallatech firmware requires a read response.
-    // The dummyReadWords response will be written to a scratch buffer.
-    //
-    // The function returns the first word of the read response -- useful
-    // for returning a status flag from the FPGA.
-    NALLATECH_WORD DoAALWriteTransaction(int writeWords, int dummyReadWords);
+    void DoAALTransaction(int writeWindowID, int writeWords,
+                          int readWindowID, int readWords);
 
     // Convert a request size to a legal buffer size
     inline int LegalBufSize(int words) const;

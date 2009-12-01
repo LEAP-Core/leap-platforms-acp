@@ -174,6 +174,8 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
 
     FIFOF#(UMF_CHUNK) readBuffer <- mkFIFOF();
 
+    Reg#(Bool) noMoreReadData <- mkReg(False);
+
     //
     // Read the message header
     //
@@ -186,8 +188,9 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
             // Last chunk in the buffer.  H2F messages can't span buffers, so
             // this chunk had better not be a packet header or data will be lost.
             readState <= RSTATE_DONE;
+            noMoreReadData <= False;
         end
-        else if (header.phyChannelPvt != 0)
+        else if ((header.phyChannelPvt != 0) && ! noMoreReadData)
         begin
             //
             // Start of a new message
@@ -201,6 +204,14 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
             begin
                 readState <= RSTATE_CONT;
             end
+        end
+        else
+        begin
+            // Once a header chunk indicates no message the rest of the
+            // buffer must be ignored.  This allows the software side
+            // to mark the buffer end with a single chunk instead of having
+            // to pad the entire buffer with no-message flags.
+            noMoreReadData <= True;
         end
 
         rawReadChunksRemaining <= rawReadChunksRemaining - 1;
@@ -246,7 +257,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     // The last chunk of every buffer returned to the software holds a pointer
     // to the last useful chunk in the message.  This helps the software avoid
     // searching through an array of NODATA messages.
-    Reg#(NALLATECH_BUF_IDX) numUsefulWriteChunks <- mkReg(1);
+    Reg#(NALLATECH_BUF_IDX) numUsefulWriteChunks <- mkRegU();
     Reg#(NALLATECH_BUF_IDX) numWrittenChunks <- mkRegU();
 
     // Outbound data arriving from the write() method below
@@ -275,6 +286,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         end
 
         numWrittenChunks <= 0;
+        numUsefulWriteChunks <= 0;
 
         spinCycles <= spinCycles - 1;
     endrule
@@ -366,6 +378,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
             writeState <= WSTATE_LAST;
         end
 
+        numUsefulWriteChunks <= 0;
         rawWriteChunksRemaining <= rawWriteChunksRemaining - 1;
     endrule
 
@@ -377,11 +390,6 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     rule f2hCompleteWrite ((writeState == WSTATE_LAST) &&
                            (readState == RSTATE_DONE));
         dataToHost.enq(bufIdxToChunk(numUsefulWriteChunks));
-
-        // The software side requires at least one significant chunk.
-        // That is guaranteed, even if they are all NODATA chunks.
-        // Set it here for next time.
-        numUsefulWriteChunks <= 1;
 
         writeState <= WSTATE_READY;
         readState <= RSTATE_READY;
