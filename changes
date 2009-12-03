@@ -877,3 +877,63 @@ over 400MB/s for one-way messages and over 600MB/s for two-way pipelined
 messages.  Two-way non-pipelined messages and smaller messages are significantly
 slower due to channel I/O and software layer overhead.  My most recent
 check-in to platforms reduces the software overhead.
+
+----------
+pellauer    Date: Thu Dec  3 18:36:57 EST 2009  CSN: CSN-platform-acp-42
+                  Thu Dec  3 23:36:57 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform
+ acp-m2c-with-sram/        Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ xilinx.ut                 Locally Added               0 
+ acp-m2c.cpp               Locally Added               0 
+ acp-m2c.h                 Locally Added               0 
+ xilinx.xst                Locally Added               0 
+ acp-m2c.awb               Locally Added               0 
+ acp-m2c.bsv               Locally Added               0 
+ acp-m2c.ucf               Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices
+ ddr-sram/                 Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddrii_top_ctrl_sm.vhd     Locally Added               0 
+ ddrii_phy_dly_cal_sm.vhd  Locally Added               0 
+ ddr-sram-device.ucf       Locally Added               0 
+ ddrii_phy_io.vhd          Locally Added               0 
+ m2c_sram.vhd              Locally Added               0 
+ ddrii_idelay_ctrl.vhd     Locally Added               0 
+ ddrii_top_addr_cmd_interface.vhd Locally Added               0 
+ ddr_sram_vhdl_import.bi   Locally Added               0 
+ ddrii_sram.vhd            Locally Added               0 
+ ddrii_top.vhd             Locally Added               0 
+ ddr-sram-device.bi        Locally Added               0 
+ ddr-sram-device.bsv       Locally Added               0 
+ ddr_sram_vhdl_import.bo   Locally Added               0 
+ ddr-sram-vhdl-import.bi   Locally Added               0 
+ ddr-sram-device.bo        Locally Added               0 
+ ddrii_phy_cq_io.vhd       Locally Added               0 
+ ddrii_phy_write.vhd       Locally Added               0 
+ ddr-sram-vhdl-import.bsv  Locally Added               0 
+ ddrii_phy_dq_io.vhd       Locally Added               0 
+ ddrii_phy_ctrl_io.vhd     Locally Added               0 
+ ddrii_phy_bw_io.vhd       Locally Added               0 
+ m2c_clocking.vhd          Locally Added               0 
+ ddrii_infrastructure.vhd  Locally Added               0 
+ ddrii_top_user_interface.vhd Locally Added               0 
+ ddr-sram-vhdl-import.bo   Locally Added               0 
+ ddrii_phy_top.vhd         Locally Added               0 
+ ddrii_phy_en.vhd          Locally Added               0 
+ ddrii_phy_init_sm.vhd     Locally Added               0 
+ ddrii_top_wr_data_interface.vhd Locally Added               0 
+ ddr-sram-device.awb       Locally Added               0 
+
+
+* Extremely preliminary ddr_sram device for ACP. Still needs a Bluespec driver, as well as some understanding of how it wants to be
+  clocked.
+
+* ACP w/SRAM alternative physical platform.
+
+Michael P.

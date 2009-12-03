@@ -1,0 +1,30 @@
+%name ACP DDR SRAM Device
+%desc Import DDR SRAM VHDL into Bluespec
+
+%provides ddr_sram_device
+
+%sources -t BSV -v PUBLIC  ddr-sram-vhdl-import.bsv
+%sources -t BSV -v PUBLIC  ddr-sram-device.bsv
+
+%sources -t VHD -v PRIVATE ddrii_idelay_ctrl.vhd
+%sources -t VHD -v PRIVATE ddrii_infrastructure.vhd
+%sources -t VHD -v PRIVATE ddrii_phy_bw_io.vhd
+%sources -t VHD -v PRIVATE ddrii_phy_cq_io.vhd
+%sources -t VHD -v PRIVATE ddrii_phy_ctrl_io.vhd
+%sources -t VHD -v PRIVATE ddrii_phy_dly_cal_sm.vhd
+%sources -t VHD -v PRIVATE ddrii_phy_dq_io.vhd
+%sources -t VHD -v PRIVATE ddrii_phy_en.vhd
+%sources -t VHD -v PRIVATE ddrii_phy_init_sm.vhd
+%sources -t VHD -v PRIVATE ddrii_phy_io.vhd
+%sources -t VHD -v PRIVATE ddrii_phy_top.vhd
+%sources -t VHD -v PRIVATE ddrii_phy_write.vhd
+%sources -t VHD -v PRIVATE ddrii_top.vhd
+%sources -t VHD -v PRIVATE ddrii_top_addr_cmd_interface.vhd
+%sources -t VHD -v PRIVATE ddrii_top_ctrl_sm.vhd
+%sources -t VHD -v PRIVATE ddrii_top_user_interface.vhd
+%sources -t VHD -v PRIVATE ddrii_top_wr_data_interface.vhd
+%sources -t VHD -v PRIVATE m2c_clocking.vhd
+%sources -t VHD -v PRIVATE m2c_sram.vhd
+%sources -t VHD -v PRIVATE ddrii_sram.vhd
+
+%sources -t UCF -v PRIVATE ddr-sram-device.ucf
