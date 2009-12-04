@@ -937,3 +937,34 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
 * ACP w/SRAM alternative physical platform.
 
 Michael P.
+
+----------
+pellauer    Date: Fri Dec  4 17:10:55 EST 2009  CSN: CSN-platform-acp-43
+                  Fri Dec  4 22:10:55 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.bsv Locally Modified           41 
+ nallatech-edge-vhdl-import.bsv Locally Modified           41 
+ nallatech-edge-device.vhd Locally Modified           41 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           42 
+ ddrii_sram.vhd            Locally Modified           42 
+ ddr-sram-device.bsv       Locally Modified           42 
+ ddr-sram-vhdl-import.bsv  Locally Modified           42 
+ m2c_clocking.vhd          Locally Modified           42 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.bsv               Locally Modified           42 
+
+
+* Updates to the ACP SRAM device - now takes its clocking from the nallatech
+edge device. 
+
+* Wires look to be all going to the right place in the .v files - remains to see
+if the UCF still needs some tweaking.
+
+* We should be able to start doing the BSV driver now.
+
+Michael P.

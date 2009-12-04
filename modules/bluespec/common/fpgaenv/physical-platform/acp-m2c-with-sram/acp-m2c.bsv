@@ -95,7 +95,15 @@ module mkPhysicalPlatform
     
     // Instantiate all other physical devices
     
-    DDR_SRAM_DEVICE ddr_sram_device <- mkDDRSRAMDevice();
+    Clock clk = nallatech_edge_device.clocks_driver.clock;
+    Reset rst = nallatech_edge_device.clocks_driver.reset;
+    
+    DDR_SRAM_DEVICE ddr_sram_device <- mkDDRSRAMDevice(nallatech_edge_device.sram_clocks_driver.ramClk0,
+                                                       nallatech_edge_device.sram_clocks_driver.ramClk200,
+                                                       nallatech_edge_device.sram_clocks_driver.ramClk270,
+                                                       nallatech_edge_device.sram_clocks_driver.ramClkLocked,
+                                                       clocked_by clk, 
+                                                       reset_by rst);
 
     // Aggregate the drivers
     

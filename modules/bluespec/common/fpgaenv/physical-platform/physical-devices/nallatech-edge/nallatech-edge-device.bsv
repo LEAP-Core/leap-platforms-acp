@@ -49,9 +49,21 @@ interface NALLATECH_EDGE_DEVICE;
     interface NALLATECH_EDGE_DRIVER edge_driver;
     interface NALLATECH_EDGE_WIRES  wires;
     interface CLOCKS_DRIVER         clocks_driver;
+    interface SRAM_CLOCKS_DRIVER    sram_clocks_driver;
         
 endinterface
 
+// Interface SRAM_CLOCKS_DRIVER
+// An interface to pass wires from the edge driver to an SRAM device (if present)
+
+interface SRAM_CLOCKS_DRIVER;
+
+    interface Clock ramClk0;
+    interface Clock ramClk200;
+    interface Clock ramClk270;
+    method Bit#(1) ramClkLocked();
+        
+endinterface
 
 // mkNallatechEdgeDevice
 
@@ -140,6 +152,17 @@ module mkNallatechEdgeDevice
             
         endmethod
                 
+    endinterface
+    
+    // The Nallatech Edge device currently also provides clocks for any SRAM devices present.
+    
+    interface SRAM_CLOCKS_DRIVER sram_clocks_driver;
+
+        interface Clock ramClk0 = prim_device.ramClk0;
+        interface Clock ramClk200 = prim_device.ramClk200;
+        interface Clock ramClk270 = prim_device.ramClk270;
+        method Bit#(1)  ramClkLocked() = prim_device.ramClkLocked();
+            
     endinterface
     
     // The Nallatech Edge device currently also provides the Clocks driver

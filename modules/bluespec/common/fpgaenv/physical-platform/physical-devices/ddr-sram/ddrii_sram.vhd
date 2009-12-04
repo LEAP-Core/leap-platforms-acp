@@ -133,11 +133,7 @@ entity ddrii_sram is
    ddrii_dll_off_n       : out   std_logic;
    ddrii_bw_n            : out   std_logic_vector((BW_WIDTH-1) downto 0);
    masterbank_sel_pin    : in    std_logic_vector((MASTERBANK_PIN_WIDTH-1) downto 0);
-   sys_rst_n             : in    std_logic;
    cal_done              : out   std_logic;
-   clk_0                 : in    std_logic;
-   clk_270               : in    std_logic;
-   clk_200               : in    std_logic;
    idelay_ctrl_ready     : in 	std_logic;
 	
    ddrii_cq              : in    std_logic_vector((CQ_WIDTH-1) downto 0);
@@ -148,6 +144,11 @@ entity ddrii_sram is
    ddrii_c_n             : out   std_logic_vector((CLK_WIDTH-1) downto 0);
 
    -- Wires for Bluespec interface
+   clk_0                 : in    std_logic;
+   clk_270               : in    std_logic;
+   clk_200               : in    std_logic;
+   sys_rst_n             : in    std_logic;
+   locked                : in    std_logic;
 
    user_addr_wr_en      : in    std_logic;
    user_wrdata_wr_en    : in    std_logic;
@@ -408,7 +409,7 @@ begin
    )
     port map (
       sys_rst_n             => sys_rst_n,
-      locked                => '0', -- XXX or '1'
+      locked                => locked,
       reset_clk_0           => reset_clk_0,
       reset_clk_270         => reset_clk_270,
       reset_clk_200         => reset_clk_200,

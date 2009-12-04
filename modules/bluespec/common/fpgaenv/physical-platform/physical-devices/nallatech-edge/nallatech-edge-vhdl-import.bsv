@@ -68,7 +68,7 @@ interface NALLATECH_EDGE_WIRES;
     (* result = "SYS_LED_OUT" *) method Bit#(6) wSYS_LED_OUT();
                                      
     // RAM
-    (* result = "RAM_PWR_ON" *) method Bit#(1) wRAM_PWR_ON;
+    (* result = "RAM_PWR_ON" *) method Bit#(1) wRAM_PWR_ON();
     (* result = "RAM_LEDS"   *) method Bit#(2) wRAM_LEDS();
     (* enable = "RAM_PG"     *) method Action  wRAM_PG();
                                     
@@ -93,6 +93,15 @@ interface PRIMITIVE_NALLATECH_EDGE_DEVICE;
     
     interface Clock rawClock;
     
+    //
+    // SRAM Clocking
+    //
+    
+    interface Clock ramClk0;
+    interface Clock ramClk200;
+    interface Clock ramClk270;
+    method Bit#(1) ramClkLocked();
+
     //
     // Wires to be sent to the top level
     //
@@ -129,6 +138,12 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
     output_reset reset (RST_N_OUT) clocked_by(clock);
   
     output_clock rawClock (RAW_CLK_OUT);
+
+    output_clock ramClk0   (ram_clk0);
+    output_clock ramClk200 (ram_clk200);
+    output_clock ramClk270 (ram_clk270);
+
+    method ram_clk_locked ramClkLocked();
 
     //
     // Wires to be sent to the top level
@@ -213,6 +228,7 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
               wires_wLVDS_RX_LANE_P, wires_wLVDS_RX_LANE_N, wires_wLVDS_RX_CLK_P, wires_wLVDS_RX_CLK_N,
               wires_wLVDS_TX_LANE_P, wires_wLVDS_TX_LANE_N, wires_wLVDS_TX_CLK_P, wires_wLVDS_TX_CLK_N,
               wires_wSCL, wires_wSYS_LED_OUT, wires_wRAM_PWR_ON, wires_wRAM_LEDS, wires_wRAM_PG,
+              ramClkLocked,
               wires_wMGT_PG)
         
         CF
@@ -223,7 +239,7 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
               wires_wLVDS_TX_LANE_P, wires_wLVDS_TX_LANE_N, wires_wLVDS_TX_CLK_P, wires_wLVDS_TX_CLK_N,
               wires_wSCL, wires_wSYS_LED_OUT, wires_wRAM_PWR_ON, wires_wRAM_LEDS, wires_wRAM_PG,
               wires_wMGT_PG,
-
+              ramClkLocked,
               enq, first, deq);
     
     // enq

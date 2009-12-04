@@ -65,7 +65,7 @@ interface DDR_SRAM_WIRES;
     (* prefix = "" *) interface Inout#(Bit#(`SRAM_DATA_WIDTH)) w_ddrii_dq;
 
     (* result = "ddrii_sa" *) method Bit#(`SRAM_ADDR_WIDTH) w_ddrii_sa();
-    (* result = "ddrii_ln_n" *) method Bit#(1) w_ddrii_ld_n();
+    (* result = "ddrii_ld_n" *) method Bit#(1) w_ddrii_ld_n();
     (* result = "ddrii_rw_n" *) method Bit#(1) w_ddrii_rw_n();
     (* result = "ddrii_dll_off_n" *) method Bit#(1) w_ddrii_dll_off_n();
     (* result = "ddrii_bw_n" *) method Bit#(`SRAM_BW_WIDTH) w_ddrii_bw_n();
@@ -121,16 +121,15 @@ endinterface
 // Straightforward import of the VHDL into Bluespec.
 
 import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
-    #(Clock bsv_clk150,
-      Clock bsv_clk200,
-      Clock bsv_clk270,
-      Reset bsv_rst150,
-      Reset bsv_rst200)
+    #(Clock ram_clk0,
+      Clock ram_clk200,
+      Clock ram_clk270,
+      Bit#(1) ram_clkLocked)
     // interface:
                  (PRIMITIVE_DDR_SRAM_DEVICE);
 
-    default_clock no_clock; // XXX this perhaps should be bsv_clk150 depending on how we do it.
-    default_reset no_reset;
+    default_clock no_clock; // Note: These perhaps should be ram_clk0 depending on how it affects synchronization.
+    default_reset  (sys_rst_n) clocked_by (no_clock);
 
     parameter ADDR_WIDTH = `SRAM_ADDR_WIDTH;
     parameter BURST_LENGTH = `SRAM_BURST_LENGTH;
@@ -141,15 +140,16 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
     parameter DATA_WIDTH = `SRAM_DATA_WIDTH;
 
     //
-    // XXX Clocks and resets need more thought.
+    // Input Clocks from the Edge device.
     //
 
-    input_clock   (clk_0)      = bsv_clk150;
-    input_clock   (clk_200)    = bsv_clk200;
-    input_clock   (clk_270)    = bsv_clk270;
+    input_clock   (clk_0)      = ram_clk0;
+    input_clock   (clk_200)    = ram_clk200;
+    input_clock   (clk_270)    = ram_clk270;
     
-    input_reset   (sys_rst_n) clocked_by (bsv_clk150) = bsv_rst150;
-
+    // RAM clk_locked port. Could also do this as a method, but that could get messy.
+    port locked = ram_clkLocked;
+   
     //
     // Wires to be sent to the top level
     //
@@ -180,24 +180,26 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
     //
     // Bluespec-VHDL interface
     //
+    
+    // XXX is ram_clk0 correct here?
 
     method enqueue_address(user_addr, user_cmd)
         ready  (addr_fifo_not_full)
         enable (user_addr_wr_en)
-        clocked_by (bsv_clk150);
+        clocked_by (ram_clk0);
 
     method enqueue_data(user_wr_data_rise, user_bw_n_rise, user_wr_data_fall, user_bw_n_fall)
         ready  (wrdata_fifo_not_full)
         enable (user_wrdata_wr_en)
-        clocked_by (bsv_clk150);
+        clocked_by (ram_clk0);
 
     method user_rd_data_rise dequeue_data_rise()
         ready (rd_data_valid)
-        clocked_by (bsv_clk150);
+        clocked_by (ram_clk0);
 
     method user_rd_data_fall dequeue_data_fall()
         ready (rd_data_valid)
-        clocked_by (bsv_clk150);
+        clocked_by (ram_clk0);
                           
     //
     // Scheduling

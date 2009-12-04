@@ -57,18 +57,17 @@ endinterface
 // Wrap the primitive device and deal with DDR.
 
 module mkDDRSRAMDevice
+    #(Clock ramClk0,
+      Clock ramClk200,
+      Clock ramClk270,
+      Bit#(1) ramClkLocked)
     // interface:
                  (DDR_SRAM_DEVICE);
 
     // Instantiate the primitive device.
     // XXX just use a fake clock now so we can get this to compile.
 
-    
-    Clock modelClock <- exposeCurrentClock();
-    Reset modelReset <- exposeCurrentReset();
-    MakeClockIfc#(Bit#(1)) fakeclock <- mkUngatedClock(0);
-    
-    PRIMITIVE_DDR_SRAM_DEVICE prim_device <- mkPrimitiveDDRSRAMDevice(fakeclock.new_clk, fakeclock.new_clk, fakeclock.new_clk, modelReset, modelReset);
+    PRIMITIVE_DDR_SRAM_DEVICE prim_device <- mkPrimitiveDDRSRAMDevice(ramClk0, ramClk200, ramClk270, ramClkLocked);
 
     interface DDR_SRAM_DRIVER sram_driver;
 

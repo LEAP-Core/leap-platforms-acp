@@ -98,6 +98,11 @@ entity nallatech_edge_vhdl is
         raw_clk_out: out std_logic;     -- raw oscillator clock
         clk_out    : out std_logic;     -- interface clock
         rst_n_out  : out std_logic;     -- interface reset
+
+	ram_clk0   : out std_logic;
+        ram_clk200 : out std_logic;
+	ram_clk270 : out std_logic;
+	ram_clk_locked : out std_logic;
         
         -- user interface
         
@@ -148,7 +153,7 @@ architecture rtl of nallatech_edge_vhdl is
 			ram_clk0 : out std_logic;
 			ram_clk180 : out std_logic;
 			ram_clk270 : out std_logic;
-			clk200mhz : out std_logic;
+                        clk200mhz : out std_logic;
 			ram_clk_locked : out std_logic;
 			user_reg_clk : out std_logic;
 			user_interupt : in std_logic_vector(3 downto 0);
@@ -178,12 +183,12 @@ architecture rtl of nallatech_edge_vhdl is
 	end component;
 	
 	---------------------------------------------------------------------------
-	--M2E edge ram clock signals
-	signal ram_clk0 : std_logic;
+	--M2E edge ram clock signals, now outputs:
+	--signal ram_clk0 : std_logic;
 	signal ram_clk180 : std_logic;
-	signal ram_clk270 : std_logic;
+	--signal ram_clk270 : std_logic;
 	signal clk200mhz : std_logic;
-	signal ram_clk_locked : std_logic;
+	signal i_ram_clk_locked : std_logic;
 	
     -- raw oscillator clock
     signal osc_clk : std_logic;
@@ -308,7 +313,7 @@ begin
 		ram_clk180 => ram_clk180,
 		ram_clk270 => ram_clk270,
 		clk200mhz => clk200mhz,
-		ram_clk_locked => ram_clk_locked, 
+		ram_clk_locked => i_ram_clk_locked, 
 		-------------------------------
 		--user register slave interface
 		user_reg_clk => user_reg_clk,
@@ -359,7 +364,9 @@ begin
     -- raw_clk_out <= raw_clk_c;
     raw_clk_out <= clk;
     clk_out     <= clk;
-    rst_n_out   <= ram_clk_locked;
+    rst_n_out   <= i_ram_clk_locked;
+    ram_clk_locked <= i_ram_clk_locked;
+    ram_clk200  <= clk200MHz;
 
     -- clk_ibufgds_inst : ibufgds
     -- port map (
