@@ -968,3 +968,30 @@ if the UCF still needs some tweaking.
 * We should be able to start doing the BSV driver now.
 
 Michael P.
+
+----------
+mcadler     Date: Mon Dec  7 18:42:54 EST 2009  CSN: CSN-platform-acp-44
+                  Mon Dec  7 23:42:54 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.awb               Locally Modified           43 
+ acp-m2c.bsv               Locally Modified           43 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr_sram_vhdl_import.bi   Locally Removed            43 
+ ddr-sram-device.bi        Locally Removed            43 
+ ddr-sram-device.bsv       Locally Modified           43 
+ ddr_sram_vhdl_import.bo   Locally Removed            43 
+ ddr-sram-vhdl-import.bi   Locally Removed            43 
+ ddr-sram-vhdl-import.bsv  Locally Modified           43 
+ ddr-sram-device.bo        Locally Removed            43 
+ ddr-sram-vhdl-import.bo   Locally Removed            43 
+ ddr-sram-device.awb       Locally Modified           43 
+
+- Change interface naming to be consistent with other DDR2 controllers so
+  this driver can be used by the generic local memory code in platforms.
+
+- Change memory sizes to fit in with with local memory.
+
+- Still no actual driver code.

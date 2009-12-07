@@ -25,7 +25,7 @@ import Clocks::*;
 
 `include "asim/provides/clocks_device.bsh"
 `include "asim/provides/nallatech_edge_device.bsh"
-`include "asim/provides/ddr_sram_device.bsh"
+`include "asim/provides/ddr2_device.bsh"
 
 // PHYSICAL_DRIVERS
 
@@ -37,8 +37,7 @@ interface PHYSICAL_DRIVERS;
 
     interface CLOCKS_DRIVER         clocksDriver;
     interface NALLATECH_EDGE_DRIVER nallatechEdgeDriver;
-    interface DDR_SRAM_DRIVER sramDriver;
-
+    interface DDR2_DRIVER           ddr2Driver;
 
 endinterface
 
@@ -55,7 +54,7 @@ interface TOP_LEVEL_WIRES;
     interface NALLATECH_EDGE_WIRES nallatechEdgeWires;
 
     (* prefix = "" *)
-    interface DDR_SRAM_WIRES sramWires;
+    interface DDR2_WIRES ddr2Wires;
 
 endinterface
 
@@ -98,12 +97,13 @@ module mkPhysicalPlatform
     Clock clk = nallatech_edge_device.clocks_driver.clock;
     Reset rst = nallatech_edge_device.clocks_driver.reset;
     
-    DDR_SRAM_DEVICE ddr_sram_device <- mkDDRSRAMDevice(nallatech_edge_device.sram_clocks_driver.ramClk0,
-                                                       nallatech_edge_device.sram_clocks_driver.ramClk200,
-                                                       nallatech_edge_device.sram_clocks_driver.ramClk270,
-                                                       nallatech_edge_device.sram_clocks_driver.ramClkLocked,
-                                                       clocked_by clk, 
-                                                       reset_by rst);
+    DDR2_DEVICE ddr2_sram_device <- mkDDR2SRAMDevice(nallatech_edge_device.sram_clocks_driver.ramClk0,
+                                                     nallatech_edge_device.sram_clocks_driver.ramClk200,
+                                                     nallatech_edge_device.sram_clocks_driver.ramClk270,
+                                                     nallatech_edge_device.sram_clocks_driver.ramClkLocked,
+                                                     rst,
+                                                     clocked_by clk, 
+                                                     reset_by rst);
 
     // Aggregate the drivers
     
@@ -111,7 +111,7 @@ module mkPhysicalPlatform
     
         interface clocksDriver        = nallatech_edge_device.clocks_driver;
         interface nallatechEdgeDriver = nallatech_edge_device.edge_driver;
-        interface sramDriver          = ddr_sram_device.sram_driver;
+        interface ddr2Driver          = ddr2_sram_device.driver;
     
     endinterface
     
@@ -120,7 +120,7 @@ module mkPhysicalPlatform
     interface TOP_LEVEL_WIRES topLevelWires;
     
         interface nallatechEdgeWires  = nallatech_edge_device.wires;
-        interface sramWires           = ddr_sram_device.wires;
+        interface ddr2Wires           = ddr2_sram_device.wires;
 
     endinterface
                

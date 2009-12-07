@@ -35,32 +35,41 @@
 `define SRAM_CQ_WIDTH 1
 `define SRAM_DATA_WIDTH 36
 
-// Typedefs.
+//
+// Data sizes are fixed by the VHDL DRAM controller and the hardware and are
+// not flexible.
+//
 
-// The SRAM controller uses both clock edges to pass data, which appears to
-// be 2 words per cycle.
-typedef TMul#(2, `SRAM_DATA_WIDTH) FPGA_SRAM_DUALEDGE_DATA_SZ;
-typedef Bit#(FPGA_SRAM_DUALEDGE_DATA_SZ) FPGA_SRAM_DUALEDGE_DATA;
+// The smallest addressable word:
+typedef 32 FPGA_DDR_WORD_SZ;
+typedef Bit#(FPGA_DDR_WORD_SZ) FPGA_DDR_WORD;
 
-// The SRAM controller reads and writes multiple dual-edge data values for
+// The DRAM controller uses both clock edges to pass data, which appears to
+// be 2 words per cycle.  Addresses are little endian, so the low address
+// goes in the low bits.  Most of the interfaces in this module pass:
+typedef TMul#(2, FPGA_DDR_WORD_SZ) FPGA_DDR_DUALEDGE_DATA_SZ;
+typedef Bit#(FPGA_DDR_DUALEDGE_DATA_SZ) FPGA_DDR_DUALEDGE_DATA;
+
+// The DRAM controller reads and writes multiple dual-edge data values for
 // a single request.  The number of dual-edge data values per request is:
-typedef `SRAM_BURST_LENGTH FPGA_SRAM_BURST_LENGTH;
+typedef `SRAM_BURST_LENGTH FPGA_DDR_BURST_LENGTH;
 
 // Each byte in a write may be disabled for writes using a bit mask.
 // !!! NOTE: to conform to the controller, a mask bit is 0 to request a write !!!
-typedef `SRAM_BW_WIDTH FPGA_SRAM_WORD_MASK_SZ;
-typedef Bit#(FPGA_SRAM_WORD_MASK_SZ) FPGA_SRAM_DUALEDGE_DATA_MASK;
+typedef Bit#(TDiv#(FPGA_DDR_WORD_SZ, 8)) FPGA_DDR_WORD_MASK;
+typedef Bit#(TDiv#(FPGA_DDR_DUALEDGE_DATA_SZ, 8)) FPGA_DDR_DUALEDGE_DATA_MASK;
 
-// Capacity of the memory (addressing FPGA_SRAM_WORDs):
-typedef `SRAM_ADDR_WIDTH FPGA_SRAM_ADDRESS_SZ;
-typedef Bit#(FPGA_SRAM_ADDRESS_SZ) FPGA_SRAM_ADDRESS;
+// Capacity of the memory (addressing FPGA_DDR_WORDs):
+typedef `SRAM_ADDR_WIDTH FPGA_DDR_ADDRESS_SZ;
+typedef Bit#(FPGA_DDR_ADDRESS_SZ) FPGA_DDR_ADDRESS;
 
 
-// DDR_SRAM_WIRES
+
+// DDR2_WIRES
 
 // Wires to be sent to the top level
 
-interface DDR_SRAM_WIRES;
+interface DDR2_WIRES;
 
     (* prefix = "" *) interface Inout#(Bit#(`SRAM_DATA_WIDTH)) w_ddrii_dq;
 
@@ -94,7 +103,7 @@ interface PRIMITIVE_DDR_SRAM_DEVICE;
     // Wires to be sent to the top level
     //
 
-    (* prefix = "" *) interface DDR_SRAM_WIRES wires;
+    (* prefix = "" *) interface DDR2_WIRES wires;
         
     //
     // Methods for the Driver
@@ -124,12 +133,13 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
     #(Clock ram_clk0,
       Clock ram_clk200,
       Clock ram_clk270,
-      Bit#(1) ram_clkLocked)
+      Bit#(1) ram_clkLocked,
+      Reset topLevelReset)
     // interface:
                  (PRIMITIVE_DDR_SRAM_DEVICE);
 
     default_clock no_clock; // Note: These perhaps should be ram_clk0 depending on how it affects synchronization.
-    default_reset  (sys_rst_n) clocked_by (no_clock);
+    default_reset (sys_rst_n) clocked_by (no_clock) = topLevelReset;
 
     parameter ADDR_WIDTH = `SRAM_ADDR_WIDTH;
     parameter BURST_LENGTH = `SRAM_BURST_LENGTH;
@@ -154,7 +164,7 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
     // Wires to be sent to the top level
     //
 
-    interface DDR_SRAM_WIRES wires;
+    interface DDR2_WIRES wires;
     
         ifc_inout w_ddrii_dq(ddrii_dq);
 

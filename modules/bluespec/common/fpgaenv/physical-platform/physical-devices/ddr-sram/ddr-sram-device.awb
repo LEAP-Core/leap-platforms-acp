@@ -1,7 +1,7 @@
-%name ACP DDR SRAM Device
-%desc Import DDR SRAM VHDL into Bluespec
+%name ACP DDR2 SRAM Device
+%desc Import DDR2 SRAM VHDL into Bluespec
 
-%provides ddr_sram_device
+%provides ddr2_device
 
 %sources -t BSV -v PUBLIC  ddr-sram-vhdl-import.bsv
 %sources -t BSV -v PUBLIC  ddr-sram-device.bsv
