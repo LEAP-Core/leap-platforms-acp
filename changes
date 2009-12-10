@@ -995,3 +995,13 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
 - Change memory sizes to fit in with with local memory.
 
 - Still no actual driver code.
+
+----------
+mcadler     Date: Thu Dec 10 09:45:32 EST 2009  CSN: CSN-platform-acp-45
+                  Thu Dec 10 14:45:32 UTC 2009
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-sram-nallatech.apm Locally Added               0 
+
+Add Nallatech firmware configuration with SRAM.
