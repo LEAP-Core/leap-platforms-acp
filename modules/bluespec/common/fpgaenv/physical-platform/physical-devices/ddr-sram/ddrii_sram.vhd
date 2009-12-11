@@ -124,8 +124,11 @@ entity ddrii_sram is
    );
   port(
 
+   --
    -- Top-level wires for the UCF
+   --
 
+   -- Wires for RAM 1 or 5
    ddrii_dq              : inout  std_logic_vector((DATA_WIDTH-1) downto 0);
    ddrii_sa              : out   std_logic_vector((ADDR_WIDTH-1) downto 0);
    ddrii_ld_n            : out   std_logic;
@@ -135,7 +138,6 @@ entity ddrii_sram is
    masterbank_sel_pin    : in    std_logic_vector((MASTERBANK_PIN_WIDTH-1) downto 0);
    cal_done              : out   std_logic;
    idelay_ctrl_ready     : in 	std_logic;
-	
    ddrii_cq              : in    std_logic_vector((CQ_WIDTH-1) downto 0);
    ddrii_cq_n            : in    std_logic_vector((CQ_WIDTH-1) downto 0);
    ddrii_k               : out   std_logic_vector((CLK_WIDTH-1) downto 0);
@@ -143,13 +145,34 @@ entity ddrii_sram is
    ddrii_c               : out   std_logic_vector((CLK_WIDTH-1) downto 0);
    ddrii_c_n             : out   std_logic_vector((CLK_WIDTH-1) downto 0);
 
+   -- Wires for RAM 2 or 6
+   ddrii_dq_2              : inout  std_logic_vector((DATA_WIDTH-1) downto 0);
+   ddrii_sa_2              : out   std_logic_vector((ADDR_WIDTH-1) downto 0);
+   ddrii_ld_n_2            : out   std_logic;
+   ddrii_rw_n_2            : out   std_logic;
+   ddrii_dll_off_n_2       : out   std_logic;
+   ddrii_bw_n_2            : out   std_logic_vector((BW_WIDTH-1) downto 0);
+   masterbank_sel_pin_2    : in    std_logic_vector((MASTERBANK_PIN_WIDTH-1) downto 0);
+   cal_done_2              : out   std_logic;
+   idelay_ctrl_ready_2     : in   std_logic;
+   ddrii_cq_2              : in    std_logic_vector((CQ_WIDTH-1) downto 0);
+   ddrii_cq_n_2            : in    std_logic_vector((CQ_WIDTH-1) downto 0);
+   ddrii_k_2               : out   std_logic_vector((CLK_WIDTH-1) downto 0);
+   ddrii_k_n_2             : out   std_logic_vector((CLK_WIDTH-1) downto 0);
+   ddrii_c_2               : out   std_logic_vector((CLK_WIDTH-1) downto 0);
+   ddrii_c_n_2             : out   std_logic_vector((CLK_WIDTH-1) downto 0);
+
+
    -- Wires for Bluespec interface
    clk_0                 : in    std_logic;
    clk_270               : in    std_logic;
    clk_200               : in    std_logic;
    sys_rst_n             : in    std_logic;
    locked                : in    std_logic;
+   clk0_out              : out   std_logic;
+   rst0_n_out            : out   std_logic;
 
+   -- Wires for RAM 1 or 5
    user_addr_wr_en      : in    std_logic;
    user_wrdata_wr_en    : in    std_logic;
    wrdata_fifo_not_full : out   std_logic;
@@ -162,7 +185,22 @@ entity ddrii_sram is
    user_bw_n_rise       : in    std_logic_vector((BW_WIDTH-1) downto 0);
    user_bw_n_fall       : in    std_logic_vector((BW_WIDTH-1) downto 0);
    user_addr            : in    std_logic_vector(ADDR_WIDTH-1 downto 0);
-   user_cmd             : in    std_logic
+   user_cmd             : in    std_logic;
+
+   -- Wires for RAM 2 or 6
+   user_addr_wr_en_2      : in    std_logic;
+   user_wrdata_wr_en_2    : in    std_logic;
+   wrdata_fifo_not_full_2 : out   std_logic;
+   addr_fifo_not_full_2   : out   std_logic;
+   rd_data_valid_2        : out   std_logic;
+   user_wr_data_rise_2    : in    std_logic_vector((DATA_WIDTH-1) downto 0);
+   user_wr_data_fall_2    : in    std_logic_vector((DATA_WIDTH-1) downto 0);
+   user_rd_data_rise_2    : out   std_logic_vector((DATA_WIDTH-1) downto 0);
+   user_rd_data_fall_2    : out   std_logic_vector((DATA_WIDTH-1) downto 0);
+   user_bw_n_rise_2       : in    std_logic_vector((BW_WIDTH-1) downto 0);
+   user_bw_n_fall_2       : in    std_logic_vector((BW_WIDTH-1) downto 0);
+   user_addr_2            : in    std_logic_vector(ADDR_WIDTH-1 downto 0);
+   user_cmd_2             : in    std_logic
    );
 end entity ddrii_sram;
 
@@ -314,6 +352,10 @@ component ddrii_top
   signal  addr_fifo_full     : std_logic;
   signal  user_addr_cmd          : std_logic_vector(ADDR_WIDTH downto 0);
   signal  i_cal_done           : std_logic;
+  signal  wrdata_fifo_full_2   : std_logic;
+  signal  addr_fifo_full_2     : std_logic;
+  signal  user_addr_cmd_2          : std_logic_vector(ADDR_WIDTH downto 0);
+  signal  i_cal_done_2           : std_logic;
 
 
   --Debug signals
@@ -349,11 +391,43 @@ component ddrii_top
   signal  dbg_sel_idel_cq_n          : std_logic_vector(CQ_WIDTH-1 downto 0);
   signal  dbg_sel_all_idel_cq_n      : std_logic;
 
+  signal  dbg_stg1_cal_done_cq_inst_2  : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_stg1_cal_done_cq_n_inst_2  : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_stg2_cal_done_cq_inst_2  : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_stg2_cal_done_cq_n_inst_2  : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_stg3_cal_done_cq_inst_2  : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_stg3_cal_done_cq_n_inst_2  : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_q_tap_count_cq_inst_2    : std_logic_vector((6*CQ_WIDTH)-1 downto 0);
+  signal  dbg_q_tap_count_cq_n_inst_2  : std_logic_vector((6*CQ_WIDTH)-1 downto 0);
+  signal  dbg_cq_tap_count_inst_2      : std_logic_vector((6*CQ_WIDTH)-1 downto 0);
+  signal  dbg_cq_n_tap_count_inst_2    : std_logic_vector((6*CQ_WIDTH)-1 downto 0);
+  signal  dbg_data_valid_cq_inst_2     : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_data_valid_cq_n_inst_2   : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_cal_done_2               : std_logic;
+  signal  dbg_init_wait_done_2         : std_logic;
+  signal  dbg_data_valid_2             : std_logic;
+  signal  dbg_idel_up_all_2            : std_logic;
+  signal  dbg_idel_down_all_2          : std_logic;
+  signal  dbg_idel_up_q_2              : std_logic;
+  signal  dbg_idel_down_q_2            : std_logic;
+  signal  dbg_sel_idel_q_cq_2          : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_sel_all_idel_q_cq_2      : std_logic;
+  signal  dbg_sel_idel_q_cq_n_2        : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_sel_all_idel_q_cq_n_2    : std_logic;
+  signal  dbg_idel_up_cq_2             : std_logic;
+  signal  dbg_idel_down_cq_2           : std_logic;
+  signal  dbg_sel_idel_cq_2            : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_sel_all_idel_cq_2        : std_logic;
+  signal  dbg_sel_idel_cq_n_2          : std_logic_vector(CQ_WIDTH-1 downto 0);
+  signal  dbg_sel_all_idel_cq_n_2      : std_logic;
+
 
 
   signal control0     : std_logic_vector(35 downto 0);
   signal dbg_sync_out : std_logic_vector(36 downto 0);
   signal dbg_async_in : std_logic_vector(131 downto 0);
+  signal dbg_sync_out_2 : std_logic_vector(36 downto 0);
+  signal dbg_async_in_2 : std_logic_vector(131 downto 0);
 
   signal  masterbank_sel_pin_out : std_logic_vector((MASTERBANK_PIN_WIDTH-1) downto 0);
 
@@ -376,7 +450,14 @@ begin
   wrdata_fifo_not_full <= not wrdata_fifo_full;
   addr_fifo_not_full   <= not addr_fifo_full;
   user_addr_cmd <= user_addr & user_cmd; -- & is concatenation in VHDL
-
+  
+  cal_done_2   <= i_cal_done_2;
+  wrdata_fifo_not_full_2 <= not wrdata_fifo_full_2;
+  addr_fifo_not_full_2   <= not addr_fifo_full_2;
+  user_addr_cmd_2 <= user_addr_2 & user_cmd_2; -- & is concatenation in VHDL
+  
+  clk0_out    <= clk_0;
+  rst0_n_out  <= reset_clk_0;
 
 
   DUMMY_INST1 : for dpw_i in 0 to MASTERBANK_PIN_WIDTH-1 generate
@@ -617,6 +698,203 @@ begin
        dbg_idel_down_all       <= '0';
 
      end generate WITHOUT_DEBUG_SIGNALS_INST;
+
+  u_ddrii_top_1 : ddrii_top
+    generic map (
+      ADDR_WIDTH            => ADDR_WIDTH,
+      BURST_LENGTH          => BURST_LENGTH,
+      BUS_TURNAROUND        => BUS_TURNAROUND,
+      BW_WIDTH              => BW_WIDTH,
+      CLK_FREQ              => CLK_FREQ,
+      CLK_WIDTH             => CLK_WIDTH,
+      CQ_WIDTH              => CQ_WIDTH,
+      DATA_WIDTH            => DATA_WIDTH,
+      DEBUG_EN              => DEBUG_EN,
+      HIGH_PERFORMANCE_MODE   => HIGH_PERFORMANCE_MODE,
+      IODELAY_GRP           => IODELAY_GRP,
+      IO_TYPE               => IO_TYPE,
+      MEMORY_WIDTH          => MEMORY_WIDTH,
+      SIM_ONLY              => SIM_ONLY
+      )
+    port map (
+      ddrii_d               => open,
+      ddrii_q               => ddrii_q,
+      ddrii_dq              => ddrii_dq_2,
+      ddrii_sa              => ddrii_sa_2,
+      ddrii_ld_n            => ddrii_ld_n_2,
+      ddrii_rw_n            => ddrii_rw_n_2,
+      ddrii_dll_off_n       => ddrii_dll_off_n_2,
+      ddrii_bw_n            => ddrii_bw_n_2,
+      cal_done              => i_cal_done_2,
+      reset_clk_0           => reset_clk_0,
+      reset_clk_270         => reset_clk_270,
+      idelay_ctrl_ready     => idelay_ctrl_ready,
+      clk_0                 => clk_0,
+      clk_90                => clk_90,
+      clk_270               => clk_270,
+      user_addr_wr_en       => user_addr_wr_en_2,
+      user_wrdata_wr_en     => user_wrdata_wr_en_2,
+      wrdata_fifo_full      => wrdata_fifo_full_2,
+      addr_fifo_full        => addr_fifo_full_2,
+      rd_data_valid         => rd_data_valid_2,
+      user_wr_data_rise     => user_wr_data_rise_2,
+      user_wr_data_fall     => user_wr_data_fall_2,
+      user_rd_data_rise     => user_rd_data_rise_2,
+      user_rd_data_fall     => user_rd_data_fall_2,
+      user_bw_n_rise        => user_bw_n_rise_2,
+      user_bw_n_fall        => user_bw_n_fall_2,
+      user_addr_cmd         => user_addr_cmd_2,
+      ddrii_cq              => ddrii_cq_2,
+      ddrii_cq_n            => ddrii_cq_n_2,
+      ddrii_k               => ddrii_k_2,
+      ddrii_k_n             => ddrii_k_n_2,
+      ddrii_c               => ddrii_c_2,
+      ddrii_c_n             => ddrii_c_n_2,
+
+      dbg_stg1_cal_done_cq_inst   => dbg_stg1_cal_done_cq_inst_2,
+      dbg_stg1_cal_done_cq_n_inst   => dbg_stg1_cal_done_cq_n_inst_2,
+      dbg_stg2_cal_done_cq_inst   => dbg_stg2_cal_done_cq_inst_2,
+      dbg_stg2_cal_done_cq_n_inst   => dbg_stg2_cal_done_cq_n_inst_2,
+      dbg_stg3_cal_done_cq_inst   => dbg_stg3_cal_done_cq_inst_2,
+      dbg_stg3_cal_done_cq_n_inst   => dbg_stg3_cal_done_cq_n_inst_2,
+      dbg_q_tap_count_cq_inst   => dbg_q_tap_count_cq_inst_2,
+      dbg_q_tap_count_cq_n_inst   => dbg_q_tap_count_cq_n_inst_2,
+      dbg_cq_tap_count_inst   => dbg_cq_tap_count_inst_2,
+      dbg_cq_n_tap_count_inst   => dbg_cq_n_tap_count_inst_2,
+      dbg_data_valid_cq_inst   => dbg_data_valid_cq_inst_2,
+      dbg_data_valid_cq_n_inst   => dbg_data_valid_cq_n_inst_2,
+      dbg_cal_done            => dbg_cal_done_2,
+      dbg_init_wait_done      => dbg_init_wait_done_2,
+      dbg_data_valid          => dbg_data_valid_2,
+      dbg_idel_up_all         => dbg_idel_up_all_2,
+      dbg_idel_down_all       => dbg_idel_down_all_2,
+      dbg_idel_up_q           => dbg_idel_up_q_2,
+      dbg_idel_down_q         => dbg_idel_down_q_2,
+      dbg_sel_idel_q_cq       => dbg_sel_idel_q_cq_2,
+      dbg_sel_all_idel_q_cq   => dbg_sel_all_idel_q_cq_2,
+      dbg_sel_idel_q_cq_n     => dbg_sel_idel_q_cq_n_2,
+      dbg_sel_all_idel_q_cq_n   => dbg_sel_all_idel_q_cq_n_2,
+      dbg_idel_up_cq          => dbg_idel_up_cq_2,
+      dbg_idel_down_cq        => dbg_idel_down_cq_2,
+      dbg_sel_idel_cq         => dbg_sel_idel_cq_2,
+      dbg_sel_all_idel_cq     => dbg_sel_all_idel_cq_2,
+      dbg_sel_idel_cq_n       => dbg_sel_idel_cq_n_2,
+      dbg_sel_all_idel_cq_n   => dbg_sel_all_idel_cq_n_2
+      );
+
+     DEBUG_SIGNALS_INST_2 : if(DEBUG_EN = 1) generate
+     begin
+       ---------------------------------------------------------------------------
+       -- PHY Debug Port example - see MIG User's Guide
+       -- NOTES:
+       --   1. PHY Debug Port demo connects to 1 VIO modules:
+       --     - The asynchronous inputs
+       --      * Monitor IDELAY taps for Q, CQ/CQ#
+       --      * Calibration status
+       --     - The synchronous outputs
+       --      * Allow dynamic adjustment of IDELAY taps
+       --   2. User may need to modify this code to incorporate other
+       --      chipscope-related modules in their larger design (e.g.if they have
+       --      other ILA/VIO modules, they will need to for example instantiate a
+       --      larger ICON module).
+       --   3. For X36 bit component designs, since 18 bits of data are calibrated
+       --      using cq and other 18 bits of data are calibration using cq_n,
+       --      there are debug signals for monitoring/modifying the IDELAY
+       --      tap values of cq and cq_n and that of data bits related to cq and
+       --      cq_n.
+       --
+       --      But for X18bit component designs, since the calibration is done
+       --      w.r.t., only cq, all the debug signal related to cq_n (all the
+       --      debug signals appended with cq_n) must be ignored.
+       ---------------------------------------------------------------------------
+       X36_INST : if(MEMORY_WIDTH = 36) generate
+       begin
+         dbg_async_in_2(131 downto (32*CQ_WIDTH)+3) <= (others => '0');
+       
+         dbg_async_in_2((32*CQ_WIDTH)+2 downto 0)  <= (dbg_stg1_cal_done_cq_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_stg1_cal_done_cq_n_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_stg2_cal_done_cq_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_stg2_cal_done_cq_n_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_stg3_cal_done_cq_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_stg3_cal_done_cq_n_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_q_tap_count_cq_inst_2((6*CQ_WIDTH)-1 downto 0) &
+                                                     dbg_q_tap_count_cq_n_inst_2((6*CQ_WIDTH)-1 downto 0) &
+                                                     dbg_cq_tap_count_inst_2((6*CQ_WIDTH)-1 downto 0) &
+                                                     dbg_cq_n_tap_count_inst_2((6*CQ_WIDTH)-1 downto 0) &
+                                                     dbg_data_valid_cq_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_data_valid_cq_n_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_cal_done_2 & dbg_init_wait_done_2 &
+                                                     dbg_data_valid_2
+                                                    );
+       
+         dbg_sel_idel_q_cq_2       <= dbg_sync_out_2(((4*CQ_WIDTH)+9) downto ((3*CQ_WIDTH)+10));
+         dbg_sel_idel_q_cq_n_2     <= dbg_sync_out_2(((3*CQ_WIDTH)+9) downto ((2*CQ_WIDTH)+10));
+         dbg_sel_idel_cq_2         <= dbg_sync_out_2(((2*CQ_WIDTH)+9) downto (CQ_WIDTH+10));
+         dbg_sel_idel_cq_n_2       <= dbg_sync_out_2(CQ_WIDTH+9 downto 10);
+         dbg_sel_all_idel_q_cq_2   <= dbg_sync_out_2(9);
+         dbg_sel_all_idel_q_cq_n_2 <= dbg_sync_out_2(8);
+         dbg_sel_all_idel_cq_2     <= dbg_sync_out_2(7);
+         dbg_sel_all_idel_cq_n_2   <= dbg_sync_out_2(6);
+         dbg_idel_up_cq_2          <= dbg_sync_out_2(5);
+         dbg_idel_down_cq_2        <= dbg_sync_out_2(4);
+         dbg_idel_up_q_2           <= dbg_sync_out_2(3);
+         dbg_idel_down_q_2         <= dbg_sync_out_2(2);
+         dbg_idel_up_all_2         <= dbg_sync_out_2(1);
+         dbg_idel_down_all_2       <= dbg_sync_out_2(0);
+
+       end generate X36_INST;
+       
+       X18_X9_INST : if(MEMORY_WIDTH /= 36 ) generate
+       begin
+         dbg_async_in_2(131 downto (16*CQ_WIDTH)+3) <= (others => '0');
+         dbg_async_in_2((16*CQ_WIDTH)+2 downto 0)  <= (dbg_stg1_cal_done_cq_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_stg2_cal_done_cq_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_stg3_cal_done_cq_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_q_tap_count_cq_inst_2((6*CQ_WIDTH)-1 downto 0) &
+                                                     dbg_cq_tap_count_inst_2((6*CQ_WIDTH)-1 downto 0) &
+                                                     dbg_data_valid_cq_inst_2(CQ_WIDTH-1 downto 0) &
+                                                     dbg_cal_done_2 & dbg_init_wait_done_2 &
+                                                     dbg_data_valid_2
+                                                     );
+       
+         dbg_sel_idel_q_cq_2       <= dbg_sync_out_2(((2*CQ_WIDTH)+7) downto (CQ_WIDTH+8));
+         dbg_sel_idel_cq_2         <= dbg_sync_out_2(CQ_WIDTH+7 downto 8);
+         dbg_sel_all_idel_q_cq_2   <= dbg_sync_out_2(7);
+         dbg_sel_all_idel_cq_2     <= dbg_sync_out_2(6);
+         dbg_idel_up_cq_2          <= dbg_sync_out_2(5);
+         dbg_idel_down_cq_2        <= dbg_sync_out_2(4);
+         dbg_idel_up_q_2           <= dbg_sync_out_2(3);
+         dbg_idel_down_q_2         <= dbg_sync_out_2(2);
+         dbg_idel_up_all_2         <= dbg_sync_out_2(1);
+         dbg_idel_down_all_2       <= dbg_sync_out_2(0);
+       
+       end generate X18_X9_INST;
+
+     end generate DEBUG_SIGNALS_INST_2;
+
+     WITHOUT_DEBUG_SIGNALS_INST_2 : if(DEBUG_EN = 0) generate
+     begin
+       -------------------------------------------------------------------------
+       -- Hooks to prevent sim/syn compilation errors. When DEBUG_EN = 0, all the
+       -- debug input signals are floating. To avoid this, they are connected to
+       -- all zeros.
+       -------------------------------------------------------------------------
+       dbg_sel_idel_q_cq_2       <= (others => '0');
+       dbg_sel_idel_q_cq_n_2     <= (others => '0');
+       dbg_sel_idel_cq_2         <= (others => '0');
+       dbg_sel_idel_cq_n_2       <= (others => '0');
+       dbg_sel_all_idel_q_cq_2   <= '0';
+       dbg_sel_all_idel_q_cq_n_2 <= '0';
+       dbg_sel_all_idel_cq_2     <= '0';
+       dbg_sel_all_idel_cq_n_2   <= '0';
+       dbg_idel_up_cq_2          <= '0';
+       dbg_idel_down_cq_2        <= '0';
+       dbg_idel_up_q_2           <= '0';
+       dbg_idel_down_q_2         <= '0';
+       dbg_idel_up_all_2         <= '0';
+       dbg_idel_down_all_2       <= '0';
+
+     end generate WITHOUT_DEBUG_SIGNALS_INST_2;
 
 
 end architecture arc_mem_interface_top;

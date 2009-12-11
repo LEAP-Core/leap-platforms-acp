@@ -1005,3 +1005,36 @@ Directory config/pm/hasim/submodels/fpgaenv
  fpgaenv-acp-m2c-sram-nallatech.apm Locally Added               0 
 
 Add Nallatech firmware configuration with SRAM.
+
+----------
+pellauer    Date: Fri Dec 11 15:16:14 EST 2009  CSN: CSN-platform-acp-46
+                  Fri Dec 11 20:16:14 UTC 2009
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           45 
+ ddrii_sram.vhd            Locally Modified           45 
+ ddr-sram-device.bsv       Locally Modified           45 
+ ddr-sram-vhdl-import.bsv  Locally Modified           45 
+ ddr-sram-device.awb       Locally Modified           45 
+
+
+* ACP SRAM: now expose two banks of RAM.
+
+* Update the UCF to compile with the correct signal names.
+
+* Pass the output reset from the SRAM to keep the clock-crossing FIFOs happy.
+
+* Put some extremely preliminary synchronization logic in the BSV driver as an
+  attempt to keep XST from optimizing things away.
+
+* Currently the build fails in NGDBUILD when some critical signals in the EDGE
+  device FIFO are optimized away. The next step will be for Michael A. to make
+  an actual driver so that these signals are not optimized away.
+
+* If the EDGE device FIFO line in the UCF is commented out then the build fails
+  in MAP when critical RAM-related signals are undriven. Again, hopefully a real
+  driver would fix this.
+
+Michael P.
+

@@ -28,3 +28,5 @@
 %sources -t VHD -v PRIVATE ddrii_sram.vhd
 
 %sources -t UCF -v PRIVATE ddr-sram-device.ucf
+
+%param SRAM_MAX_OUTSTANDING_READS  8 "Maximum in-flight read requests"
