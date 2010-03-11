@@ -1,0 +1,10 @@
+files
+fast_arches_top.vhd: wrapper to make the bluespec compatible with the given arches IP.
+TopArchesReal.bsv: contains the MPI module with provides MPI send/recieve and get/put method calls.
+ArchesTypes.bsv: contains the types that represent the actual Arches MPI command formats.
+FSL.bsv: driver modules to manage the Arches command and data fifos.
+Top.bsv: example hw top level module
+test.c: example sw file
+
+The top level module must be called mkTopArches (this name is hard coded in the fast_arches_top.vhd file). mkTopArches module instantiates mkMPI and mkFSLDuplexChannel modules. To make an MPI call, use the appropriate mkMPI method and then use either the get or put method calls in mkFSLDuplexChannel to pass data to or from the x86 rank.
+
