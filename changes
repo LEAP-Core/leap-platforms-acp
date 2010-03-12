@@ -1038,3 +1038,46 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
 
 Michael P.
 
+
+----------
+aparasha    Date: Fri Mar 12 17:00:25 EST 2010  CSN: CSN-platform-acp-48
+                  Fri Mar 12 22:00:25 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddrii_top_ctrl_sm.vhd     Locally Modified           47 
+ ddrii_phy_dly_cal_sm.vhd  Locally Modified           47 
+ ddr-sram-device.ucf       Locally Modified           47 
+ ddrii_phy_io.vhd          Locally Modified           47 
+ m2c_sram.vhd              Locally Removed            47 
+ ddrii_idelay_ctrl.vhd     Locally Modified           47 
+ ddrii_top_addr_cmd_interface.vhd Locally Modified           47 
+ ddrii_top.vhd             Locally Modified           47 
+ ddrii_sram.vhd            Locally Removed            47 
+ ddr2_sram.vhd             Locally Added               0 
+ ddr-sram-device.bsv       Locally Modified           47 
+ ddr-sram-vhdl-import.bsv  Locally Modified           47 
+ ddrii_phy_cq_io.vhd       Locally Modified           47 
+ ddrii_phy_write.vhd       Locally Modified           47 
+ ddrii_phy_ctrl_io.vhd     Locally Modified           47 
+ ddrii_phy_dq_io.vhd       Locally Modified           47 
+ ddrii_phy_bw_io.vhd       Locally Modified           47 
+ m2c_clocking.vhd          Locally Removed            47 
+ ddrii_infrastructure.vhd  Locally Modified           47 
+ ddrii_top_user_interface.vhd Locally Modified           47 
+ ddrii_phy_top.vhd         Locally Modified           47 
+ ddrii_phy_init_sm.vhd     Locally Modified           47 
+ ddrii_phy_en.vhd          Locally Modified           47 
+ ddr-sram-device.awb       Locally Modified           47 
+ ddrii_top_wr_data_interface.vhd Locally Modified           47 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.ucf Locally Modified           47 
+ nallatech-edge-vhdl-import.bsv Locally Modified           47 
+ nallatech-edge-device.vhd Locally Modified           47 
+
+- updated DDR2 SRAM controller for ACP. It now synthesizes into a valid bitfile but
+  the SRAM functionality does not work.
+- updated UCF and some VHDL code in the Edge Device code to reflect
+  re-wiring due to SRAM integration
+

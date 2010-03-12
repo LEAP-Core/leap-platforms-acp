@@ -40,11 +40,11 @@
 --   ____  ____
 --  /   /\/   /
 -- /___/  \  /    Vendor             : Xilinx
--- \   \   \/     Version            : 3.1
+-- \   \   \/     Version            : 3.2
 --  \   \         Application        : MIG
 --  /   /         Filename           : ddrii_phy_dly_cal_sm.vhd
 -- /___/   /\     Timestamp          : 08 Apr 2008
--- \   \  /  \    Date Last Modified : $Date: 2009/05/09 16:59:26 $
+-- \   \  /  \    Date Last Modified : $Date: 2009/07/03 07:48:15 $
 --  \___\/\___\
 --
 --Device: Virtex-5
@@ -70,7 +70,7 @@ entity ddrii_phy_dly_cal_sm is
   generic(
     -- Following parameters are for 72-bit design. Actual values may be
     -- different. Actual parameters values are passed from design top module
-    -- mig_31 module. Please refer to the mig_31 module for actual
+    -- ddr2_sram module. Please refer to the ddr2_sram module for actual
     -- values.
     BURST_LENGTH : integer := 4;
     CLK_FREQ     : integer := 300;
@@ -1038,7 +1038,12 @@ begin
       if(reset_clk_0_r = '1') then
         insuff_window_taps <= (others => '0');
       elsif ((insuff_window_detect = '1') and (insuff_window_detect_r = '0'))then
-        insuff_window_taps <= cq_tap_cnt;
+        --insuff_window_taps <= cq_tap_cnt;
+        if (cq_inc_flag = '1') then
+            insuff_window_taps <= q_tap_cnt;
+         else
+            insuff_window_taps <= cq_tap_cnt;
+         end if;
       end if;
     end if;
   end process;
@@ -1071,7 +1076,7 @@ begin
     if(rising_edge(clk_0)) then
       if(cnt_rst = '1') then
         end_of_taps <= '0';
-      elsif(cq_tap_cnt = "110000") then
+      elsif( (cq_tap_cnt = "111010") or (q_tap_cnt = "111010"))then
         end_of_taps <= '1';
       end if;
     end if;
@@ -1082,7 +1087,8 @@ begin
     if(rising_edge(clk_0)) then
       if(reset_clk_0_r = '1') then
         stg2_cal_done_i <= '0';
-      elsif((cq_tap_cnt = cq_final_tap_cnt) and (cq_q_detect_done = '1')) then
+      --elsif((cq_tap_cnt = cq_final_tap_cnt) and (cq_q_detect_done = '1')) then
+      elsif(((cq_inc_flag = '1' and q_tap_cnt = cq_final_tap_cnt) or (q_inc_flag = '1' and cq_tap_cnt = cq_final_tap_cnt)) and (cq_q_detect_done = '1')) then
         stg2_cal_done_i <= '1';
       end if;
     end if;

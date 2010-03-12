@@ -23,9 +23,7 @@
 %sources -t VHD -v PRIVATE ddrii_top_ctrl_sm.vhd
 %sources -t VHD -v PRIVATE ddrii_top_user_interface.vhd
 %sources -t VHD -v PRIVATE ddrii_top_wr_data_interface.vhd
-%sources -t VHD -v PRIVATE m2c_clocking.vhd
-%sources -t VHD -v PRIVATE m2c_sram.vhd
-%sources -t VHD -v PRIVATE ddrii_sram.vhd
+%sources -t VHD -v PRIVATE ddr2_sram.vhd
 
 %sources -t UCF -v PRIVATE ddr-sram-device.ucf
 

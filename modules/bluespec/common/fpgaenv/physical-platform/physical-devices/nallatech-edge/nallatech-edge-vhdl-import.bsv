@@ -68,8 +68,8 @@ interface NALLATECH_EDGE_WIRES;
     (* result = "SYS_LED_OUT" *) method Bit#(6) wSYS_LED_OUT();
                                      
     // RAM
-    (* result = "RAM_PWR_ON" *) method Bit#(1) wRAM_PWR_ON();
-    (* result = "RAM_LEDS"   *) method Bit#(2) wRAM_LEDS();
+    // moved to SRAM device (* result = "RAM_PWR_ON" *) method Bit#(1) wRAM_PWR_ON();
+    // moved to SRAM device (* result = "RAM_LEDS"   *) method Bit#(2) wRAM_LEDS();
     (* enable = "RAM_PG"     *) method Action  wRAM_PG();
                                     
     // misc
@@ -185,8 +185,8 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
         method SYS_LED_OUT wSYS_LED_OUT();
                                      
         // RAM
-        method RAM_PWR_ON wRAM_PWR_ON();
-        method RAM_LEDS   wRAM_LEDS();
+        // method RAM_PWR_ON wRAM_PWR_ON();
+        // method RAM_LEDS   wRAM_LEDS();
         method            wRAM_PG() enable (RAM_PG);
                                     
         // misc
@@ -227,7 +227,7 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
               wires_wREG_LDS_Z, wires_wREG_ADS_Z, wires_wREG_EN_Z, wires_wREG_RDY_Z, wires_wREG_RD_WR_Z,
               wires_wLVDS_RX_LANE_P, wires_wLVDS_RX_LANE_N, wires_wLVDS_RX_CLK_P, wires_wLVDS_RX_CLK_N,
               wires_wLVDS_TX_LANE_P, wires_wLVDS_TX_LANE_N, wires_wLVDS_TX_CLK_P, wires_wLVDS_TX_CLK_N,
-              wires_wSCL, wires_wSYS_LED_OUT, wires_wRAM_PWR_ON, wires_wRAM_LEDS, wires_wRAM_PG,
+              wires_wSCL, wires_wSYS_LED_OUT, /*wires_wRAM_PWR_ON, wires_wRAM_LEDS,*/ wires_wRAM_PG,
               ramClkLocked,
               wires_wMGT_PG)
         
@@ -237,7 +237,7 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
               wires_wREG_LDS_Z, wires_wREG_ADS_Z, wires_wREG_EN_Z, wires_wREG_RDY_Z, wires_wREG_RD_WR_Z,
               wires_wLVDS_RX_LANE_P, wires_wLVDS_RX_LANE_N, wires_wLVDS_RX_CLK_P, wires_wLVDS_RX_CLK_N,
               wires_wLVDS_TX_LANE_P, wires_wLVDS_TX_LANE_N, wires_wLVDS_TX_CLK_P, wires_wLVDS_TX_CLK_N,
-              wires_wSCL, wires_wSYS_LED_OUT, wires_wRAM_PWR_ON, wires_wRAM_LEDS, wires_wRAM_PG,
+              wires_wSCL, wires_wSYS_LED_OUT, /*wires_wRAM_PWR_ON, wires_wRAM_LEDS,*/ wires_wRAM_PG,
               wires_wMGT_PG,
               ramClkLocked,
               enq, first, deq);

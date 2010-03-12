@@ -27,10 +27,10 @@ NET "sys_led_out[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = A
 NET "sys_led_out[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK17;
 NET "sys_led_out[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL17;
 
-# NET "ram_pwr_on" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AL14;
+# -- moved to SRAM device -- NET "ram_pwr_on" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AL14;
+# -- moved to SRAM device -- NET "ram_leds[0]" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AN29;
+# -- moved to SRAM device -- NET "ram_leds[1]" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AP28;
 
-NET "ram_leds[0]" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AN29;
-NET "ram_leds[1]" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AP28;
 NET "ram_pg" IOSTANDARD = "LVCMOS25" | LOC=AM29;
 NET "mgt_pg" IOSTANDARD = "LVCMOS25" | LOC=AM13;
 
@@ -344,11 +344,13 @@ net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst
 ## Angshuman's additions
 net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/bretime_inst2/q_i[*]" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_rst" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_tx_inst/bretime_inst_rsest/q_i[*]" TIG;
 
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q_dD_OUT[*]"     TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/Mram_fifoMem*" TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q_dD_OUT[*]"      TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/Mram_fifoMem*"  TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/Mram_fifoMem*"  TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dGDeqPtr[*]"    TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sSyncReg1[*]"   TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/sGEnqPtr[*]"   TIG;

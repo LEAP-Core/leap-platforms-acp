@@ -92,7 +92,7 @@ module mkDDR2SRAMDevice
     PRIMITIVE_DDR_SRAM_DEVICE prim_device <- mkPrimitiveDDRSRAMDevice(ramClk0, ramClk200, ramClk270, ramClkLocked, topLevelReset);
 
     // State
-    Reg#(FPGA_DDR_STATE) state <- mkReg(STATE_init);
+    Reg#(FPGA_DDR_STATE) state <- mkReg(STATE_ready);
 
     // Clock the glue logic with the output clock.
 
@@ -143,7 +143,7 @@ module mkDDR2SRAMDevice
     (* fire_when_enabled *)
     rule readDataToBufferRise (!readPending);
         FPGA_DDR_WORD d1 = truncate(prim_device.ram1.dequeue_data_rise());
-        FPGA_DDR_WORD d2 = truncate(prim_device.ram2.dequeue_data_rise());
+        FPGA_DDR_WORD d2 = '0; // Angshu truncate(prim_device.ram2.dequeue_data_rise());
         syncReadDataQ.enq({d1, d2});
         readPending <= True;
     endrule
@@ -153,7 +153,7 @@ module mkDDR2SRAMDevice
     (* fire_when_enabled *)
     rule readDataToBufferFall (readPending);
         FPGA_DDR_WORD d1 = truncate(prim_device.ram1.dequeue_data_fall());
-        FPGA_DDR_WORD d2 = truncate(prim_device.ram2.dequeue_data_fall());
+        FPGA_DDR_WORD d2 = '0; // Angshu truncate(prim_device.ram2.dequeue_data_fall());
         syncReadDataQ.enq({d1, d2});
         readPending <= False;
     endrule
@@ -166,7 +166,7 @@ module mkDDR2SRAMDevice
                              syncRequestQ.first() matches tagged DRAM_READ .address);
         syncRequestQ.deq();
         prim_device.ram1.enqueue_address(zeroExtend(address), READ);
-        prim_device.ram2.enqueue_address(zeroExtend(address), READ);
+        // Angshu prim_device.ram2.enqueue_address(zeroExtend(address), READ);
 
     endrule
 
@@ -213,7 +213,7 @@ module mkDDR2SRAMDevice
 
         // address + command
         prim_device.ram1.enqueue_address(zeroExtend(address), WRITE);
-        prim_device.ram2.enqueue_address(zeroExtend(address), WRITE);
+        // Angshu prim_device.ram2.enqueue_address(zeroExtend(address), WRITE);
         
         // Data + mask
         // ICK  match {.d1, .d2} = unpack(writeValue[0]);
@@ -262,7 +262,7 @@ module mkDDR2SRAMDevice
             syncWriteDataQ.deq();
     endrule
 
-
+/*
     // ====================================================================
     //
     // Initialization
@@ -364,7 +364,7 @@ module mkDDR2SRAMDevice
 
         initPart <= initPart + 1;
     endrule
-
+*/
 
     // ====================================================================
     //

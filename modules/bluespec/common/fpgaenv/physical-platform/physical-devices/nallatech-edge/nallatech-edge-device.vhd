@@ -88,8 +88,8 @@ entity nallatech_edge_vhdl is
 		eeprom_scl : out std_logic;
 		eeprom_sda : inout std_logic;
 		sys_led_out : out std_logic_vector(5 downto 0);
-		ram_pwr_on : out std_logic;
-		ram_leds:out std_logic_vector(1 downto 0);
+		-- moved to SRAM device -- ram_pwr_on : out std_logic;
+		-- moved to SRAM device -- ram_leds:out std_logic_vector(1 downto 0);
 		ram_pg : in std_logic;
 		mgt_pg : in std_logic;
 
@@ -194,6 +194,10 @@ architecture rtl of nallatech_edge_vhdl is
     signal osc_clk : std_logic;
     signal raw_clk_c : std_logic;
     
+    -- Angshuman - we seem to need these IBUFs
+    signal ram_pg_buf : std_logic;
+    signal mgt_pg_buf : std_logic;
+
     ---------------------------------------------------------------------------
 	--M2E user register slave interface signals
 	signal user_reg_clk : std_logic;
@@ -231,6 +235,10 @@ architecture rtl of nallatech_edge_vhdl is
 	signal sysmon_alarm : std_logic_vector(3 downto 0);
 	signal leds : std_logic_vector(3 downto 0);
 
+    -- Angshuman -- dummy signals to catch non-functional RAM signals from edge
+    -- core. We'll let these dangle
+    signal ram_pwr_on: std_logic;
+    signal ram_leds  : std_logic_vector(1 downto 0);
 	
 	---------------------------------------------------------------------------
 	-- Component declaration of usr_reg_slave_if_bram_example
@@ -264,6 +272,11 @@ architecture rtl of nallatech_edge_vhdl is
         port (O  : out STD_ULOGIC;
               I  : in STD_ULOGIC;
               IB : in STD_ULOGIC);
+    end component;
+
+    component IBUF
+        port (O  : out STD_LOGIC;
+              I  : in STD_LOGIC);
     end component;
 
 begin  
@@ -300,8 +313,8 @@ begin
 		eeprom_sda => eeprom_sda,
 		sys_led_out => sys_led_out,
 		ram_pwr_on => ram_pwr_on,
-		ram_pg => ram_pg,
-		mgt_pg => mgt_pg,  
+		ram_pg => ram_pg_buf,           -- Angshuman
+		mgt_pg => mgt_pg_buf,           -- Angshuman
 		
 		
 		-------------------------------
@@ -367,6 +380,20 @@ begin
     rst_n_out   <= i_ram_clk_locked;
     ram_clk_locked <= i_ram_clk_locked;
     ram_clk200  <= clk200MHz;
+
+    -- Angshuman - we seem to need these explicit IBUFs
+    RAM_PG_IBUF : IBUF
+      port map (
+        I => ram_pg,
+        O => ram_pg_buf
+        );
+
+    MGT_PG_IBUF : IBUF
+      port map (
+        I => mgt_pg,
+        O => mgt_pg_buf
+        );
+    -- Angshuman end
 
     -- clk_ibufgds_inst : ibufgds
     -- port map (

@@ -40,11 +40,11 @@
 --   ____  ____
 --  /   /\/   /
 -- /___/  \  /    Vendor             : Xilinx
--- \   \   \/     Version            : 3.1
+-- \   \   \/     Version            : 3.2
 --  \   \         Application        : MIG
 --  /   /         Filename           : ddrii_phy_ctrl_io.vhd
 -- /___/   /\     Timestamp          : 08 Apr 2008
--- \   \  /  \    Date Last Modified : $Date: 2009/03/23 16:11:01 $
+-- \   \  /  \    Date Last Modified : $Date: 2009/05/11 21:13:29 $
 --  \___\/\___\
 --
 --Device: Virtex-5
@@ -70,7 +70,7 @@ entity ddrii_phy_ctrl_io is
   generic (
     -- Following parameters are for 72-bit design. Actual values may be
     -- different. Actual parameters values are passed from design top module
-    -- mig_31 module. Please refer to the mig_31 module for actual
+    -- ddr2_sram module. Please refer to the ddr2_sram module for actual
     -- values.
     ADDR_WIDTH   : integer := 19;
     BURST_LENGTH : integer := 4;
@@ -142,6 +142,13 @@ architecture arch_ddrii_phy_ctrl_io of ddrii_phy_ctrl_io is
   attribute IOB of U8_FDRSE : label is "force";
   attribute syn_useioff of U11_FDRSE : label is true;
   attribute IOB of U11_FDRSE : label is "force";
+
+  -- Angshuman begin
+  attribute S : string;
+  attribute S of "not_write_cmd_r4" : signal is "TRUE";
+  attribute S of "not_write_cmd_r5" : signal is "TRUE";
+  attribute keep : string;
+  -- Angshuman end
 
 begin
   ------------------------------------------------------------------------------
@@ -218,6 +225,10 @@ begin
     TRI_ENA_FF_INST : for t in 0 to DATA_WIDTH-1 generate
     attribute syn_useioff of U5_FDRSE : label is true;
     attribute IOB of U5_FDRSE : label is "force";
+
+    -- Angshu
+    attribute keep of U5_FDRSE : label is "true";
+    
     begin
       U4_FDRSE : FDRSE
         generic map (

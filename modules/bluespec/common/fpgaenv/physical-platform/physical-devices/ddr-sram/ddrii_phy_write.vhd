@@ -40,11 +40,11 @@
 --   ____  ____
 --  /   /\/   /
 -- /___/  \  /    Vendor             : Xilinx
--- \   \   \/     Version            : 3.1
+-- \   \   \/     Version            : 3.2
 --  \   \         Application        : MIG
 --  /   /         Filename           : ddrii_phy_write.vhd
 -- /___/   /\     Timestamp          : 08 Apr 2008
--- \   \  /  \    Date Last Modified : $Date: 2009/03/23 16:11:01 $
+-- \   \  /  \    Date Last Modified : $Date: 2009/05/11 21:13:30 $
 --  \___\/\___\
 --
 --Device: Virtex-5
@@ -70,7 +70,7 @@ entity ddrii_phy_write is
   generic(
     -- Following parameters are for 72-bit design. Actual values may be
     -- different. Actual parameters values are passed from design top module
-    -- mig_31 module. Please refer to the mig_31 module for actual
+    -- ddr2_sram module. Please refer to the ddr2_sram module for actual
     -- values.
     BURST_LENGTH : integer := 4;
     BW_WIDTH     : integer := 8;

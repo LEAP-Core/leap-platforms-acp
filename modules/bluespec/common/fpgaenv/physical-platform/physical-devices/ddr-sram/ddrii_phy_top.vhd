@@ -40,11 +40,11 @@
 --   ____  ____
 --  /   /\/   /
 -- /___/  \  /    Vendor             : Xilinx
--- \   \   \/     Version            : 3.1
+-- \   \   \/     Version            : 3.2
 --  \   \         Application        : MIG
 --  /   /         Filename           : ddrii_phy_top.vhd
 -- /___/   /\     Timestamp          : 08 Apr 2008
--- \   \  /  \    Date Last Modified : $Date: 2009/03/23 16:11:01 $
+-- \   \  /  \    Date Last Modified : $Date: 2009/05/11 21:13:30 $
 --  \___\/\___\
 --
 --Device: Virtex-5
@@ -68,7 +68,7 @@ entity ddrii_phy_top is
   generic (
     -- Following parameters are for 72-bit design. Actual values may be
     -- different. Actual parameters values are passed from design top module
-    -- mig_31 module. Please refer to the mig_31 module for actual
+    -- ddr2_sram module. Please refer to the ddr2_sram module for actual
     -- values.
     ADDR_WIDTH            : integer := 19;
     BURST_LENGTH          : integer := 4;
@@ -158,9 +158,9 @@ architecture arch_ddrii_phy_top of ddrii_phy_top is
 
   attribute X_CORE_INFO : string;
   attribute X_CORE_INFO of arch_ddrii_phy_top : architecture is
-    "mig_v3_1_ddrii_sram_v5, Coregen 11.2";
+    "mig_v3_2_ddrii_sram_v5, Coregen 11.3";
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of arch_ddrii_phy_top : architecture is "ddrii_sram_v5,mig_v3_1,{component_name=mig_31, addr_width = 21, burst_length = 2, bw_width = 4, clk_freq = 200, clk_width = 1, cq_width = 1, data_width = 36, memory_width = 36, rst_act_low = 1}";
+  attribute CORE_GENERATION_INFO of arch_ddrii_phy_top : architecture is "ddrii_sram_v5,mig_v3_2,{component_name=ddr2_sram, addr_width = 21, burst_length = 2, bw_width = 4, clk_freq = 250, clk_width = 1, cq_width = 1, data_width = 36, memory_width = 36, rst_act_low = 1}";
 
   constant Q_PER_CQ_9 : integer := Q_PER_CQ/9; -- Number of sets of 9 bits in
                                                -- every read data bits associated

@@ -75,6 +75,11 @@ typedef enum {
 // Wires to be sent to the top level
 
 interface DDR2_WIRES;
+
+    // global
+    (* result = "ram_pwr_on" *) method Bit#(1) w_ram_pwr_on();
+    (* result = "ram_leds"   *) method Bit#(2) w_ram_leds();
+
     // RAM 1 or 5
     (* prefix = "" *) interface Inout#(Bit#(`SRAM_DATA_WIDTH)) w_ddrii_dq;
 
@@ -84,9 +89,10 @@ interface DDR2_WIRES;
     (* result = "ddrii_dll_off_n" *) method Bit#(1) w_ddrii_dll_off_n();
     (* result = "ddrii_bw_n" *) method Bit#(`SRAM_BW_WIDTH) w_ddrii_bw_n();
     (* prefix = "" *) method Action w_masterbank_sel_pin((* port = "masterbank_sel_pin" *) Bit#(1) data);
+    // (* result = "masterbank_sel_pin_out" *) method Bit#(1) w_masterbank_sel_pin_out();
 
     (* result = "cal_done" *) method Bit#(1) w_cal_done();
-    (* prefix = "" *) method Action w_idelay_ctrl_ready((* port = "idelay_ctrl_ready" *) Bit#(1) data);
+    // (* prefix = "" *) method Action w_idelay_ctrl_ready((* port = "idelay_ctrl_ready" *) Bit#(1) data);
 
     (* prefix = "" *) method Action w_ddrii_cq((* port = "ddrii_cq" *) Bit#(`SRAM_CQ_WIDTH) data);
     (* prefix = "" *) method Action w_ddrii_cq_n((* port = "ddrii_cq_n" *) Bit#(`SRAM_CQ_WIDTH) data);
@@ -94,7 +100,7 @@ interface DDR2_WIRES;
     (* result = "ddrii_k_n" *) method Bit#(`SRAM_CLK_WIDTH) w_ddrii_k_n();
     (* result = "ddrii_c" *) method Bit#(`SRAM_CLK_WIDTH) w_ddrii_c();
     (* result = "ddrii_c_n" *) method Bit#(`SRAM_CLK_WIDTH) w_ddrii_c_n();
-
+/*
     // RAM 2 or 6
     (* prefix = "" *) interface Inout#(Bit#(`SRAM_DATA_WIDTH)) w_ddrii_dq_2;
 
@@ -106,7 +112,7 @@ interface DDR2_WIRES;
     (* prefix = "" *) method Action w_masterbank_sel_pin_2((* port = "masterbank_sel_pin_2" *) Bit#(1) data);
 
     (* result = "cal_done_2" *) method Bit#(1) w_cal_done_2();
-    (* prefix = "" *) method Action w_idelay_ctrl_ready_2((* port = "idelay_ctrl_ready_2" *) Bit#(1) data);
+    // (* prefix = "" *) method Action w_idelay_ctrl_ready_2((* port = "idelay_ctrl_ready_2" *) Bit#(1) data);
 
     (* prefix = "" *) method Action w_ddrii_cq_2((* port = "ddrii_cq_2" *) Bit#(`SRAM_CQ_WIDTH) data);
     (* prefix = "" *) method Action w_ddrii_cq_n_2((* port = "ddrii_cq_n_2" *) Bit#(`SRAM_CQ_WIDTH) data);
@@ -114,7 +120,7 @@ interface DDR2_WIRES;
     (* result = "ddrii_k_n_2" *) method Bit#(`SRAM_CLK_WIDTH) w_ddrii_k_n_2();
     (* result = "ddrii_c_2" *) method Bit#(`SRAM_CLK_WIDTH) w_ddrii_c_2();
     (* result = "ddrii_c_n_2" *) method Bit#(`SRAM_CLK_WIDTH) w_ddrii_c_n_2();
-
+*/
 endinterface
 
 interface DDR2_PRIM_DRIVER;
@@ -152,7 +158,7 @@ interface PRIMITIVE_DDR_SRAM_DEVICE;
 
     // Two drivers for Blusepec-VHDL-interaction, one for each SRAM.
     (* prefix = "" *) interface DDR2_PRIM_DRIVER ram1;
-    (* prefix = "" *) interface DDR2_PRIM_DRIVER ram2;
+    // (* prefix = "" *) interface DDR2_PRIM_DRIVER ram2;
 
 endinterface
 
@@ -161,7 +167,7 @@ endinterface
 
 // Straightforward import of the VHDL into Bluespec.
 
-import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
+import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
     #(Clock ram_clk0,
       Clock ram_clk200,
       Clock ram_clk270,
@@ -201,7 +207,11 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
     //
 
     interface DDR2_WIRES wires;
-
+        
+        // global
+        method ram_pwr_on w_ram_pwr_on();
+        method ram_leds   w_ram_leds();
+        
         // RAM 1 or 5
         ifc_inout w_ddrii_dq(ddrii_dq);
 
@@ -213,7 +223,9 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
         method cal_done         w_cal_done();
 
         method w_masterbank_sel_pin(masterbank_sel_pin) enable ((* inhigh *) EN0);
-        method w_idelay_ctrl_ready(idelay_ctrl_ready) enable ((* inhigh *) EN1);
+        // method masterbank_sel_pin_out w_masterbank_sel_pin_out();
+
+        // method w_idelay_ctrl_ready(idelay_ctrl_ready) enable ((* inhigh *) EN1);
         method w_ddrii_cq(ddrii_cq) enable ((* inhigh *) EN2);
         method w_ddrii_cq_n(ddrii_cq_n) enable ((* inhigh *) EN3);
 
@@ -223,7 +235,7 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
         method ddrii_c_n        w_ddrii_c_n();
 
         // RAM 2 or 6
-
+/*
         ifc_inout w_ddrii_dq_2(ddrii_dq_2);
 
         method ddrii_sa_2         w_ddrii_sa_2();
@@ -234,7 +246,7 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
         method cal_done_2         w_cal_done_2();
 
         method w_masterbank_sel_pin_2(masterbank_sel_pin_2) enable ((* inhigh *) EN4);
-        method w_idelay_ctrl_ready_2(idelay_ctrl_ready_2) enable ((* inhigh *) EN5);
+        // method w_idelay_ctrl_ready_2(idelay_ctrl_ready_2) enable ((* inhigh *) EN5);
         method w_ddrii_cq_2(ddrii_cq_2) enable ((* inhigh *) EN6);
         method w_ddrii_cq_n_2(ddrii_cq_n_2) enable ((* inhigh *) EN7);
 
@@ -242,7 +254,9 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
         method ddrii_k_n_2        w_ddrii_k_n_2();
         method ddrii_c_2          w_ddrii_c_2();
         method ddrii_c_n_2        w_ddrii_c_n_2();
-    endinterface
+*/
+ 
+     endinterface
 
     //
     // Bluespec-VHDL interface
@@ -272,7 +286,7 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
             reset_by (rst_out);
 
     endinterface
-
+/*
     interface DDR2_PRIM_DRIVER ram2;
 
         method enqueue_address(user_addr_2, user_cmd_2)
@@ -298,6 +312,8 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
             reset_by (rst_out);
 
     endinterface
+*/
+ 
     //
     // Scheduling
     //
@@ -306,38 +322,43 @@ import "BVI" ddrii_sram = module mkPrimitiveDDRSRAMDevice
 
     // First, let's set the top-level wires to not conflict against each other or interface methods
 
-    schedule (wires_w_ddrii_sa, wires_w_ddrii_ld_n, wires_w_ddrii_rw_n, wires_w_ddrii_dll_off_n, wires_w_ddrii_bw_n,
-              wires_w_masterbank_sel_pin, wires_w_cal_done, wires_w_ddrii_cq, wires_w_ddrii_cq_n, wires_w_ddrii_k,
-              wires_w_ddrii_k_n, wires_w_ddrii_c, wires_w_ddrii_c_n, wires_w_idelay_ctrl_ready,
+    schedule (wires_w_ram_pwr_on, wires_w_ram_leds,
+              wires_w_ddrii_sa, wires_w_ddrii_ld_n, wires_w_ddrii_rw_n, wires_w_ddrii_dll_off_n, wires_w_ddrii_bw_n,
+              wires_w_masterbank_sel_pin,// wires_w_masterbank_sel_pin_out,
+              wires_w_cal_done, wires_w_ddrii_cq, wires_w_ddrii_cq_n, wires_w_ddrii_k,
+              wires_w_ddrii_k_n, wires_w_ddrii_c, wires_w_ddrii_c_n /*,
               wires_w_ddrii_sa_2, wires_w_ddrii_ld_n_2, wires_w_ddrii_rw_n_2, wires_w_ddrii_dll_off_n_2, wires_w_ddrii_bw_n_2,
               wires_w_masterbank_sel_pin_2, wires_w_cal_done_2, wires_w_ddrii_cq_2, wires_w_ddrii_cq_n_2, wires_w_ddrii_k_2,
-              wires_w_ddrii_k_n_2, wires_w_ddrii_c_2, wires_w_ddrii_c_n_2, wires_w_idelay_ctrl_ready_2)
+              wires_w_ddrii_k_n_2, wires_w_ddrii_c_2, wires_w_ddrii_c_n_2)*/)
         CF
-             (wires_w_ddrii_sa, wires_w_ddrii_ld_n, wires_w_ddrii_rw_n, wires_w_ddrii_dll_off_n, wires_w_ddrii_bw_n,
-              wires_w_masterbank_sel_pin, wires_w_cal_done, wires_w_ddrii_cq, wires_w_ddrii_cq_n, wires_w_ddrii_k,
-              wires_w_ddrii_k_n, wires_w_ddrii_c, wires_w_ddrii_c_n, wires_w_idelay_ctrl_ready,
+             (wires_w_ram_pwr_on, wires_w_ram_leds,
+              wires_w_ddrii_sa, wires_w_ddrii_ld_n, wires_w_ddrii_rw_n, wires_w_ddrii_dll_off_n, wires_w_ddrii_bw_n,
+              wires_w_masterbank_sel_pin,// wires_w_masterbank_sel_pin_out,
+              wires_w_cal_done, wires_w_ddrii_cq, wires_w_ddrii_cq_n, wires_w_ddrii_k,
+              wires_w_ddrii_k_n, wires_w_ddrii_c, wires_w_ddrii_c_n,/*
               wires_w_ddrii_sa_2, wires_w_ddrii_ld_n_2, wires_w_ddrii_rw_n_2, wires_w_ddrii_dll_off_n_2, wires_w_ddrii_bw_n_2,
               wires_w_masterbank_sel_pin_2, wires_w_cal_done_2, wires_w_ddrii_cq_2, wires_w_ddrii_cq_n_2, wires_w_ddrii_k_2,
-              wires_w_ddrii_k_n_2, wires_w_ddrii_c_2, wires_w_ddrii_c_n_2, wires_w_idelay_ctrl_ready_2,
-              ram1_enqueue_address, ram1_enqueue_data, ram1_dequeue_data_rise, ram1_dequeue_data_fall,
-              ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
+              wires_w_ddrii_k_n_2, wires_w_ddrii_c_2, wires_w_ddrii_c_n_2,*/
+              ram1_enqueue_address, ram1_enqueue_data, ram1_dequeue_data_rise, ram1_dequeue_data_fall);
+//              ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
 
     schedule ram1_enqueue_address C (ram1_enqueue_address);
-    schedule ram1_enqueue_address CF (ram1_enqueue_data, ram1_dequeue_data_rise, ram1_dequeue_data_fall,
-                                      ram2_enqueue_address,ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
+    schedule ram1_enqueue_address CF (ram1_enqueue_data, ram1_dequeue_data_rise, ram1_dequeue_data_fall);
+//                                      ram2_enqueue_address,ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
     schedule ram1_enqueue_data C (ram1_enqueue_data);
-    schedule ram1_enqueue_data CF (ram1_dequeue_data_rise, ram1_dequeue_data_fall,
-                                   ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
-    schedule ram1_dequeue_data_rise CF (ram1_dequeue_data_rise, ram1_dequeue_data_fall,
-                                        ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
-    schedule ram1_dequeue_data_fall CF (ram1_dequeue_data_fall,
-                                        ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
-
+    schedule ram1_enqueue_data CF (ram1_dequeue_data_rise, ram1_dequeue_data_fall);
+//                                   ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
+    schedule ram1_dequeue_data_rise CF (ram1_dequeue_data_rise, ram1_dequeue_data_fall);
+//                                        ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
+    schedule ram1_dequeue_data_fall CF (ram1_dequeue_data_fall);
+//                                        ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
+/*
     schedule ram2_enqueue_address C (ram2_enqueue_address);
     schedule ram2_enqueue_address CF (ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
     schedule ram2_enqueue_data C (ram2_enqueue_data);
     schedule ram2_enqueue_data CF (ram2_dequeue_data_rise, ram2_dequeue_data_fall);
     schedule ram2_dequeue_data_rise CF (ram2_dequeue_data_rise, ram2_dequeue_data_fall);
     schedule ram2_dequeue_data_fall CF (ram2_dequeue_data_fall);
-
+*/
+                             
 endmodule
