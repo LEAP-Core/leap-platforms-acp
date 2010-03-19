@@ -1081,3 +1081,19 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 - updated UCF and some VHDL code in the Edge Device code to reflect
   re-wiring due to SRAM integration
 
+
+----------
+mcadler     Date: Fri Mar 19 07:13:21 EDT 2010  CSN: CSN-platform-acp-49
+                  Fri Mar 19 11:13:21 UTC 2010
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.bsv Locally Modified           48 
+
+- More robust reset logic.  The old version was allowing the model to start
+  before the FPGA settled.
+
+- Add a version of the platform with no central cache.

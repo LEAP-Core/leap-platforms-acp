@@ -94,9 +94,12 @@ module mkNallatechEdgeDevice
     
     Clock modelClock = userClockPackage.clk;
 
-    // Reset transReset <- mkAsyncReset(5, edgeReset, modelClock);
-    // Reset modelReset <- mkResetEither(transReset, userClockPackage.rst, clocked_by modelClock);
-    Reset modelReset = userClockPackage.rst;
+    // Combine edge and raw resets
+    Reset localEdgeReset <- mkAsyncReset(2, edgeReset, modelClock);
+    Reset baseReset <- mkResetEither(localEdgeReset, userClockPackage.rst, clocked_by modelClock);
+
+    // Hold reset for 10 cycles
+    Reset modelReset <- mkAsyncReset(10, baseReset, modelClock);
       
     // Synchronizers
     
