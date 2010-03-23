@@ -127,16 +127,19 @@ interface DDR2_PRIM_DRIVER;
 
     // Address, cmd=0 if performing a write, cmd=1 for read.
     method Action enqueue_address(FPGA_DDR_ADDRESS addr, DDR2Command cmd);
+    method Bool   enqueue_address_RDY();
 
     // Data rise and fall share a single enable, so it seems we have to make them a single method.
     // If this becomes a problem we can try to separate it into two.
     // Note that the mask is negatively-enabled, so 0=perform write.
     method Action enqueue_data(Bit#(`SRAM_DATA_WIDTH) data_rise, Bit#(`SRAM_BW_WIDTH) bw_mask_rise_n, Bit#(`SRAM_DATA_WIDTH) data_fall, Bit#(`SRAM_BW_WIDTH) bw_mask_fall_n);
+    method Bool   enqueue_data_RDY();
 
     // These share a Ready, but Bluespec has no problem with this. 
     // Alternatively, these could also be combined into a single method which returns a struct.
     method Bit#(`SRAM_DATA_WIDTH) dequeue_data_rise();
     method Bit#(`SRAM_DATA_WIDTH) dequeue_data_fall();
+    method Bool dequeue_data_RDY();
 
 endinterface
 
@@ -264,26 +267,28 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
     interface DDR2_PRIM_DRIVER ram1;
 
         method enqueue_address(user_addr, user_cmd)
-            ready  (addr_fifo_not_full)
             enable (user_addr_wr_en)
             clocked_by (clk_out)
             reset_by (rst_out);
 
+        method addr_fifo_not_full enqueue_address_RDY();
+
         method enqueue_data(user_wr_data_rise, user_bw_n_rise, user_wr_data_fall, user_bw_n_fall)
-            ready  (wrdata_fifo_not_full)
             enable (user_wrdata_wr_en)
             clocked_by (clk_out)
             reset_by (rst_out);
+            
+        method wrdata_fifo_not_full enqueue_data_RDY();
 
         method user_rd_data_rise dequeue_data_rise()
-            ready (rd_data_valid)
             clocked_by (clk_out)
             reset_by (rst_out);
 
         method user_rd_data_fall dequeue_data_fall()
-            ready (rd_data_valid)
             clocked_by (clk_out)
             reset_by (rst_out);
+
+        method rd_data_valid dequeue_data_RDY();
 
     endinterface
 /*
@@ -339,19 +344,27 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
               wires_w_ddrii_sa_2, wires_w_ddrii_ld_n_2, wires_w_ddrii_rw_n_2, wires_w_ddrii_dll_off_n_2, wires_w_ddrii_bw_n_2,
               wires_w_masterbank_sel_pin_2, wires_w_cal_done_2, wires_w_ddrii_cq_2, wires_w_ddrii_cq_n_2, wires_w_ddrii_k_2,
               wires_w_ddrii_k_n_2, wires_w_ddrii_c_2, wires_w_ddrii_c_n_2,*/
-              ram1_enqueue_address, ram1_enqueue_data, ram1_dequeue_data_rise, ram1_dequeue_data_fall);
+              ram1_enqueue_address, ram1_enqueue_data, ram1_dequeue_data_rise, ram1_dequeue_data_fall,
+                                      ram1_enqueue_address_RDY, ram1_enqueue_data_RDY, ram1_dequeue_data_RDY);
 //              ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
 
     schedule ram1_enqueue_address C (ram1_enqueue_address);
-    schedule ram1_enqueue_address CF (ram1_enqueue_data, ram1_dequeue_data_rise, ram1_dequeue_data_fall);
+    schedule ram1_enqueue_address CF (ram1_enqueue_data, ram1_dequeue_data_rise, ram1_dequeue_data_fall,
+                                      ram1_enqueue_address_RDY, ram1_enqueue_data_RDY, ram1_dequeue_data_RDY);
 //                                      ram2_enqueue_address,ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
     schedule ram1_enqueue_data C (ram1_enqueue_data);
-    schedule ram1_enqueue_data CF (ram1_dequeue_data_rise, ram1_dequeue_data_fall);
+    schedule ram1_enqueue_data CF (ram1_dequeue_data_rise, ram1_dequeue_data_fall,
+                                      ram1_enqueue_address_RDY, ram1_enqueue_data_RDY, ram1_dequeue_data_RDY);
 //                                   ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
-    schedule ram1_dequeue_data_rise CF (ram1_dequeue_data_rise, ram1_dequeue_data_fall);
+    schedule ram1_dequeue_data_rise CF (ram1_dequeue_data_rise, ram1_dequeue_data_fall,
+                                      ram1_enqueue_address_RDY, ram1_enqueue_data_RDY, ram1_dequeue_data_RDY);
 //                                        ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
-    schedule ram1_dequeue_data_fall CF (ram1_dequeue_data_fall);
+    schedule ram1_dequeue_data_fall CF (ram1_dequeue_data_fall,
+                                      ram1_enqueue_address_RDY, ram1_enqueue_data_RDY, ram1_dequeue_data_RDY);
 //                                        ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
+    schedule ram1_enqueue_address_RDY CF (ram1_enqueue_address_RDY, ram1_enqueue_data_RDY, ram1_dequeue_data_RDY);
+    schedule ram1_enqueue_data_RDY CF (ram1_enqueue_data_RDY, ram1_dequeue_data_RDY);
+    schedule ram1_dequeue_data_RDY CF ram1_dequeue_data_RDY;
 /*
     schedule ram2_enqueue_address C (ram2_enqueue_address);
     schedule ram2_enqueue_address CF (ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);

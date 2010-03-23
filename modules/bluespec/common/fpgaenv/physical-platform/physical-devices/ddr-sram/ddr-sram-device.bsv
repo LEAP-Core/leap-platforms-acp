@@ -30,6 +30,7 @@ import RWire::*;
 
 interface DDR2_DRIVER;
 
+    method Bit#(32) statusCheck();
     method Action readReq(FPGA_DDR_ADDRESS addr);
     method ActionValue#(FPGA_DDR_DUALEDGE_DATA) readRsp();
     method Action writeReq(FPGA_DDR_ADDRESS addr);
@@ -125,6 +126,9 @@ module mkDDR2SRAMDevice
     SyncFIFOIfc#(Tuple2#(FPGA_DDR_DUALEDGE_DATA, FPGA_DDR_DUALEDGE_DATA_MASK))
         syncWriteDataQ <- mkSyncFIFO(2, modelClock, modelReset, controllerClock);
     
+    // Status queue
+    Reg#(Bit#(32)) syncStatus <- mkSyncReg(0, controllerClock, controllerReset, modelClock);
+
     Reg#(Bool) writePending <- mkReg(False, clocked_by controllerClock, reset_by controllerReset);
     Reg#(Bool) readPending  <- mkReg(False, clocked_by controllerClock, reset_by controllerReset);
     
@@ -141,7 +145,7 @@ module mkDDR2SRAMDevice
     // Push incoming data into read buffer. This rule *MUST* fire if the explicit
     // conditions are true, else we will lose data.
     (* fire_when_enabled *)
-    rule readDataToBufferRise (!readPending);
+    rule readDataToBufferRise (!readPending && prim_device.ram1.dequeue_data_RDY());
         FPGA_DDR_WORD d1 = truncate(prim_device.ram1.dequeue_data_rise());
         FPGA_DDR_WORD d2 = '0; // Angshu truncate(prim_device.ram2.dequeue_data_rise());
         syncReadDataQ.enq({d1, d2});
@@ -151,7 +155,7 @@ module mkDDR2SRAMDevice
     // Push incoming data into read buffer. This rule *MUST* fire if the explicit
     // conditions are true, else we will lose data.
     (* fire_when_enabled *)
-    rule readDataToBufferFall (readPending);
+    rule readDataToBufferFall (readPending && prim_device.ram1.dequeue_data_RDY());
         FPGA_DDR_WORD d1 = truncate(prim_device.ram1.dequeue_data_fall());
         FPGA_DDR_WORD d2 = '0; // Angshu truncate(prim_device.ram2.dequeue_data_fall());
         syncReadDataQ.enq({d1, d2});
@@ -163,6 +167,7 @@ module mkDDR2SRAMDevice
     //
     
     rule processReadRequest (! syncResetQ.notEmpty() &&&
+                             prim_device.ram1.enqueue_address_RDY() &&&
                              syncRequestQ.first() matches tagged DRAM_READ .address);
         syncRequestQ.deq();
         prim_device.ram1.enqueue_address(zeroExtend(address), READ);
@@ -206,6 +211,7 @@ module mkDDR2SRAMDevice
     //
     rule processWriteRequest0 (! syncResetQ.notEmpty() &&&
                                ! writePending &&&
+                               prim_device.ram1.enqueue_address_RDY() &&&
                                (writeBurstIdx == fromInteger(valueOf(FPGA_DDR_BURST_LENGTH))) &&&
                                syncRequestQ.first() matches tagged DRAM_WRITE .address);
 
@@ -388,9 +394,54 @@ module mkDDR2SRAMDevice
         syncRequestQ.enq(r);
     endrule
 
+
+    rule statusUpd (True);
+
+        Bit#(32) status = 0;
+        status[7]  = pack(syncReadDataQ.notFull());
+        status[8]  = pack(syncResetQ.notEmpty());
+        status[10] = pack(syncRequestQ.notEmpty());
+        status[12] = pack(syncWriteDataQ.notEmpty());
+        status[14] = pack(writePending);
+        status[15] = pack(readPending);
+        status[18] = pack(writeBurstIdx == 0);
+
+        syncStatus <= status;
+
+    endrule
+
     // Drivers visible to upper layers
     interface DDR2_DRIVER driver;
     
+        method Bit#(32) statusCheck();
+
+            Bit#(32) status = 0;
+            status[0]  = pack(prim_device.ram1.enqueue_address_RDY());
+            status[1]  = pack(prim_device.ram1.enqueue_data_RDY());
+            status[2]  = pack(prim_device.ram1.dequeue_data_RDY());
+            status[3]  = pack(mergeReqQ.notEmpty());
+            status[4]  = pack(mergeReqQ.ports[0].notFull());
+            status[5]  = pack(mergeReqQ.ports[1].notFull());
+            status[6]  = pack(syncReadDataQ.notEmpty());
+            // status[7]  = pack(syncReadDataQ.notFull());
+            // status[8]  = pack(syncResetQ.notEmpty());
+            status[9]  = pack(syncResetQ.notFull());
+            // status[10] = pack(syncRequestQ.notEmpty());
+            status[11] = pack(syncRequestQ.notFull());
+            // status[12] = pack(syncWriteDataQ.notEmpty());
+            status[13] = pack(syncWriteDataQ.notFull());
+            // status[14] = pack(writePending);
+            // status[15] = pack(readPending);
+            status[16] = pack(nInflightReads.value() == 0);
+            status[17] = pack(readBurstCnt == 0);
+            // status[18] = pack(writeBurstIdx == 0);
+
+            status = status | syncStatus;
+
+            return status;
+
+        endmethod
+
         method Action readReq(FPGA_DDR_ADDRESS addr) if ((state == STATE_ready) &&
                                                          (nInflightReads.value() < `SRAM_MAX_OUTSTANDING_READS));
             mergeReqQ.ports[0].enq(tagged DRAM_READ addr);
