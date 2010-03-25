@@ -20,7 +20,7 @@
 // Types
 //
 
-import RegFile::*;
+
 // ddr-sram-vhdl-import
 
 // Import the VHDL device into BSV
@@ -52,7 +52,7 @@ typedef Bit#(FPGA_DDR_DUALEDGE_DATA_SZ) FPGA_DDR_DUALEDGE_DATA;
 
 // The DRAM controller reads and writes multiple dual-edge data values for
 // a single request.  The number of dual-edge data values per request is:
-typedef `SRAM_BURST_LENGTH FPGA_DDR_BURST_LENGTH;
+typedef TDiv#(`SRAM_BURST_LENGTH, 2) FPGA_DDR_BURST_LENGTH;
 
 // Each byte in a write may be disabled for writes using a bit mask.
 // !!! NOTE: to conform to the controller, a mask bit is 0 to request a write !!!
@@ -81,7 +81,7 @@ interface DDR2_WIRES;
     (* result = "ram_leds"   *) method Bit#(2) w_ram_leds();
 
     // RAM 1 or 5
-    // (* prefix = "" *) interface Inout#(Bit#(`SRAM_DATA_WIDTH)) w_ddrii_dq;
+    (* prefix = "" *) interface Inout#(Bit#(`SRAM_DATA_WIDTH)) w_ddrii_dq;
 
     (* result = "ddrii_sa" *) method Bit#(`SRAM_ADDR_WIDTH) w_ddrii_sa();
     (* result = "ddrii_ld_n" *) method Bit#(1) w_ddrii_ld_n();
@@ -168,76 +168,8 @@ endinterface
 
 // mkPrimitiveDDRSRAMDevice
 
-module mkPrimitiveDDRSRAMDevice
-    #(Clock ram_clk0,
-      Clock ram_clk200,
-      Clock ram_clk270,
-      Bit#(1) ram_clkLocked,
-      Reset topLevelReset)
-    // interface:
-                 (PRIMITIVE_DDR_SRAM_DEVICE);
-
-    Clock ram_clock = ram_clk0;
-    Reset ram_reset <- mkAsyncReset(25, topLevelReset, ram_clk0);
-
-    RegFile#(Bit#(8), Bit#(72)) rf <- mkRegFileFull(clocked_by ram_clock, reset_by ram_reset);
-    Reg#(FPGA_DDR_ADDRESS) wrAddr <- mkReg(0, clocked_by ram_clock, reset_by ram_reset);
-    COUNTER#(3) rdRdy <- mkLCounter(0, clocked_by ram_clock, reset_by ram_reset);
-    Reg#(Bit#(`SRAM_DATA_WIDTH)) rdData1 <- mkReg(0, clocked_by ram_clock, reset_by ram_reset);
-    Reg#(Bit#(`SRAM_DATA_WIDTH)) rdData2 <- mkReg(0, clocked_by ram_clock, reset_by ram_reset);
-
-
-    rule rdRst (rdRdy.value() != 0);
-        rdRdy.down();
-    endrule
-
-    interface Clock clk_out = ram_clock;
-    interface Reset rst_out = ram_reset;
-    
-    interface DDR2_PRIM_DRIVER ram1;
-
-        // Address, cmd=0 if performing a write, cmd=1 for read.
-        method Action enqueue_address(FPGA_DDR_ADDRESS addr, DDR2Command cmd) if (rdRdy.value() == 0);
-
-            if (cmd == READ)
-            begin
-                Tuple2#(Bit#(`SRAM_DATA_WIDTH), Bit#(`SRAM_DATA_WIDTH)) tup = unpack(rf.sub(truncate(addr)));
-                match {.d1, .d2} = tup;
-                rdData1 <= d1;
-                rdData2 <= d2;
-                rdRdy.upBy(4);
-            end
-            else
-            begin
-                wrAddr <= addr;
-            end
-        
-        endmethod
-
-        method Bool   enqueue_address_RDY() = True;
-        
-        method Action enqueue_data(Bit#(`SRAM_DATA_WIDTH) data_rise, Bit#(`SRAM_BW_WIDTH) bw_mask_rise_n, Bit#(`SRAM_DATA_WIDTH) data_fall, Bit#(`SRAM_BW_WIDTH) bw_mask_fall_n);
-            rf.upd(truncate(wrAddr), {data_rise, data_fall});
-        endmethod
-
-        method Bool   enqueue_data_RDY() = True;
-
-        method Bit#(`SRAM_DATA_WIDTH) dequeue_data_rise();
-            return rdData1;
-        endmethod
-
-        method Bit#(`SRAM_DATA_WIDTH) dequeue_data_fall();
-            return rdData2;
-        endmethod
-                 
-        method Bool dequeue_data_RDY() = rdRdy.value() != 0;
-
-    endinterface
-
-endmodule
-
 // Straightforward import of the VHDL into Bluespec.
-/*
+
 import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
     #(Clock ram_clk0,
       Clock ram_clk200,
@@ -325,8 +257,8 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
         method ddrii_k_n_2        w_ddrii_k_n_2();
         method ddrii_c_2          w_ddrii_c_2();
         method ddrii_c_n_2        w_ddrii_c_n_2();
-
- *)))
+*/
+ 
      endinterface
 
     //
@@ -339,14 +271,18 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
             clocked_by (clk_out)
             reset_by (rst_out);
 
-        method addr_fifo_not_full enqueue_address_RDY();
+        method addr_fifo_not_full enqueue_address_RDY()
+            clocked_by (clk_out)
+            reset_by (rst_out);
 
         method enqueue_data(user_wr_data_rise, user_bw_n_rise, user_wr_data_fall, user_bw_n_fall)
             enable (user_wrdata_wr_en)
             clocked_by (clk_out)
             reset_by (rst_out);
             
-        method wrdata_fifo_not_full enqueue_data_RDY();
+        method wrdata_fifo_not_full enqueue_data_RDY()
+            clocked_by (clk_out)
+            reset_by (rst_out);
 
         method user_rd_data_rise dequeue_data_rise()
             clocked_by (clk_out)
@@ -356,7 +292,9 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
             clocked_by (clk_out)
             reset_by (rst_out);
 
-        method rd_data_valid dequeue_data_RDY();
+        method rd_data_valid dequeue_data_RDY()
+            clocked_by (clk_out)
+            reset_by (rst_out);
 
     endinterface
 /*
@@ -385,8 +323,7 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
             reset_by (rst_out);
 
     endinterface
-*)))
-
+*/
  
     //
     // Scheduling
@@ -403,7 +340,7 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
               wires_w_ddrii_k_n, wires_w_ddrii_c, wires_w_ddrii_c_n /*,
               wires_w_ddrii_sa_2, wires_w_ddrii_ld_n_2, wires_w_ddrii_rw_n_2, wires_w_ddrii_dll_off_n_2, wires_w_ddrii_bw_n_2,
               wires_w_masterbank_sel_pin_2, wires_w_cal_done_2, wires_w_ddrii_cq_2, wires_w_ddrii_cq_n_2, wires_w_ddrii_k_2,
-              wires_w_ddrii_k_n_2, wires_w_ddrii_c_2, wires_w_ddrii_c_n_2)*))))
+              wires_w_ddrii_k_n_2, wires_w_ddrii_c_2, wires_w_ddrii_c_n_2)*/)
         CF
              (wires_w_ram_pwr_on, wires_w_ram_leds,
               wires_w_ddrii_sa, wires_w_ddrii_ld_n, wires_w_ddrii_rw_n, wires_w_ddrii_dll_off_n, wires_w_ddrii_bw_n,
@@ -412,7 +349,7 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
               wires_w_ddrii_k_n, wires_w_ddrii_c, wires_w_ddrii_c_n,/*
               wires_w_ddrii_sa_2, wires_w_ddrii_ld_n_2, wires_w_ddrii_rw_n_2, wires_w_ddrii_dll_off_n_2, wires_w_ddrii_bw_n_2,
               wires_w_masterbank_sel_pin_2, wires_w_cal_done_2, wires_w_ddrii_cq_2, wires_w_ddrii_cq_n_2, wires_w_ddrii_k_2,
-              wires_w_ddrii_k_n_2, wires_w_ddrii_c_2, wires_w_ddrii_c_n_2,*)))
+              wires_w_ddrii_k_n_2, wires_w_ddrii_c_2, wires_w_ddrii_c_n_2,*/
               ram1_enqueue_address, ram1_enqueue_data, ram1_dequeue_data_rise, ram1_dequeue_data_fall,
                                       ram1_enqueue_address_RDY, ram1_enqueue_data_RDY, ram1_dequeue_data_RDY);
 //              ram2_enqueue_address, ram2_enqueue_data, ram2_dequeue_data_rise, ram2_dequeue_data_fall);
@@ -441,7 +378,6 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
     schedule ram2_enqueue_data CF (ram2_dequeue_data_rise, ram2_dequeue_data_fall);
     schedule ram2_dequeue_data_rise CF (ram2_dequeue_data_rise, ram2_dequeue_data_fall);
     schedule ram2_dequeue_data_fall CF (ram2_dequeue_data_fall);
-*)))
+*/
                              
 endmodule
-*/

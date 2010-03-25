@@ -89,16 +89,15 @@ module mkDDR2SRAMDevice
     // interface:
     (DDR2_DEVICE);
 
+    // Clock the glue logic with the output clock.
+    Clock modelClock <- exposeCurrentClock();
+    Reset modelReset <- exposeCurrentReset();
+
     // Instantiate the primitive device.
     PRIMITIVE_DDR_SRAM_DEVICE prim_device <- mkPrimitiveDDRSRAMDevice(ramClk0, ramClk200, ramClk270, ramClkLocked, topLevelReset);
 
     // State
     Reg#(FPGA_DDR_STATE) state <- mkReg(STATE_ready);
-
-    // Clock the glue logic with the output clock.
-
-    Clock modelClock <- exposeCurrentClock();
-    Reset modelReset <- exposeCurrentReset();
 
     // Clock the glue logic with the Controller's clock
     Clock controllerClock = prim_device.clk_out;
@@ -109,9 +108,12 @@ module mkDDR2SRAMDevice
     //
 
     // Read buffer (size this buffer to sustain as many DRAM bursts as needed)
+    // We need 2 independent queues to read in the raw data from the 2 controllers
     SyncFIFOIfc#(FPGA_DDR_DUALEDGE_DATA) syncReadDataQ <-
         mkSyncFIFO(`SRAM_MAX_OUTSTANDING_READS * valueOf(FPGA_DDR_BURST_LENGTH),
                    controllerClock, controllerReset, modelClock);
+    
+    FIFO#(FPGA_DDR_DUALEDGE_DATA) readDataTimingQ <- mkFIFO();
 
     //
     // Synchronizers from Model to Controller
@@ -129,9 +131,6 @@ module mkDDR2SRAMDevice
     // Status queue
     Reg#(Bit#(32)) syncStatus <- mkSyncReg(0, controllerClock, controllerReset, modelClock);
 
-    Reg#(Bool) writePending <- mkReg(False, clocked_by controllerClock, reset_by controllerReset);
-    Reg#(Bool) readPending  <- mkReg(False, clocked_by controllerClock, reset_by controllerReset);
-    
     // Keep track of the number of reads in flight
     COUNTER#(TLog#(TAdd#(`SRAM_MAX_OUTSTANDING_READS, 1))) nInflightReads <- mkLCounter(0);
     Reg#(Bit#(TLog#(TAdd#(FPGA_DDR_BURST_LENGTH, 1)))) readBurstCnt <- mkReg(fromInteger(valueOf(TSub#(FPGA_DDR_BURST_LENGTH, 1))));
@@ -142,25 +141,30 @@ module mkDDR2SRAMDevice
     
     // Rules for synchronizing from Controller to Model
     
-    // Push incoming data into read buffer. This rule *MUST* fire if the explicit
-    // conditions are true, else we will lose data.
+    // 2 disjoint rules for each controller to push incoming data from
+    // controller into intermediate read buffers. These rules *MUST* fire
+    // if the explicit conditions are true, else we will lose data
     (* fire_when_enabled *)
-    rule readDataToBufferRise (!readPending && prim_device.ram1.dequeue_data_RDY());
+    rule readRAM1DataToBuffer (prim_device.ram1.dequeue_data_RDY());
         FPGA_DDR_WORD d1 = truncate(prim_device.ram1.dequeue_data_rise());
-        FPGA_DDR_WORD d2 = '0; // Angshu truncate(prim_device.ram2.dequeue_data_rise());
+        FPGA_DDR_WORD d2 = truncate(prim_device.ram1.dequeue_data_fall());
         syncReadDataQ.enq({d1, d2});
-        readPending <= True;
+    endrule
+    
+    rule fix_timing_bug (True);
+        readDataTimingQ.enq(syncReadDataQ.first());
+        syncReadDataQ.deq();
+    endrule
+    
+    /*
+    (* fire_when_enabled *)
+    rule readRAM2DataToBuffer (prim_device.ram2.dequeue_data_RDY());
+        FPGA_DDR_WORD d1 = truncate(prim_device.ram2.dequeue_data_rise());
+        FPGA_DDR_WORD d2 = truncate(prim_device.ram2.dequeue_data_fall());
+        syncReadDataQ_RAM2.enq({d1, d2});
     endrule
 
-    // Push incoming data into read buffer. This rule *MUST* fire if the explicit
-    // conditions are true, else we will lose data.
-    (* fire_when_enabled *)
-    rule readDataToBufferFall (readPending && prim_device.ram1.dequeue_data_RDY());
-        FPGA_DDR_WORD d1 = truncate(prim_device.ram1.dequeue_data_fall());
-        FPGA_DDR_WORD d2 = '0; // Angshu truncate(prim_device.ram2.dequeue_data_fall());
-        syncReadDataQ.enq({d1, d2});
-        readPending <= False;
-    endrule
+    */
     
     // 
     // Rules for synchronizing from Model to Controller
@@ -209,8 +213,10 @@ module mkDDR2SRAMDevice
     //     Stage 0 of write request.  Send control message and first half of data
     //     to the memory controller.
     //
+    // FIXME: this code only works for BURST_LENGTH == 1. We need one processWriteRequest method
+    //        for each item in the burst
+    //
     rule processWriteRequest0 (! syncResetQ.notEmpty() &&&
-                               ! writePending &&&
                                prim_device.ram1.enqueue_address_RDY() &&&
                                (writeBurstIdx == fromInteger(valueOf(FPGA_DDR_BURST_LENGTH))) &&&
                                syncRequestQ.first() matches tagged DRAM_WRITE .address);
@@ -230,28 +236,9 @@ module mkDDR2SRAMDevice
         prim_device.ram1.enqueue_data(zeroExtend(d1), zeroExtend(m1), zeroExtend(d2), zeroExtend(m2));
 
         writeBurstIdx <= 0;
-        writePending <= True;
 
     endrule
     
-    //
-    // processWriteRequest 1--
-    //   Stage two of write request.  Forward remainder of data to the memory.
-    //   This rule *MUST* fire in the cycle immediately after the previous rule.
-    //
-    (* fire_when_enabled *)
-    rule processWriteRequest1 (writePending);
-        // data + mask
-        // ICK  match {.d1, .d2} = unpack(writeValue[1]);
-        Tuple2#(FPGA_DDR_WORD, FPGA_DDR_WORD) tup = unpack(writeValue[1]);
-        Tuple2#(FPGA_DDR_WORD_MASK, FPGA_DDR_WORD_MASK) tup2 = unpack(writeValueMask[1]);
-        match {.d1, .d2} = tup;
-        match {.m1, .m2} = tup2;
-        prim_device.ram1.enqueue_data(zeroExtend(d1), zeroExtend(m1), zeroExtend(d2), zeroExtend(m2));
-        writePending <= False;
-    endrule    
-
-
     //
     // processModelReset --
     //     Model reset needs to clear out partial writes.
@@ -398,13 +385,16 @@ module mkDDR2SRAMDevice
     rule statusUpd (True);
 
         Bit#(32) status = 0;
+        
+        status[0]  = pack(prim_device.ram1.enqueue_address_RDY());
+        status[1]  = pack(prim_device.ram1.enqueue_data_RDY());
         status[2]  = pack(prim_device.ram1.dequeue_data_RDY());
         status[7]  = pack(syncReadDataQ.notFull());
         status[8]  = pack(syncResetQ.notEmpty());
         status[10] = pack(syncRequestQ.notEmpty());
         status[12] = pack(syncWriteDataQ.notEmpty());
-        status[14] = pack(writePending);
-        status[15] = pack(readPending);
+        status[14] = 0;
+        status[15] = 0;
         status[18] = pack(writeBurstIdx == 0);
 
         syncStatus <= status;
@@ -417,25 +407,16 @@ module mkDDR2SRAMDevice
         method Bit#(32) statusCheck();
 
             Bit#(32) status = 0;
-            status[0]  = pack(prim_device.ram1.enqueue_address_RDY());
-            status[1]  = pack(prim_device.ram1.enqueue_data_RDY());
-            //status[2]  = pack(prim_device.ram1.dequeue_data_RDY());
+            
             status[3]  = pack(mergeReqQ.notEmpty());
             status[4]  = pack(mergeReqQ.ports[0].notFull());
             status[5]  = pack(mergeReqQ.ports[1].notFull());
             status[6]  = pack(syncReadDataQ.notEmpty());
-            // status[7]  = pack(syncReadDataQ.notFull());
-            // status[8]  = pack(syncResetQ.notEmpty());
             status[9]  = pack(syncResetQ.notFull());
-            // status[10] = pack(syncRequestQ.notEmpty());
             status[11] = pack(syncRequestQ.notFull());
-            // status[12] = pack(syncWriteDataQ.notEmpty());
             status[13] = pack(syncWriteDataQ.notFull());
-            // status[14] = pack(writePending);
-            // status[15] = pack(readPending);
             status[16] = pack(nInflightReads.value() == 0);
             status[17] = pack(readBurstCnt == 0);
-            // status[18] = pack(writeBurstIdx == 0);
 
             status = status | syncStatus;
 
@@ -450,8 +431,8 @@ module mkDDR2SRAMDevice
         endmethod
 
         method ActionValue#(FPGA_DDR_DUALEDGE_DATA) readRsp() if (state == STATE_ready);
-            let d = syncReadDataQ.first();
-            syncReadDataQ.deq();
+            let d = readDataTimingQ.first();
+            readDataTimingQ.deq();
 
             if (readBurstCnt == 0)
             begin

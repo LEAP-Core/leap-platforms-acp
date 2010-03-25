@@ -142,6 +142,6 @@ net "m_vp_llpi_phys_plat_ddr2_sram_device_syncWriteDataQ/sGEnqPtr[*]"   TIG;
 net "m_vp_llpi_phys_plat_ddr2_sram_device_syncWriteDataQ/dSyncReg1[*]"  TIG;
 
 net "m_vp_llpi_phys_plat_ddr2_sram_device_syncReadDataQ_dD_OUT[*]"      TIG;
-#net "m_vp_llpi_phys_plat_ddr2_sram_device_syncReadDataQ/Mram_fifoMem*"  TIG;
+#net "m_vp_llpi_phys_plat_ddr2_sram_device_syncReadDataQ/fifoMem[*]"  TIG;
 net "m_vp_llpi_phys_plat_ddr2_sram_device_syncReadDataQ/dGDeqPtr[*]"    TIG;
 net "m_vp_llpi_phys_plat_ddr2_sram_device_syncReadDataQ/sSyncReg1[*]"   TIG;

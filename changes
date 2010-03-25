@@ -1127,3 +1127,17 @@ We should make sure this works before moving to the real SRAM.
 
 Michael P.
 
+
+----------
+aparasha    Date: Thu Mar 25 20:45:02 EDT 2010  CSN: CSN-platform-acp-52
+                  Fri Mar 26 00:45:02 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           51 
+ ddr-sram-device.bsv       Locally Modified           51 
+ ddr-sram-vhdl-import.bsv  Locally Modified           51 
+
+DDR SRAM now works with one SRAM controller. It should be straightforward to extend
+this to two controllers. Please keep in mind that some of the logic in the top-level
+ddr2_sram.vhd file is common for both controllers (e.g. IDELAY instantiation).
