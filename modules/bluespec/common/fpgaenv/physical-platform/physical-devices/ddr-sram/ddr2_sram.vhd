@@ -391,7 +391,7 @@ begin
   user_addr_cmd <= user_addr & user_cmd; -- & is concatenation in VHDL
   
   clk0_out    <= clk_0;
-  rst0_n_out  <= reset_clk_0;
+  rst0_n_out  <= not reset_clk_0;
 
   -- start 'er up!
 

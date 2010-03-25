@@ -398,6 +398,7 @@ module mkDDR2SRAMDevice
     rule statusUpd (True);
 
         Bit#(32) status = 0;
+        status[2]  = pack(prim_device.ram1.dequeue_data_RDY());
         status[7]  = pack(syncReadDataQ.notFull());
         status[8]  = pack(syncResetQ.notEmpty());
         status[10] = pack(syncRequestQ.notEmpty());
@@ -418,7 +419,7 @@ module mkDDR2SRAMDevice
             Bit#(32) status = 0;
             status[0]  = pack(prim_device.ram1.enqueue_address_RDY());
             status[1]  = pack(prim_device.ram1.enqueue_data_RDY());
-            status[2]  = pack(prim_device.ram1.dequeue_data_RDY());
+            //status[2]  = pack(prim_device.ram1.dequeue_data_RDY());
             status[3]  = pack(mergeReqQ.notEmpty());
             status[4]  = pack(mergeReqQ.ports[0].notFull());
             status[5]  = pack(mergeReqQ.ports[1].notFull());

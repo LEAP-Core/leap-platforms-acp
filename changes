@@ -1108,3 +1108,22 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
  ddr-sram-vhdl-import.bsv  Locally Modified           49 
 
 Updating with Michael Pellauer's debugger updates.
+
+----------
+pellauer    Date: Thu Mar 25 15:36:07 EDT 2010  CSN: CSN-platform-acp-51
+                  Thu Mar 25 19:36:07 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device-fake.awb  Locally Added               0 
+ ddr2_sram.vhd             Locally Modified           50 
+ ddr-sram-device.bsv       Locally Modified           50 
+ ddr-sram-vhdl-import.bsv  Locally Modified           50 
+ ddr-sram-fake.bsv         Locally Added               0 
+
+
+Adding "Fake" SRAM -- just a Bluespec RegFile with the correct clock domains.
+We should make sure this works before moving to the real SRAM.
+
+Michael P.
+
