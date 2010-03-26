@@ -1141,3 +1141,21 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
 DDR SRAM now works with one SRAM controller. It should be straightforward to extend
 this to two controllers. Please keep in mind that some of the logic in the top-level
 ddr2_sram.vhd file is common for both controllers (e.g. IDELAY instantiation).
+
+----------
+mcadler     Date: Fri Mar 26 20:29:58 EDT 2010  CSN: CSN-platform-acp-53
+                  Sat Mar 27 00:29:58 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.bsv               Locally Modified           52 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           52 
+ ddr-sram-device.bsv       Locally Modified           52 
+ ddr-sram-vhdl-import.bsv  Locally Modified           52 
+
+Two SRAM banks now work.  The wrapper instantiates a single bank and the SRAM
+device allocates two of them.
+
+The code is now cleaned up in the wrapper.  The device still needs work.

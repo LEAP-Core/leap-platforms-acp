@@ -17,6 +17,7 @@
 //
 
 import FIFO::*;
+import Vector::*;
 import Clocks::*;
 
 // htg-v5-pcie-enabled
@@ -37,7 +38,7 @@ interface PHYSICAL_DRIVERS;
 
     interface CLOCKS_DRIVER         clocksDriver;
     interface NALLATECH_EDGE_DRIVER nallatechEdgeDriver;
-    interface DDR2_DRIVER           ddr2Driver;
+    interface Vector#(FPGA_DDR_BANKS, DDR2_DRIVER) ddr2Driver;
 
 endinterface
 
@@ -53,8 +54,7 @@ interface TOP_LEVEL_WIRES;
     (* prefix = "" *)
     interface NALLATECH_EDGE_WIRES nallatechEdgeWires;
 
-    (* prefix = "" *)
-    interface DDR2_WIRES ddr2Wires;
+    interface Vector#(FPGA_DDR_BANKS, DDR2_WIRES) ddr2Wires;
 
 endinterface
 
@@ -97,13 +97,22 @@ module mkPhysicalPlatform
     Clock clk = nallatech_edge_device.clocks_driver.clock;
     Reset rst = nallatech_edge_device.clocks_driver.reset;
     
-    DDR2_DEVICE ddr2_sram_device <- mkDDR2SRAMDevice(nallatech_edge_device.sram_clocks_driver.ramClk0,
-                                                     nallatech_edge_device.sram_clocks_driver.ramClk200,
-                                                     nallatech_edge_device.sram_clocks_driver.ramClk270,
-                                                     nallatech_edge_device.sram_clocks_driver.ramClkLocked,
-                                                     rst,
-                                                     clocked_by clk, 
-                                                     reset_by rst);
+    // Instantiate memory bank controllers
+    Vector#(FPGA_DDR_BANKS, DDR2_DEVICE) ddr2_sram_device = newVector();
+    Vector#(FPGA_DDR_BANKS, DDR2_DRIVER) ddr2_driver = newVector();
+    Vector#(FPGA_DDR_BANKS, DDR2_WIRES) ddr2_wires = newVector();
+    for (Integer b = 0; b < valueOf(FPGA_DDR_BANKS); b = b + 1)
+    begin
+        ddr2_sram_device[b] <- mkDDR2SRAMDevice(nallatech_edge_device.sram_clocks_driver.ramClk0,
+                                                nallatech_edge_device.sram_clocks_driver.ramClk200,
+                                                nallatech_edge_device.sram_clocks_driver.ramClk270,
+                                                nallatech_edge_device.sram_clocks_driver.ramClkLocked,
+                                                rst,
+                                                clocked_by clk, 
+                                                reset_by rst);
+        ddr2_driver[b] = ddr2_sram_device[b].driver;
+        ddr2_wires[b] = ddr2_sram_device[b].wires;
+    end
 
     // Aggregate the drivers
     
@@ -111,7 +120,7 @@ module mkPhysicalPlatform
     
         interface clocksDriver        = nallatech_edge_device.clocks_driver;
         interface nallatechEdgeDriver = nallatech_edge_device.edge_driver;
-        interface ddr2Driver          = ddr2_sram_device.driver;
+        interface ddr2Driver          = ddr2_driver;
     
     endinterface
     
@@ -120,7 +129,7 @@ module mkPhysicalPlatform
     interface TOP_LEVEL_WIRES topLevelWires;
     
         interface nallatechEdgeWires  = nallatech_edge_device.wires;
-        interface ddr2Wires           = ddr2_sram_device.wires;
+        interface ddr2Wires           = ddr2_wires;
 
     endinterface
                

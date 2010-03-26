@@ -5,7 +5,6 @@
 ###############################################################################
 ###############################################################################
 ########################################################################
-# Controller 1
 # Memory Device: DDRII_SRAM->CIO->CY7C1520V18-250BZC #
 # Data Width:     36 #
 ########################################################################
@@ -14,134 +13,218 @@
 # I/O STANDARDS
 ################################################################################
 
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[*]"                         IOSTANDARD = "HSTL_II_DCI_18";
-NET  "ddrii_sa[*]"                         IOSTANDARD = "HSTL_I_18";
-NET  "ddrii_ld_n"                          IOSTANDARD = "HSTL_I_18";
-NET  "ddrii_rw_n"                          IOSTANDARD = "HSTL_I_18";
-NET  "ddrii_dll_off_n"                     IOSTANDARD = "HSTL_I_18";
-NET  "ddrii_bw_n[*]"                       IOSTANDARD = "HSTL_I_DCI_18"; # Angshuman
-NET  "ddrii_k"                             IOSTANDARD = "HSTL_I_DCI_18"; # Angshuman
-NET  "ddrii_k_n"                           IOSTANDARD = "HSTL_I_DCI_18"; # Angshuman
-NET  "ddrii_cq"                            IOSTANDARD = "HSTL_II_DCI_18";
-NET  "ddrii_cq_n"                          IOSTANDARD = "HSTL_II_DCI_18";
-#NET  "cal_done" 					 IOSTANDARD = "LVCMOS25" ;
-NET  "masterbank_sel_pin"                  IOSTANDARD = "HSTL_II_DCI_18"; # Angshuman - need at least one II_DCI on master
-#NET  "masterbank_sel_pin_out"              IOSTANDARD = "HSTL_II_DCI_18";
+NET  "*_sram_device_*_prim_device_ddrii_dq[*]"                         IOSTANDARD = "HSTL_II_DCI_18";
+NET  "ddr2Wires_*_ddrii_sa[*]"                         IOSTANDARD = "HSTL_I_18";
+NET  "ddr2Wires_*_ddrii_ld_n"                          IOSTANDARD = "HSTL_I_18";
+NET  "ddr2Wires_*_ddrii_rw_n"                          IOSTANDARD = "HSTL_I_18";
+NET  "ddr2Wires_*_ddrii_dll_off_n"                     IOSTANDARD = "HSTL_I_18";
+NET  "ddr2Wires_*_ddrii_bw_n[*]"                       IOSTANDARD = "HSTL_I_DCI_18"; # Angshuman
+NET  "ddr2Wires_*_ddrii_k"                             IOSTANDARD = "HSTL_I_DCI_18"; # Angshuman
+NET  "ddr2Wires_*_ddrii_k_n"                           IOSTANDARD = "HSTL_I_DCI_18"; # Angshuman
+NET  "ddr2Wires_*_ddrii_cq"                            IOSTANDARD = "HSTL_II_DCI_18";
+NET  "ddr2Wires_*_ddrii_cq_n"                          IOSTANDARD = "HSTL_II_DCI_18";
+#NET  "ddr2Wires_*_cal_done" 					 IOSTANDARD = "LVCMOS25" ;
+NET  "ddr2Wires_*_masterbank_sel_pin"                  IOSTANDARD = "HSTL_II_DCI_18"; # Angshuman - need at least one II_DCI on master
+#NET  "ddr2Wires_*_masterbank_sel_pin_out"              IOSTANDARD = "HSTL_II_DCI_18";
 
 
 ################################################################################
 #SAVE attributes to reserve the pins
 ################################################################################
-NET  "ddrii_cq_n"                            S;
-#NET  "masterbank_sel_pin"                    S;
-
-# ENABLE DCI CASCADE BANK 33 IS THE MASTER AND BANK 29 IS THE SLAVE
-CONFIG DCI_CASCADE = "33 29";
+NET  "ddr2Wires_*_ddrii_cq_n"                            S;
+#NET  "ddr2Wires_*_masterbank_sel_pin"                    S;
 
 ############################################################################
 ################ THIS IS FOR RAM6 and RAM 1###################
 
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[0]"                          LOC = "AY42" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[1]"                          LOC = "AW42" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[2]"                          LOC = "AW41" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[3]"                          LOC = "AW40" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[4]"                          LOC = "AY40" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[5]"                          LOC = "BA41" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[6]"                          LOC = "BA42" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[7]"                          LOC = "BB41" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[8]"                          LOC = "BA40" ;      # Bank 29    # byte lane 0 parity          
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[9]"                          LOC = "BB38" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[10]"                         LOC = "BA39" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[11]"                         LOC = "AY38" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[12]"                         LOC = "AW37" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[13]"                         LOC = "AW38" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[14]"                         LOC = "AY39" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[15]"                         LOC = "BB37" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[16]"                         LOC = "BA37" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[17]"                         LOC = "AW36" ;      # Bank 29    # byte lane 1 parity          
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[18]"                         LOC = "BB36" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[19]"                         LOC = "BA36" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[20]"                         LOC = "AW35" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[21]"                         LOC = "BB34" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[22]"                         LOC = "BA35" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[23]"                         LOC = "BB33" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[24]"                         LOC = "BA34" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[25]"                         LOC = "AY33" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[26]"                         LOC = "AW33" ;      # Bank 29    # byte lane 2 parity          
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[27]"                         LOC = "AW32" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[28]"                         LOC = "AY32" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[29]"                         LOC = "BA32" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[30]"                         LOC = "BB32" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[31]"                         LOC = "BB31" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[32]"                         LOC = "BA30" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[33]"                         LOC = "BA31" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[34]"                         LOC = "AY30" ;      # Bank 29
-NET  "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device_ddrii_dq[35]"                         LOC = "AW31" ;      # Bank 29
+# ENABLE DCI CASCADE BANK 33 IS THE MASTER AND BANK 29 IS THE SLAVE
+CONFIG DCI_CASCADE = "33 29";
 
-#NET  "ddrii_sa[21]"                         LOC = "AW20" ;	# NEED TO COME BACK TO THIS      
+NET  "*_sram_device_0_prim_device_ddrii_dq[0]"                          LOC = "AY42" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[1]"                          LOC = "AW42" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[2]"                          LOC = "AW41" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[3]"                          LOC = "AW40" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[4]"                          LOC = "AY40" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[5]"                          LOC = "BA41" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[6]"                          LOC = "BA42" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[7]"                          LOC = "BB41" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[8]"                          LOC = "BA40" ;      # Bank 29    # byte lane 0 parity          
+NET  "*_sram_device_0_prim_device_ddrii_dq[9]"                          LOC = "BB38" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[10]"                         LOC = "BA39" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[11]"                         LOC = "AY38" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[12]"                         LOC = "AW37" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[13]"                         LOC = "AW38" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[14]"                         LOC = "AY39" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[15]"                         LOC = "BB37" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[16]"                         LOC = "BA37" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[17]"                         LOC = "AW36" ;      # Bank 29    # byte lane 1 parity          
+NET  "*_sram_device_0_prim_device_ddrii_dq[18]"                         LOC = "BB36" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[19]"                         LOC = "BA36" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[20]"                         LOC = "AW35" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[21]"                         LOC = "BB34" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[22]"                         LOC = "BA35" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[23]"                         LOC = "BB33" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[24]"                         LOC = "BA34" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[25]"                         LOC = "AY33" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[26]"                         LOC = "AW33" ;      # Bank 29    # byte lane 2 parity          
+NET  "*_sram_device_0_prim_device_ddrii_dq[27]"                         LOC = "AW32" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[28]"                         LOC = "AY32" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[29]"                         LOC = "BA32" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[30]"                         LOC = "BB32" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[31]"                         LOC = "BB31" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[32]"                         LOC = "BA30" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[33]"                         LOC = "BA31" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[34]"                         LOC = "AY30" ;      # Bank 29
+NET  "*_sram_device_0_prim_device_ddrii_dq[35]"                         LOC = "AW31" ;      # Bank 29
 
-NET  "ddrii_sa[20]"                         LOC = "AW21" ;	      # Bank 33
-NET  "ddrii_sa[19]"                         LOC = "AY20" ;	      # Bank 33
-NET  "ddrii_sa[18]"                         LOC = "AY19" ;	      # Bank 33
-NET  "ddrii_sa[17]"                         LOC = "BA19" ;	      # Bank 33
-NET  "ddrii_sa[16]"                         LOC = "BA20" ;	      # Bank 33
-NET  "ddrii_sa[15]"                         LOC = "BA21" ;	      # Bank 33
-NET  "ddrii_sa[14]"                         LOC = "BB20" ;	      # Bank 33
-NET  "ddrii_sa[13]"                         LOC = "AW22" ;	      # Bank 33
-NET  "ddrii_sa[12]"                         LOC = "AW23" ;	      # Bank 33
-NET  "ddrii_sa[11]"                         LOC = "AY22" ;	      # Bank 33
-NET  "ddrii_sa[10]"                         LOC = "BA22" ;	      # Bank 33
-NET  "ddrii_sa[9]"                          LOC = "BB21" ;	      # Bank 33
-NET  "ddrii_sa[8]"                          LOC = "AW26" ;	      # Bank 33
-NET  "ddrii_sa[7]"                          LOC = "AV26" ;	      # Bank 33
-NET  "ddrii_sa[6]"                          LOC = "AW27" ;	      # Bank 33
-NET  "ddrii_sa[5]"                          LOC = "AV28" ;	      # Bank 33
-NET  "ddrii_sa[4]"                          LOC = "BA29" ;	      # Bank 33
-NET  "ddrii_sa[3]"                          LOC = "AY29" ;	      # Bank 33
-NET  "ddrii_sa[2]"                          LOC = "AY28" ;	      # Bank 33
-NET  "ddrii_sa[1]"                          LOC = "AY27" ;	      # Bank 33
-NET  "ddrii_sa[0]"                          LOC = "AW28" ;	      # Bank 33
+#NET  "ddr2Wires_0_ddrii_sa[21]"                         LOC = "AW20" ;	# NEED TO COME BACK TO THIS      
+NET  "ddr2Wires_0_ddrii_sa[20]"                         LOC = "AW21" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[19]"                         LOC = "AY20" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[18]"                         LOC = "AY19" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[17]"                         LOC = "BA19" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[16]"                         LOC = "BA20" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[15]"                         LOC = "BA21" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[14]"                         LOC = "BB20" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[13]"                         LOC = "AW22" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[12]"                         LOC = "AW23" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[11]"                         LOC = "AY22" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[10]"                         LOC = "BA22" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[9]"                          LOC = "BB21" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[8]"                          LOC = "AW26" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[7]"                          LOC = "AV26" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[6]"                          LOC = "AW27" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[5]"                          LOC = "AV28" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[4]"                          LOC = "BA29" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[3]"                          LOC = "AY29" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[2]"                          LOC = "AY28" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[1]"                          LOC = "AY27" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_sa[0]"                          LOC = "AW28" ;	      # Bank 33
 
-NET  "ddrii_ld_n"                           LOC = "BB29" ;        # Bank 33
-NET  "ddrii_rw_n"                           LOC = "BB28" ;        # Bank 33
-NET  "ddrii_dll_off_n"                      LOC = "BB27" ;	      # Bank 33
-NET  "ddrii_bw_n[0]"                        LOC = "BB24" ;        # Bank 33
-NET  "ddrii_bw_n[1]"                        LOC = "BA24" ;        # Bank 33
-NET  "ddrii_bw_n[2]"                        LOC = "AY24" ;        # Bank 33
-NET  "ddrii_bw_n[3]"                        LOC = "AW25" ;        # Bank 33
+NET  "ddr2Wires_0_ddrii_ld_n"                           LOC = "BB29" ;        # Bank 33
+NET  "ddr2Wires_0_ddrii_rw_n"                           LOC = "BB28" ;        # Bank 33
+NET  "ddr2Wires_0_ddrii_dll_off_n"                      LOC = "BB27" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_bw_n[0]"                        LOC = "BB24" ;        # Bank 33
+NET  "ddr2Wires_0_ddrii_bw_n[1]"                        LOC = "BA24" ;        # Bank 33
+NET  "ddr2Wires_0_ddrii_bw_n[2]"                        LOC = "AY24" ;        # Bank 33
+NET  "ddr2Wires_0_ddrii_bw_n[3]"                        LOC = "AW25" ;        # Bank 33
 
-#NET  "cal_done"                             LOC = "AN29" ;	       # Bank 04    #"AP28" ; # MIG dly_cal_done	 Bank 04
-NET  "masterbank_sel_pin"                   LOC = "BA27" ;        # Bank 33
-#NET  "masterbank_sel_pin_out"               LOC = "AV30" ;	      # Bank 33 Angshuman DEBUG
+#NET  "ddr2Wires_0_cal_done"                             LOC = "AN29" ;	       # Bank 04    #"AP28" ; # MIG dly_cal_done	 Bank 04
+NET  "ddr2Wires_0_masterbank_sel_pin"                   LOC = "BA27" ;        # Bank 33
+#NET  "ddr2Wires_0_masterbank_sel_pin_out"               LOC = "AV30" ;	      # Bank 33 Angshuman DEBUG
 
-NET  "ddrii_k"                              LOC = "BB26" ;	      # Bank 33
-NET  "ddrii_k_n"                            LOC = "BA26" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_k"                              LOC = "BB26" ;	      # Bank 33
+NET  "ddr2Wires_0_ddrii_k_n"                            LOC = "BA26" ;	      # Bank 33
 
-NET  "ddrii_cq"                             LOC = "AY37" ;	      # Bank 29
-NET  "ddrii_cq_n"                           LOC = "AY35" ;	      # Bank 29
+NET  "ddr2Wires_0_ddrii_cq"                             LOC = "AY37" ;	      # Bank 29
+NET  "ddr2Wires_0_ddrii_cq_n"                           LOC = "AY35" ;	      # Bank 29
 
-NET "ram_pwr_on"  IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL14;
-NET "ram_leds[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN29; 		#D3 or D
-NET "ram_leds[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP28; 		#D4 or D
+NET "ddr2Wires_0_ram_pwr_on"  IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL14;
+NET "ddr2Wires_0_ram_leds[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN29; 		#D3 or D
+NET "ddr2Wires_0_ram_leds[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP28; 		#D4 or D
 
-INST "m_vp_llpi_phys_plat_ddr2_sram_device_prim_device/u_idelayctrl" LOC = IDELAYCTRL_X0Y1; # no underscore
+INST "*_sram_device_0_prim_device/u_idelayctrl" LOC = IDELAYCTRL_X0Y1; # no underscore
 
+
+############################################################################
+################ THIS IS FOR RAM6 and RAM 1###################
+
+# ENABLE DCI CASCADE BANK 27 IS THE MASTER ABD BANK 31 IS THE SLAVE
+CONFIG DCI_CASCADE = "27 31";
+
+NET  "*_sram_device_1_prim_device_ddrii_dq[0]"                          LOC = "D20" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[1]"                          LOC = "D21" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[2]"                          LOC = "C21" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[3]"                          LOC = "C20" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[4]"                          LOC = "A20" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[5]"                          LOC = "A21" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[6]"                          LOC = "A22" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[7]"                          LOC = "B21" ;
+NET  "*_sram_device_1_prim_device_ddrii_dq[8]"                          LOC = "D22" ;     # byte lane 0 parity          
+NET  "*_sram_device_1_prim_device_ddrii_dq[9]"                          LOC = "C23" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[10]"                         LOC = "B22" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[11]"                         LOC = "B23" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[12]"                         LOC = "A24" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[13]"                         LOC = "B24" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[14]"                         LOC = "C24" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[15]"                         LOC = "E24" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[16]"                         LOC = "E25" ;
+NET  "*_sram_device_1_prim_device_ddrii_dq[17]"                         LOC = "D26" ;     # byte lane 1 parity          
+NET  "*_sram_device_1_prim_device_ddrii_dq[18]"                         LOC = "E28" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[19]"                         LOC = "E27" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[20]"                         LOC = "C26" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[21]"                         LOC = "C25" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[22]"                         LOC = "B26" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[23]"                         LOC = "A26" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[24]"                         LOC = "A25" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[25]"                         LOC = "A27" ;
+NET  "*_sram_device_1_prim_device_ddrii_dq[26]"                         LOC = "B28" ;     # byte lane 2 parity          
+NET  "*_sram_device_1_prim_device_ddrii_dq[27]"                         LOC = "A29" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[28]"                         LOC = "F30" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[29]"                         LOC = "E30" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[30]"                         LOC = "E29" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[31]"                         LOC = "D30" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[32]"                         LOC = "C29" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[33]"                         LOC = "B29" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[34]"                         LOC = "C28" ;           
+NET  "*_sram_device_1_prim_device_ddrii_dq[35]"                         LOC = "D28" ;     # byte lane 3 parity
+
+#NET  "ddr2Wires_1_ddrii_sa[21]"                         LOC = "D42" ; #need to come back to this	      
+NET  "ddr2Wires_1_ddrii_sa[20]"                         LOC = "E42" ;	      
+NET  "ddr2Wires_1_ddrii_sa[19]"                         LOC = "D41" ;	      
+NET  "ddr2Wires_1_ddrii_sa[18]"                         LOC = "D40" ;	      
+NET  "ddr2Wires_1_ddrii_sa[17]"                         LOC = "C41" ;	      
+NET  "ddr2Wires_1_ddrii_sa[16]"                         LOC = "B42" ;	      
+NET  "ddr2Wires_1_ddrii_sa[15]"                         LOC = "B41" ;	      
+NET  "ddr2Wires_1_ddrii_sa[14]"                         LOC = "A41" ;	      
+NET  "ddr2Wires_1_ddrii_sa[13]"                         LOC = "A40" ;	      
+NET  "ddr2Wires_1_ddrii_sa[12]"                         LOC = "A39" ;	      
+NET  "ddr2Wires_1_ddrii_sa[11]"                         LOC = "B39" ;	      
+NET  "ddr2Wires_1_ddrii_sa[10]"                         LOC = "C40" ;	      
+NET  "ddr2Wires_1_ddrii_sa[9]"                          LOC = "C39" ;	      
+NET  "ddr2Wires_1_ddrii_sa[8]"                          LOC = "B36" ;	      
+NET  "ddr2Wires_1_ddrii_sa[7]"                          LOC = "B37" ;	      
+NET  "ddr2Wires_1_ddrii_sa[6]"                          LOC = "A36" ;	      
+NET  "ddr2Wires_1_ddrii_sa[5]"                          LOC = "A37" ;	      
+NET  "ddr2Wires_1_ddrii_sa[4]"                          LOC = "A35" ;	      
+NET  "ddr2Wires_1_ddrii_sa[3]"                          LOC = "A34" ;	      
+NET  "ddr2Wires_1_ddrii_sa[2]"                          LOC = "B34" ;	      
+NET  "ddr2Wires_1_ddrii_sa[1]"                          LOC = "C34" ;	      
+NET  "ddr2Wires_1_ddrii_sa[0]"                          LOC = "D33" ;	      
+
+NET  "ddr2Wires_1_ddrii_ld_n"                           LOC = "D31" ;           
+NET  "ddr2Wires_1_ddrii_rw_n"                           LOC = "C31" ;           
+NET  "ddr2Wires_1_ddrii_dll_off_n"                      LOC = "C30" ;           
+NET  "ddr2Wires_1_ddrii_bw_n[0]"                        LOC = "D35" ;           
+NET  "ddr2Wires_1_ddrii_bw_n[1]"                        LOC = "D36" ;           
+NET  "ddr2Wires_1_ddrii_bw_n[2]"                        LOC = "C36" ;           
+NET  "ddr2Wires_1_ddrii_bw_n[3]"                        LOC = "C35" ;                 
+
+#NET  "ddr2Wires_1_cal_done"                             LOC = "AP28";     #"AN29" ; # MIG dly_cal_done
+NET  "ddr2Wires_1_masterbank_sel_pin"                LOC = "B31" ;	  #Bank 27
+
+NET  "ddr2Wires_1_ddrii_k"                           LOC = "A30" ;           
+NET  "ddr2Wires_1_ddrii_k_n"                         LOC = "A31" ;           
+
+NET  "ddr2Wires_1_ddrii_cq"                          LOC = "D25" ;           
+NET  "ddr2Wires_1_ddrii_cq_n"                        LOC = "D27" ;           
+
+INST "*_sram_device_1_prim_device/u_idelayctrl" LOC = IDELAYCTRL_X0Y11; # no underscore
 
 
 ############################################################################
 ##                                TIGs
 ############################################################################
-net "m_vp_llpi_phys_plat_ddr2_sram_device_syncRequestQ_dD_OUT[*]"     TIG;
-net "m_vp_llpi_phys_plat_ddr2_sram_device_syncRequestQ/Mram_fifoMem*" TIG;
-net "m_vp_llpi_phys_plat_ddr2_sram_device_syncRequestQ/sGEnqPtr[*]"   TIG;
-net "m_vp_llpi_phys_plat_ddr2_sram_device_syncRequestQ/dSyncReg1[*]"  TIG;
+net "*_sram_device_*_syncRequestQ_dD_OUT[*]"     TIG;
+net "*_sram_device_*_syncRequestQ/Mram_fifoMem*" TIG;
+net "*_sram_device_*_syncRequestQ/sGEnqPtr[*]"   TIG;
+net "*_sram_device_*_syncRequestQ/dSyncReg1[*]"  TIG;
 
-net "m_vp_llpi_phys_plat_ddr2_sram_device_syncWriteDataQ_dD_OUT[*]"     TIG;
-#net "m_vp_llpi_phys_plat_ddr2_sram_device_syncWriteDataQ/Mram_fifoMem*" TIG;
-net "m_vp_llpi_phys_plat_ddr2_sram_device_syncWriteDataQ/sGEnqPtr[*]"   TIG;
-net "m_vp_llpi_phys_plat_ddr2_sram_device_syncWriteDataQ/dSyncReg1[*]"  TIG;
+net "*_sram_device_*_syncWriteDataQ_dD_OUT[*]"     TIG;
+#net "*_sram_device_*_syncWriteDataQ/Mram_fifoMem*" TIG;
+net "*_sram_device_*_syncWriteDataQ/sGEnqPtr[*]"   TIG;
+net "*_sram_device_*_syncWriteDataQ/dSyncReg1[*]"  TIG;
 
-net "m_vp_llpi_phys_plat_ddr2_sram_device_syncReadDataQ_dD_OUT[*]"      TIG;
-#net "m_vp_llpi_phys_plat_ddr2_sram_device_syncReadDataQ/fifoMem[*]"  TIG;
-net "m_vp_llpi_phys_plat_ddr2_sram_device_syncReadDataQ/dGDeqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_ddr2_sram_device_syncReadDataQ/sSyncReg1[*]"   TIG;
+net "*_sram_device_*_syncReadDataQ_dD_OUT[*]"      TIG;
+#net "*_sram_device_*_syncReadDataQ/fifoMem[*]"  TIG;
+net "*_sram_device_*_syncReadDataQ/dGDeqPtr[*]"    TIG;
+net "*_sram_device_*_syncReadDataQ/sSyncReg1[*]"   TIG;

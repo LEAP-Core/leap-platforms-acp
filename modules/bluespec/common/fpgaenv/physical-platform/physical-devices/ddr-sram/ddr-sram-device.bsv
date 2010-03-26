@@ -141,40 +141,30 @@ module mkDDR2SRAMDevice
     
     // Rules for synchronizing from Controller to Model
     
-    // 2 disjoint rules for each controller to push incoming data from
-    // controller into intermediate read buffers. These rules *MUST* fire
-    // if the explicit conditions are true, else we will lose data
+    // Push incoming read data from the controller into the sync FIFO to cross
+    // the clock boundary.
     (* fire_when_enabled *)
-    rule readRAM1DataToBuffer (prim_device.ram1.dequeue_data_RDY());
-        FPGA_DDR_WORD d1 = truncate(prim_device.ram1.dequeue_data_rise());
-        FPGA_DDR_WORD d2 = truncate(prim_device.ram1.dequeue_data_fall());
+    rule readRAMDataToBuffer (prim_device.ram.dequeue_data_RDY());
+        FPGA_DDR_WORD d1 = truncate(prim_device.ram.dequeue_data_rise());
+        FPGA_DDR_WORD d2 = truncate(prim_device.ram.dequeue_data_fall());
         syncReadDataQ.enq({d1, d2});
     endrule
     
-    rule fix_timing_bug (True);
+    rule forwardSyncReadData (True);
         readDataTimingQ.enq(syncReadDataQ.first());
         syncReadDataQ.deq();
     endrule
     
-    /*
-    (* fire_when_enabled *)
-    rule readRAM2DataToBuffer (prim_device.ram2.dequeue_data_RDY());
-        FPGA_DDR_WORD d1 = truncate(prim_device.ram2.dequeue_data_rise());
-        FPGA_DDR_WORD d2 = truncate(prim_device.ram2.dequeue_data_fall());
-        syncReadDataQ_RAM2.enq({d1, d2});
-    endrule
 
-    */
-    
     // 
     // Rules for synchronizing from Model to Controller
     //
     
     rule processReadRequest (! syncResetQ.notEmpty() &&&
-                             prim_device.ram1.enqueue_address_RDY() &&&
+                             prim_device.ram.enqueue_address_RDY() &&&
                              syncRequestQ.first() matches tagged DRAM_READ .address);
         syncRequestQ.deq();
-        prim_device.ram1.enqueue_address(zeroExtend(address), READ);
+        prim_device.ram.enqueue_address(zeroExtend(address), READ);
         // Angshu prim_device.ram2.enqueue_address(zeroExtend(address), READ);
 
     endrule
@@ -217,14 +207,14 @@ module mkDDR2SRAMDevice
     //        for each item in the burst
     //
     rule processWriteRequest0 (! syncResetQ.notEmpty() &&&
-                               prim_device.ram1.enqueue_address_RDY() &&&
+                               prim_device.ram.enqueue_address_RDY() &&&
                                (writeBurstIdx == fromInteger(valueOf(FPGA_DDR_BURST_LENGTH))) &&&
                                syncRequestQ.first() matches tagged DRAM_WRITE .address);
 
         syncRequestQ.deq();
 
         // address + command
-        prim_device.ram1.enqueue_address(zeroExtend(address), WRITE);
+        prim_device.ram.enqueue_address(zeroExtend(address), WRITE);
         // Angshu prim_device.ram2.enqueue_address(zeroExtend(address), WRITE);
         
         // Data + mask
@@ -233,7 +223,7 @@ module mkDDR2SRAMDevice
         Tuple2#(FPGA_DDR_WORD_MASK, FPGA_DDR_WORD_MASK) tup2 = unpack(writeValueMask[0]);
         match {.d1, .d2} = tup;
         match {.m1, .m2} = tup2;
-        prim_device.ram1.enqueue_data(zeroExtend(d1), zeroExtend(m1), zeroExtend(d2), zeroExtend(m2));
+        prim_device.ram.enqueue_data(zeroExtend(d1), zeroExtend(m1), zeroExtend(d2), zeroExtend(m2));
 
         writeBurstIdx <= 0;
 
@@ -386,9 +376,9 @@ module mkDDR2SRAMDevice
 
         Bit#(32) status = 0;
         
-        status[0]  = pack(prim_device.ram1.enqueue_address_RDY());
-        status[1]  = pack(prim_device.ram1.enqueue_data_RDY());
-        status[2]  = pack(prim_device.ram1.dequeue_data_RDY());
+        status[0]  = pack(prim_device.ram.enqueue_address_RDY());
+        status[1]  = pack(prim_device.ram.enqueue_data_RDY());
+        status[2]  = pack(prim_device.ram.dequeue_data_RDY());
         status[7]  = pack(syncReadDataQ.notFull());
         status[8]  = pack(syncResetQ.notEmpty());
         status[10] = pack(syncRequestQ.notEmpty());
