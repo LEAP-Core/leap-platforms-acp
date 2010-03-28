@@ -23,7 +23,7 @@ NET  "ddr2Wires_*_ddrii_k"                             IOSTANDARD = "HSTL_I_DCI_
 NET  "ddr2Wires_*_ddrii_k_n"                           IOSTANDARD = "HSTL_I_DCI_18"; # Angshuman
 NET  "ddr2Wires_*_ddrii_cq"                            IOSTANDARD = "HSTL_II_DCI_18";
 NET  "ddr2Wires_*_ddrii_cq_n"                          IOSTANDARD = "HSTL_II_DCI_18";
-#NET  "ddr2Wires_*_cal_done" 					 IOSTANDARD = "LVCMOS25" ;
+#NET  "ddr2Wires_*_cal_done" 			       IOSTANDARD = "LVCMOS25" ;
 NET  "ddr2Wires_*_masterbank_sel_pin"                  IOSTANDARD = "HSTL_II_DCI_18"; # Angshuman - need at least one II_DCI on master
 #NET  "ddr2Wires_*_masterbank_sel_pin_out"              IOSTANDARD = "HSTL_II_DCI_18";
 
@@ -108,7 +108,7 @@ NET  "ddr2Wires_0_ddrii_bw_n[1]"                        LOC = "BA24" ;        # 
 NET  "ddr2Wires_0_ddrii_bw_n[2]"                        LOC = "AY24" ;        # Bank 33
 NET  "ddr2Wires_0_ddrii_bw_n[3]"                        LOC = "AW25" ;        # Bank 33
 
-#NET  "ddr2Wires_0_cal_done"                             LOC = "AN29" ;	       # Bank 04    #"AP28" ; # MIG dly_cal_done	 Bank 04
+#NET  "ddr2Wires_0_cal_done"                             LOC = "AN29" ;	      # MIG dly_cal_done
 NET  "ddr2Wires_0_masterbank_sel_pin"                   LOC = "BA27" ;        # Bank 33
 #NET  "ddr2Wires_0_masterbank_sel_pin_out"               LOC = "AV30" ;	      # Bank 33 Angshuman DEBUG
 
@@ -199,7 +199,7 @@ NET  "ddr2Wires_1_ddrii_bw_n[1]"                        LOC = "D36" ;
 NET  "ddr2Wires_1_ddrii_bw_n[2]"                        LOC = "C36" ;           
 NET  "ddr2Wires_1_ddrii_bw_n[3]"                        LOC = "C35" ;                 
 
-#NET  "ddr2Wires_1_cal_done"                             LOC = "AP28";     #"AN29" ; # MIG dly_cal_done
+#NET  "ddr2Wires_1_cal_done"                             LOC = "AP28";     # MIG dly_cal_done
 NET  "ddr2Wires_1_masterbank_sel_pin"                LOC = "B31" ;	  #Bank 27
 
 NET  "ddr2Wires_1_ddrii_k"                           LOC = "A30" ;           
@@ -224,7 +224,7 @@ net "*_sram_device_*_syncWriteDataQ_dD_OUT[*]"     TIG;
 net "*_sram_device_*_syncWriteDataQ/sGEnqPtr[*]"   TIG;
 net "*_sram_device_*_syncWriteDataQ/dSyncReg1[*]"  TIG;
 
-net "*_sram_device_*_syncReadDataQ_dD_OUT[*]"      TIG;
+#net "*_sram_device_*_syncReadDataQ_dD_OUT[*]"      TIG;
 #net "*_sram_device_*_syncReadDataQ/fifoMem[*]"  TIG;
 net "*_sram_device_*_syncReadDataQ/dGDeqPtr[*]"    TIG;
 net "*_sram_device_*_syncReadDataQ/sSyncReg1[*]"   TIG;

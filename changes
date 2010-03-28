@@ -1159,3 +1159,35 @@ Two SRAM banks now work.  The wrapper instantiates a single bank and the SRAM
 device allocates two of them.
 
 The code is now cleaned up in the wrapper.  The device still needs work.
+
+----------
+mcadler     Date: Sun Mar 28 20:49:10 EDT 2010  CSN: CSN-platform-acp-54
+                  Mon Mar 29 00:49:10 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           53 
+ ddr-sram-device.bsv       Locally Modified           53 
+ ddr-sram-vhdl-import.bsv  Locally Modified           53 
+ ddr-sram-device.awb       Locally Modified           53 
+
+- Expose cal_done from the controller as ddr_device_RDY() in Bluespec.  Wait
+  for ddr_device_RDY to be set before making any requests of the RAM.
+  Ok, I confess:  I actually read the Xilinx documentation.  Next I'll probably
+  stop at gas stations to ask directions.
+
+- Add initialization of RAM to a known pattern (standard Bluespec 0xaaaa....)
+  This way programs can't appear to work because they are using some stale
+  values.
+
+- Make debugging logic conditionally compiled (default is off).
+
+- Confirmed that 8 is a good choice for the read buffer size.  (Optimal is
+  about 6).
+
+- Move all typedefs that are computed from the Bluespec VHDL wrapper to the
+  ddr-sram-device.bsv.  Only device-specific values are set in the wrapper.
+
+- All loads and stores are coded with the intent of supporting arbitrary burst
+  sizes.  All are debugged on the current hardware that only has a burst of
+  one data message.

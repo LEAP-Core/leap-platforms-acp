@@ -28,3 +28,4 @@
 %sources -t UCF -v PRIVATE ddr-sram-device.ucf
 
 %param SRAM_MAX_OUTSTANDING_READS  8 "Maximum in-flight read requests"
+%param SRAM_DEBUG                  0 "Non-zero enables debugging methods"

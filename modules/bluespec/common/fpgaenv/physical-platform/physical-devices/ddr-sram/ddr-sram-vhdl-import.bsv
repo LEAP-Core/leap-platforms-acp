@@ -48,26 +48,13 @@ typedef 2 FPGA_DDR_BANKS;
 
 // The smallest addressable word:
 typedef 32 FPGA_DDR_WORD_SZ;
-typedef Bit#(FPGA_DDR_WORD_SZ) FPGA_DDR_WORD;
-
-// The DRAM controller uses both clock edges to pass data, which appears to
-// be 2 words per cycle.  Addresses are little endian, so the low address
-// goes in the low bits.  Most of the interfaces in this module pass:
-typedef TMul#(2, FPGA_DDR_WORD_SZ) FPGA_DDR_DUALEDGE_DATA_SZ;
-typedef Bit#(FPGA_DDR_DUALEDGE_DATA_SZ) FPGA_DDR_DUALEDGE_DATA;
 
 // The DRAM controller reads and writes multiple dual-edge data values for
 // a single request.  The number of dual-edge data values per request is:
 typedef TDiv#(`SRAM_BURST_LENGTH, 2) FPGA_DDR_BURST_LENGTH;
 
-// Each byte in a write may be disabled for writes using a bit mask.
-// !!! NOTE: to conform to the controller, a mask bit is 0 to request a write !!!
-typedef Bit#(TDiv#(FPGA_DDR_WORD_SZ, 8)) FPGA_DDR_WORD_MASK;
-typedef Bit#(TDiv#(FPGA_DDR_DUALEDGE_DATA_SZ, 8)) FPGA_DDR_DUALEDGE_DATA_MASK;
-
 // Capacity of the memory (addressing FPGA_DDR_WORDs):
 typedef `SRAM_ADDR_WIDTH FPGA_DDR_ADDRESS_SZ;
-typedef Bit#(FPGA_DDR_ADDRESS_SZ) FPGA_DDR_ADDRESS;
 
 typedef enum {
     WRITE = 0,
@@ -75,7 +62,6 @@ typedef enum {
 }
 DDR2_COMMAND
     deriving(Bits, Eq);
-
 
 
 //
@@ -97,8 +83,6 @@ interface DDR2_WIRES;
     (* result = "ddrii_dll_off_n" *) method Bit#(1) w_ddrii_dll_off_n();
     (* result = "ddrii_bw_n" *) method Bit#(`SRAM_BW_WIDTH) w_ddrii_bw_n();
     (* prefix = "" *) method Action w_masterbank_sel_pin((* port = "masterbank_sel_pin" *) Bit#(1) data);
-
-    (* result = "cal_done" *) method Bit#(1) w_cal_done();
 
     (* prefix = "" *) method Action w_ddrii_cq((* port = "ddrii_cq" *) Bit#(`SRAM_CQ_WIDTH) data);
     (* prefix = "" *) method Action w_ddrii_cq_n((* port = "ddrii_cq_n" *) Bit#(`SRAM_CQ_WIDTH) data);
@@ -125,6 +109,9 @@ interface DDR2_PRIM_DRIVER;
     method Bit#(`SRAM_DATA_WIDTH) dequeue_data_rise();
     method Bit#(`SRAM_DATA_WIDTH) dequeue_data_fall();
     method Bool dequeue_data_RDY();
+
+    // Set after the controller completes initialization.
+    method Bool ddr_device_RDY();
 endinterface
 
 
@@ -204,7 +191,6 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
         method ddrii_rw_n       w_ddrii_rw_n();
         method ddrii_dll_off_n  w_ddrii_dll_off_n();
         method ddrii_bw_n       w_ddrii_bw_n();
-        method cal_done         w_cal_done();
 
         method w_masterbank_sel_pin(masterbank_sel_pin) enable ((* inhigh *) EN0);
         // method masterbank_sel_pin_out w_masterbank_sel_pin_out();
@@ -252,6 +238,10 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
         method rd_data_valid dequeue_data_RDY()
             clocked_by (clk_out)
             reset_by (rst_out);
+
+        method cal_done ddr_device_RDY()
+            clocked_by (clk_out)
+            reset_by (rst_out);
     endinterface
 
  
@@ -266,16 +256,18 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
     schedule (wires_w_ram_pwr_on, wires_w_ram_leds,
               wires_w_ddrii_sa, wires_w_ddrii_ld_n, wires_w_ddrii_rw_n, wires_w_ddrii_dll_off_n, wires_w_ddrii_bw_n,
               wires_w_masterbank_sel_pin,
-              wires_w_cal_done, wires_w_ddrii_cq, wires_w_ddrii_cq_n, wires_w_ddrii_k,
-              wires_w_ddrii_k_n, wires_w_ddrii_c, wires_w_ddrii_c_n)
+              wires_w_ddrii_cq, wires_w_ddrii_cq_n, wires_w_ddrii_k,
+              wires_w_ddrii_k_n, wires_w_ddrii_c, wires_w_ddrii_c_n,
+              ram_ddr_device_RDY)
         CF
              (wires_w_ram_pwr_on, wires_w_ram_leds,
               wires_w_ddrii_sa, wires_w_ddrii_ld_n, wires_w_ddrii_rw_n, wires_w_ddrii_dll_off_n, wires_w_ddrii_bw_n,
               wires_w_masterbank_sel_pin,
-              wires_w_cal_done, wires_w_ddrii_cq, wires_w_ddrii_cq_n, wires_w_ddrii_k,
+              wires_w_ddrii_cq, wires_w_ddrii_cq_n, wires_w_ddrii_k,
               wires_w_ddrii_k_n, wires_w_ddrii_c, wires_w_ddrii_c_n,
               ram_enqueue_address, ram_enqueue_data, ram_dequeue_data_rise, ram_dequeue_data_fall,
-              ram_enqueue_address_RDY, ram_enqueue_data_RDY, ram_dequeue_data_RDY);
+              ram_enqueue_address_RDY, ram_enqueue_data_RDY, ram_dequeue_data_RDY,
+              ram_ddr_device_RDY);
 
     schedule ram_enqueue_address C (ram_enqueue_address);
     schedule ram_enqueue_address CF (ram_enqueue_data, ram_dequeue_data_rise, ram_dequeue_data_fall,
