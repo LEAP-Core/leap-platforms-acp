@@ -27,6 +27,8 @@ import Vector::*;
 // DDR properties, computed from device specific properties...
 //
 
+typedef `SRAM_MAX_OUTSTANDING_READS FPGA_DDR_MAX_OUTSTANDING_READS;
+
 // The smallest addressable word:
 typedef Bit#(FPGA_DDR_WORD_SZ) FPGA_DDR_WORD;
 
@@ -184,7 +186,7 @@ module mkDDR2SRAMDevice
                              prim_device.ram.enqueue_address_RDY() &&&
                              syncRequestQ.first() matches tagged DRAM_READ .address);
         syncRequestQ.deq();
-        prim_device.ram.enqueue_address(zeroExtend(address), READ);
+        prim_device.ram.enqueue_address(address, READ);
     endrule
 
     
@@ -231,7 +233,7 @@ module mkDDR2SRAMDevice
         syncRequestQ.deq();
 
         // address + command
-        prim_device.ram.enqueue_address(zeroExtend(address), WRITE);
+        prim_device.ram.enqueue_address(address, WRITE);
         
         // Data + mask
         Tuple2#(FPGA_DDR_WORD, FPGA_DDR_WORD) tup = unpack(writeValue[0]);

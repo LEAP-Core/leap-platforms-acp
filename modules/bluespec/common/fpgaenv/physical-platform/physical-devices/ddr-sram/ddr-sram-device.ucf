@@ -224,7 +224,7 @@ net "*_sram_device_*_syncWriteDataQ_dD_OUT[*]"     TIG;
 net "*_sram_device_*_syncWriteDataQ/sGEnqPtr[*]"   TIG;
 net "*_sram_device_*_syncWriteDataQ/dSyncReg1[*]"  TIG;
 
-#net "*_sram_device_*_syncReadDataQ_dD_OUT[*]"      TIG;
-#net "*_sram_device_*_syncReadDataQ/fifoMem[*]"  TIG;
+net "*_sram_device_*_syncReadDataQ_dD_OUT[*]"      TIG;
+net "*_sram_device_*_syncReadDataQ/Mram_fifoMem*"  TIG;
 net "*_sram_device_*_syncReadDataQ/dGDeqPtr[*]"    TIG;
 net "*_sram_device_*_syncReadDataQ/sSyncReg1[*]"   TIG;

@@ -1191,3 +1191,21 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
 - All loads and stores are coded with the intent of supporting arbitrary burst
   sizes.  All are debugged on the current hardware that only has a burst of
   one data message.
+
+----------
+mcadler     Date: Fri Apr  2 16:30:34 EDT 2010  CSN: CSN-platform-acp-55
+                  Fri Apr  2 20:30:34 UTC 2010
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           54 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           54 
+ fpgaenv-acp-m2c-sram-nallatech.apm Locally Removed            54 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           54 
+ ddr-sram-device.bsv       Locally Modified           54 
+
+- Add DDR to the default Nallatech configuration.
+- Correct scratchpad configuration.
+- Clean up DDR controller.
