@@ -1209,3 +1209,14 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
 - Add DDR to the default Nallatech configuration.
 - Correct scratchpad configuration.
 - Clean up DDR controller.
+
+----------
+mcadler     Date: Tue Apr  6 14:40:06 EDT 2010  CSN: CSN-platform-acp-56
+                  Tue Apr  6 18:40:06 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.bsv       Locally Modified           55 
+
+Add a path during initialization that reads from the SRAM and writes it back,
+guaranteeing that the read sync FIFO can't be optimized away.

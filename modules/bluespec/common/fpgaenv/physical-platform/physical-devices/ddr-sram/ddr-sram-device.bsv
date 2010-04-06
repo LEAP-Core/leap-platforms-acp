@@ -338,12 +338,49 @@ module mkDDR2SRAMDevice
 
     //
     // initPhase1 --
-    //     Write a constant pattern to initialize memory.
+    //     Keep read sync FIFO from being eliminated by issuing a loopback
+    //     read to write.
     //
-    Reg#(FPGA_DDR_ADDRESS) initAddr <- mkReg(0);
+    Reg#(Bit#(2)) init1Stage <- mkReg(0);
     Reg#(FPGA_DDR_BURST_IDX) initBurstIdx <- mkReg(0);
     
     rule initPhase1 ((state == STATE_INIT) && (initPhase == 1));
+        case (init1Stage)
+        0:  begin
+                syncRequestQ.enq(tagged DRAM_READ 0);
+                init1Stage <= 1;
+            end
+        1:  begin
+                syncRequestQ.enq(tagged DRAM_WRITE 0);
+                init1Stage <= 2;
+            end
+        2:  begin
+                let d = syncReadDataQ.first();
+                syncReadDataQ.deq();
+
+                syncWriteDataQ.enq(tuple2(d, 0));
+
+                if (initBurstIdx == fromInteger(valueOf(FPGA_DDR_LAST_BURST_IDX)))
+                begin
+                    initBurstIdx <= 0;
+                    initPhase <= 2;
+                end
+                else
+                begin
+                    initBurstIdx <= initBurstIdx + 1;
+                end
+            end
+        endcase
+    endrule
+
+
+    //
+    // initPhase2 --
+    //     Write a constant pattern to initialize memory.
+    //
+    Reg#(FPGA_DDR_ADDRESS) initAddr <- mkReg(0);
+    
+    rule initPhase2 ((state == STATE_INIT) && (initPhase == 2));
         // Data to write
         Vector#(TDiv#(FPGA_DDR_DUALEDGE_DATA_SZ, 8), Bit#(8)) init_data = replicate('haa);
 
@@ -397,7 +434,7 @@ module mkDDR2SRAMDevice
 
         syncRequestQ.enq(r);
     endrule
-    
+
 
 `ifndef SRAM_DEBUG_Z
     //
