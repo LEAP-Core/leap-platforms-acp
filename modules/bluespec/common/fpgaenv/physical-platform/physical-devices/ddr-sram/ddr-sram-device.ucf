@@ -214,17 +214,17 @@ INST "*_sram_device_1_prim_device/u_idelayctrl" LOC = IDELAYCTRL_X0Y11; # no und
 ############################################################################
 ##                                TIGs
 ############################################################################
-net "*_sram_device_*_syncRequestQ_dD_OUT[*]"     TIG;
-net "*_sram_device_*_syncRequestQ/Mram_fifoMem*" TIG;
-net "*_sram_device_*_syncRequestQ/sGEnqPtr[*]"   TIG;
-net "*_sram_device_*_syncRequestQ/dSyncReg1[*]"  TIG;
+net "*_sram_device_*_syncRequestQ_dD_OUT[*]"       TIG;
+net "*_sram_device_*_syncRequestQ/Mram_fifoMem*"   TIG;
+net "*_sram_device_*_syncRequestQ/sGEnqPtr*[*]"    TIG;
+net "*_sram_device_*_syncRequestQ/dSyncReg1*[*]"   TIG;
 
 net "*_sram_device_*_syncWriteDataQ_dD_OUT[*]"     TIG;
 #net "*_sram_device_*_syncWriteDataQ/Mram_fifoMem*" TIG;
-net "*_sram_device_*_syncWriteDataQ/sGEnqPtr[*]"   TIG;
-net "*_sram_device_*_syncWriteDataQ/dSyncReg1[*]"  TIG;
+net "*_sram_device_*_syncWriteDataQ/sGEnqPtr*[*]"  TIG;
+net "*_sram_device_*_syncWriteDataQ/dSyncReg1*[*]" TIG;
 
 net "*_sram_device_*_syncReadDataQ_dD_OUT[*]"      TIG;
 net "*_sram_device_*_syncReadDataQ/Mram_fifoMem*"  TIG;
-net "*_sram_device_*_syncReadDataQ/dGDeqPtr[*]"    TIG;
-net "*_sram_device_*_syncReadDataQ/sSyncReg1[*]"   TIG;
+net "*_sram_device_*_syncReadDataQ/dGDeqPtr*[*]"   TIG;
+net "*_sram_device_*_syncReadDataQ/sSyncReg1*[*]"  TIG;

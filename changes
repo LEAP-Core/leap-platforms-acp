@@ -1220,3 +1220,13 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
 
 Add a path during initialization that reads from the SRAM and writes it back,
 guaranteeing that the read sync FIFO can't be optimized away.
+
+----------
+mcadler     Date: Wed Apr  7 07:58:23 EDT 2010  CSN: CSN-platform-acp-57
+                  Wed Apr  7 11:58:23 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           56 
+
+Refine the SRAM TIG rules.
