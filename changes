@@ -1230,3 +1230,21 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
  ddr-sram-device.ucf       Locally Modified           56 
 
 Refine the SRAM TIG rules.
+
+----------
+pellauer    Date: Fri Apr  9 10:49:59 EDT 2010  CSN: CSN-platform-acp-58
+                  Fri Apr  9 14:49:59 UTC 2010
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Modified           57 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           57 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           57 
+
+
+* Updating ACP environments with rrr_common. Alfred and Elliott seem to have 
+  overlooked these yesterday, possibly because they live in a separate 
+  repository.
+
+
+Michael P.

@@ -106,7 +106,6 @@ Packagehint=platform-acp
 File=modules/bluespec/common/fpgaenv/low-level-platform-interface/local-mem/local-mem-ddr2.awb
 Packagehint=platforms
 
-
 [ACP M2 Compute Module With SRAM (Nallatech)]
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram/acp-m2c.awb
 Packagehint=platform-acp
@@ -116,3 +115,10 @@ clocks_device=Null Clocks Device
 physical_platform_utils=Common Physical Platform Utilities
 ddr2_device=ACP DDR2 SRAM Device
 nallatech_edge_device=Nallatech Edge Physical Device
+
+[RRR Common Module]
+File=modules/bluespec/common/fpgaenv/virtual-platform/rrr/rrr_common/rrr_common.awb
+Packagehint=platforms
+
+[RRR Clients and Servers/Requires]
+rrr_common=RRR Common Module

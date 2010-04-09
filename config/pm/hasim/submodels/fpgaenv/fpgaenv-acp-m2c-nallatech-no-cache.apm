@@ -179,3 +179,10 @@ scratchpad_memory_common=Scratchpad Memory Common Definitions
 [Scratchpad Memory Common Definitions]
 File=modules/bluespec/common/fpgaenv/virtual-platform/virtual-devices/memory/common/mem-scratch-common.awb
 Packagehint=platforms
+
+[RRR Common Module]
+File=modules/bluespec/common/fpgaenv/virtual-platform/rrr/rrr_common/rrr_common.awb
+Packagehint=platforms
+
+[RRR Clients and Servers/Requires]
+rrr_common=RRR Common Module
