@@ -59,8 +59,13 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
     }
     readWindows[NALLATECH_NUM_READ_WINDOWS];
 
-    // Current read window for RawReadNextWord(), etc.
+    // Current read and write windows for RawReadNextWord(), etc.
     int curReadWindow;
+    int curWriteWindow;
+
+    // Walk through read/write buffers
+    int NextReadWindow(int curWindow);
+    int NextWriteWindow(int curWindow);
 
     // Stream of data coming from the FPGA
     UINT32 BufferedWordsRemaining();
@@ -71,7 +76,7 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
     // BufferedWordsRemaining().
     const NALLATECH_WORD *RawReadBufferedWords(int nWords);
 
-    // Generate a for passing to the FPGA.
+    // Generate a command for passing data to the FPGA.
     NALLATECH_WORD GenCommand(int h2fRawBufChunks,
                               int f2hRawBufChunks,
                               int waitForDataSpinCycles,

@@ -73,6 +73,11 @@ PHYSICAL_CHANNEL_CLASS::Init()
         CallbackExit(1);
     }    
 
+    // Enforce minimum numbers of write and read windows for the ring
+    // buffer code.
+    VERIFYX(NALLATECH_NUM_WRITE_WINDOWS >= 2);
+    VERIFYX(NALLATECH_NUM_READ_WINDOWS >= 3);
+
     //
     // Initialize shared host/FPGA memory details.
     //
@@ -96,10 +101,32 @@ PHYSICAL_CHANNEL_CLASS::Init()
     }
 
     curReadWindow = 0;
+    curWriteWindow = 0;
 
     // Create the I/O thread
     writeWindows[0].lock = 1;  // I/O thread starts with a write window locked
     VERIFYX(pthread_create(&ioThreadID, NULL, &NALChannelIO_Main, (void *)this) == 0);
+}
+
+
+//
+// NextWriteWindow in the ring of write windows.
+//
+inline
+int PHYSICAL_CHANNEL_CLASS::NextWriteWindow(int curWindow)
+{
+    return ((curWindow + 1) == NALLATECH_NUM_WRITE_WINDOWS) ? 0 : curWindow + 1;
+}
+
+
+//
+// NextReadWindow in the ring of read windows.  The last read window is
+// reserved for the NULL read transaction.
+//
+inline
+int PHYSICAL_CHANNEL_CLASS::NextReadWindow(int curWindow)
+{
+    return ((curWindow + 2) == NALLATECH_NUM_READ_WINDOWS) ? 0 : curWindow + 1;
 }
 
 
@@ -131,13 +158,13 @@ PHYSICAL_CHANNEL_CLASS::BufferedWordsRemaining()
         //
         // This is a key case:  no data remains and the number of valid words
         // in the buffer is non-zero.  Set the number of valid words to 0.
-        // This tells the the I/O thread that the buffer is unused and should
+        // This tells the I/O thread that the buffer is unused and should
         // be filled again.
         //
         CompareAndExchange(&readWindows[curReadWindow].nWords, n_words, 0);
 
         // Move on to the next read window
-        curReadWindow ^= 1;
+        curReadWindow = NextReadWindow(curReadWindow);
 
         return 0;
     }
@@ -291,28 +318,32 @@ PHYSICAL_CHANNEL_CLASS::Write(
     // Spin until we get a write window.  The I/O thread holds and releases
     // locks in an order that guarantees writes will stay in order.
     //
-    int write_window = -1;
+    bool first_pass = true;
     while (1)
     {
-        for (int w = 0; w < NALLATECH_NUM_WRITE_WINDOWS; w++)
+        if (CompareAndExchange(&writeWindows[curWriteWindow].lock, 0, 2))
         {
-            if (CompareAndExchange(&writeWindows[w].lock, 0, 2))
+            // Is there enough space in the window?
+            if (writeWindows[curWriteWindow].nWords + msg_chunks < NALLATECH_MAX_MSG_WORDS)
             {
-                // Is there enough space in the window?
-                if (writeWindows[w].nWords + msg_chunks < NALLATECH_MAX_MSG_WORDS)
-                {
-                    // Looks good
-                    write_window = w;
-                    goto got_window;
-                }
-
-                // Give up the lock.  The message doesn't fit.  Either get
-                // the other window or wait for the I/O thread to empty this
-                // window.
-                CompareAndExchange(&writeWindows[w].lock, 2, 0);
+                // Looks good
+                goto got_window;
             }
+
+            // Give up the lock.  The message doesn't fit.  Go on to the next
+            // window.
+            CompareAndExchange(&writeWindows[curWriteWindow].lock, 2, 0);
+            curWriteWindow = NextWriteWindow(curWriteWindow);
+        }
+        else if (first_pass)
+        {
+            // On the first pass it is legal to skip to the next window if
+            // the current one is locked.  This still preserves write
+            // ordering.
+            curWriteWindow = NextWriteWindow(curWriteWindow);
         }
 
+        first_pass = false;
         CpuPause();
     }
 
@@ -322,10 +353,10 @@ PHYSICAL_CHANNEL_CLASS::Write(
     // copy the message into the write window
     //
 
-    int index = writeWindows[write_window].nWords;
+    int index = writeWindows[curWriteWindow].nWords;
 
     // construct header
-    NALLATECH_WORD* window_data = writeWindows[write_window].data;
+    NALLATECH_WORD* window_data = writeWindows[curWriteWindow].data;
     window_data[index++] = message->EncodeHeaderWithPhyChannelPvt(1);
 
     // write message data to buffer
@@ -334,11 +365,11 @@ PHYSICAL_CHANNEL_CLASS::Write(
     //       send chunks in reverse order
     index += message->ReverseExtractAllChunks(&window_data[index]);
 
-    writeWindows[write_window].nWords = index;
+    writeWindows[curWriteWindow].nWords = index;
     VERIFYX(index <= NALLATECH_MAX_MSG_WORDS);
 
     // Unlock the window
-    CompareAndExchange(&writeWindows[write_window].lock, 2, 0);
+    CompareAndExchange(&writeWindows[curWriteWindow].lock, 2, 0);
 
     delete message;
 }
@@ -437,7 +468,7 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
             // Use the dummy read window
             nallatechEdgeDevice->DoAALTransaction(active_write_window,
                                                   raw_write_buffer_size,
-                                                  2,
+                                                  NALLATECH_NUM_READ_WINDOWS - 1,
                                                   NALLATECH_MIN_MSG_WORDS);
 
             raw_io_cnt += 1;
@@ -496,7 +527,7 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
                 //
                 // Move on to the next read window.
                 //
-                active_read_window ^= 1;
+                active_read_window = NextReadWindow(active_read_window);
 
                 // Track raw read sizes.  These will later be used to reduce
                 // the read buffer size, if appropriate.
@@ -525,19 +556,19 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
 
 
         //
-        // Try to swap write window.  If the other window is locked just
+        // Try to swap write window.  If the next window is locked just
         // stick with the current one.  It won't have any new write data
         // but can be used to receive new read data from the FPGA on
         // the next loop iteration.
         //
 
-        // Grab the other window, so this thread owns both.
-        int other_write_window = active_write_window ^ 1;
-        if (CompareAndExchange(&writeWindows[other_write_window].lock, 0, 1))
+        // Grab the next window, so this thread owns two in a row.
+        int next_write_window = NextWriteWindow(active_write_window);
+        if (CompareAndExchange(&writeWindows[next_write_window].lock, 0, 1))
         {
             // Got it.  Give up the old window.
             CompareAndExchange(&writeWindows[active_write_window].lock, 1, 0);
-            active_write_window = other_write_window;
+            active_write_window = next_write_window;
         }
 
 
