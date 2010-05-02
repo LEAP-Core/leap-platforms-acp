@@ -24,6 +24,15 @@
 #include <pthread.h>
 
 
+//
+// Until real DMA is available we have a pseudo-DMA hack for faster processing
+// of scratchpad memory references.  The scratchpad RRR service can register
+// with this channel driver.  It will be called directly from the driver
+// instead of having messages traverse the full channel I/O and RRR stack.
+//
+#define PSEUDO_DMA_ENABLED 1
+
+
 // ============================================
 //               Physical Channel              
 // ============================================
@@ -75,6 +84,7 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
     // Return nWords words from the current buffer.  nWords must be <=
     // BufferedWordsRemaining().
     const NALLATECH_WORD *RawReadBufferedWords(int nWords);
+    const NALLATECH_WORD *RawReadBufferPtr();
 
     // Generate a command for passing data to the FPGA.
     NALLATECH_WORD GenCommand(int h2fRawBufChunks,
@@ -82,13 +92,17 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
                               int waitForDataSpinCycles,
                               bool f2hDataPermitted) const;
 
+    void WriteLock(UINT32 msgBytes);
+    void WriteUnlock();
+    void WriteRaw(UMF_CHUNK header, UINT32 msgBytes, const void *msg);
+
   public:
 
     PHYSICAL_CHANNEL_CLASS(PLATFORMS_MODULE, PHYSICAL_DEVICES);
     ~PHYSICAL_CHANNEL_CLASS();
 
     void Init();
-    
+
     // interface
     UMF_MESSAGE Read();             // blocking read
     UMF_MESSAGE TryRead();          // non-blocking read
@@ -96,6 +110,51 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
 
     // I/O management, run as a separate thread
     void IOThread();
+
+
+
+    // ====================================================================
+    //
+    // Hack for a pseudo-DMA path for memory access that bypasses the
+    // UMF / channel I/O / RRR stack.
+    //
+    // ====================================================================
+  public:
+    //
+    // Read response from DMA handler the components of a UMF message.
+    // The message will be copied directly to the buffer destined for
+    // the FPGA.
+    //
+    typedef struct
+    {
+        UMF_CHUNK header;
+        UINT32 msgBytes;
+        const void *msg;
+    }
+    PSEUDO_DMA_READ_RESP_CLASS;
+    typedef PSEUDO_DMA_READ_RESP_CLASS *PSEUDO_DMA_READ_RESP;
+
+    //
+    // Pointer to a function that handles pseudo-DMA.  This function will
+    // most likely be implemented in the scratchpad service.
+    //
+    typedef bool (*PSEUDO_DMA_HANDLER)(int methodID,
+                                       int length,
+                                       const void *msg,
+                                       PSEUDO_DMA_READ_RESP &resp);
+
+    //
+    // Call into this driver to register a pseudo-DMA handler.  At most one
+    // driver may be active.
+    //
+    static void RegisterPseudoDMAHandler(int channelID,
+                                         int serviceID,
+                                         PSEUDO_DMA_HANDLER handler);
+
+  private:
+    static int pseudoDMAChannelID;
+    static int pseudoDMAServiceID;
+    static PSEUDO_DMA_HANDLER pseudoDMAHandler;
 };
 
 #endif

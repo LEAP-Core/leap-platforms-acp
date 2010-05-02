@@ -32,6 +32,16 @@
 
 using namespace std;
 
+
+//
+// Pseudo DMA is a bypass of the normal I/O stack to handle scratchpad I/O
+// without having to copy the data.
+//
+int PHYSICAL_CHANNEL_CLASS::pseudoDMAChannelID = 0;
+int PHYSICAL_CHANNEL_CLASS::pseudoDMAServiceID = 0;
+PHYSICAL_CHANNEL_CLASS::PSEUDO_DMA_HANDLER PHYSICAL_CHANNEL_CLASS::pseudoDMAHandler = NULL;
+
+
 //
 // pthreads entry point for channel I/O.
 //
@@ -186,6 +196,15 @@ PHYSICAL_CHANNEL_CLASS::RawReadBufferedWords(int nWords)
 }
 
 
+inline
+const NALLATECH_WORD *
+PHYSICAL_CHANNEL_CLASS::RawReadBufferPtr()
+{
+    UINT32 r_idx = readWindows[curReadWindow].nextReadWordIdx;
+    return &(readWindows[curReadWindow].data[r_idx]);
+}
+
+
 // Raw stream of data from the FPGA.  Pass True for newMsg if the read request
 // is for the start of a new read attempt.  It is used for managing the
 // raw buffer size.
@@ -226,6 +245,8 @@ PHYSICAL_CHANNEL_CLASS::RawReadNextWord()
 UMF_MESSAGE
 PHYSICAL_CHANNEL_CLASS::TryRead()
 {
+  repeat:
+
     //
     // See if we actually read any data.  The response will either be
     // 0 (CHANNEL_RESPONSE_NODATA) or the header of the next UMF message.
@@ -246,11 +267,63 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
         return NULL;
     }
 
+
+    //
+    // Pseudo DMA:  Check an incoming request against the registered pseudo
+    // DMA handler.  If it matches the message handling bypasses the normal
+    // channel I/O path and is forwarded directly to the registered DMA handler.
+    //
+    UMF_MESSAGE_CLASS dummyHeader;
+    dummyHeader.DecodeHeader(resp);
+
+    UINT32 n_chunks = dummyHeader.GetLength() / sizeof(UMF_CHUNK);
+
+    //
+    // Only send a message through the pseudo-DMA path if the full message is
+    // in the buffer.  Partial messages traverse the normal RRR path.
+    //
+    if ((pseudoDMAHandler != NULL) &&
+        (dummyHeader.GetChannelID() == pseudoDMAChannelID) &&
+        (dummyHeader.GetServiceID() == pseudoDMAServiceID) &&
+        (n_chunks <= BufferedWordsRemaining()))
+    {
+        PSEUDO_DMA_READ_RESP resp;
+
+        // Packet matches.  Call the handler...
+        if ((*pseudoDMAHandler)(dummyHeader.GetMethodID(),
+                                dummyHeader.GetLength(),
+                                RawReadBufferPtr(),
+                                resp))
+        {
+            //
+            // Packet was processed by the handler.
+            //
+            RawReadBufferedWords(n_chunks);
+            BufferedWordsRemaining();
+
+            // Is there a response for the FPGA (DMA read)?
+            if (resp != NULL)
+            {
+                WriteRaw(resp->header, resp->msgBytes, resp->msg);
+            }
+
+            // Get the next packet in the buffer instead of returning
+            goto repeat;
+        }
+    }
+
+
+    //
+    // Normal (not pseudo-DMA) message flow...
+    //
+
     UMF_MESSAGE incomingMessage = new UMF_MESSAGE_CLASS;
-    incomingMessage->DecodeHeader(resp);
+    incomingMessage->SetChannelID(dummyHeader.GetChannelID());
+    incomingMessage->SetServiceID(dummyHeader.GetServiceID());
+    incomingMessage->SetMethodID(dummyHeader.GetMethodID());
+    incomingMessage->SetLength(dummyHeader.GetLength());
 
     // copy buffer data into message data
-    UINT32 n_chunks = incomingMessage->GetLength() / sizeof(UMF_CHUNK);
     while (n_chunks != 0)
     {
         UINT32 w_remaining = BufferedWordsRemaining();
@@ -299,13 +372,13 @@ PHYSICAL_CHANNEL_CLASS::Read()
     return msg;
 }
 
-// write
-void
-PHYSICAL_CHANNEL_CLASS::Write(
-    UMF_MESSAGE message)
+// Lock a window for writing at most msgChunks chunks
+inline void
+PHYSICAL_CHANNEL_CLASS::WriteLock(
+    UINT32 msgBytes)
 {
     // Message chunks is the header + the actual message
-    UINT32 msg_chunks = 1 + (message->GetLength() + sizeof(UMF_CHUNK) - 1) / sizeof(UMF_CHUNK);
+    UINT32 msg_chunks = 1 + (msgBytes + sizeof(UMF_CHUNK) - 1) / sizeof(UMF_CHUNK);
 
     // sanity checks
     if (msg_chunks > NALLATECH_MAX_MSG_WORDS)
@@ -327,7 +400,7 @@ PHYSICAL_CHANNEL_CLASS::Write(
             if (writeWindows[curWriteWindow].nWords + msg_chunks < NALLATECH_MAX_MSG_WORDS)
             {
                 // Looks good
-                goto got_window;
+                return;
             }
 
             // Give up the lock.  The message doesn't fit.  Go on to the next
@@ -346,8 +419,22 @@ PHYSICAL_CHANNEL_CLASS::Write(
         first_pass = false;
         CpuPause();
     }
+}
 
-  got_window:
+// Unlock the write window
+inline void
+PHYSICAL_CHANNEL_CLASS::WriteUnlock()
+{
+    CompareAndExchange(&writeWindows[curWriteWindow].lock, 2, 0);
+}
+
+
+// Write a UMF_MESSAGE to the FPGA
+void
+PHYSICAL_CHANNEL_CLASS::Write(
+    UMF_MESSAGE message)
+{
+    WriteLock(message->GetLength());
 
     //
     // copy the message into the write window
@@ -368,10 +455,61 @@ PHYSICAL_CHANNEL_CLASS::Write(
     writeWindows[curWriteWindow].nWords = index;
     VERIFYX(index <= NALLATECH_MAX_MSG_WORDS);
 
-    // Unlock the window
-    CompareAndExchange(&writeWindows[curWriteWindow].lock, 2, 0);
+    delete(message);
 
-    delete message;
+    // Unlock the window
+    WriteUnlock();
+}
+
+
+// Write a raw message (not encapsulated as a UMF_MESSAGE) to the FPGA.
+void
+PHYSICAL_CHANNEL_CLASS::WriteRaw(
+    UMF_CHUNK header,
+    UINT32 msgBytes,
+    const void *msg)
+{
+    //
+    // Compute the channel ID portion of a UMF header chunk the first time this
+    // method is called.
+    //
+    static UMF_CHUNK header_with_channel_id;
+    static bool did_init = false;
+    if (! did_init)
+    {
+        did_init = true;
+
+        UMF_MESSAGE_CLASS dummy_msg;
+        dummy_msg.Clear();
+
+        header_with_channel_id = dummy_msg.EncodeHeaderWithPhyChannelPvt(1);
+    }
+
+    // Lock the FPGA write buffer
+    WriteLock(msgBytes);
+
+    // Set the channel ID in the outgoing message header.
+    header |= header_with_channel_id;
+
+    int index = writeWindows[curWriteWindow].nWords;
+
+    // Write the header
+    NALLATECH_WORD* window_data = writeWindows[curWriteWindow].data;
+    window_data[index++] = header;
+
+    // Copy the message body.  Note that the message body source must have
+    // the most significant chunk first.  (The usual way, as opposed to
+    // the reversed order in UMF_CHUNKS.)
+    memcpy(&window_data[index], msg, msgBytes);
+
+    // Mark the current end of the buffer
+    index += (msgBytes + sizeof(UMF_CHUNK) - 1) / sizeof(UMF_CHUNK);
+    writeWindows[curWriteWindow].nWords = index;
+
+    VERIFYX(index <= NALLATECH_MAX_MSG_WORDS);
+
+    // Unlock the window
+    WriteUnlock();
 }
 
 
@@ -591,3 +729,16 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
         CpuPause();
     }
 }
+
+
+void
+PHYSICAL_CHANNEL_CLASS::RegisterPseudoDMAHandler(
+    int channelID,
+    int serviceID,
+    PSEUDO_DMA_HANDLER handler)
+{
+    pseudoDMAChannelID = channelID;
+    pseudoDMAServiceID = serviceID;
+    pseudoDMAHandler = handler;
+}
+

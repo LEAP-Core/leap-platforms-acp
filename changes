@@ -1265,3 +1265,18 @@ Add support in the I/O ring buffers for more than two read and two write buffers
 Increasing to 3 in each direction improves performance by about 3.5% for
 a heavily pipelined workload.  Not much, but it didn't take very long to write
 and the code is more robust.
+
+----------
+mcadler     Date: Mon May  3 14:28:03 EDT 2010  CSN: CSN-platform-acp-60
+                  Mon May  3 18:28:03 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified           59 
+ nallatech-edge-channel.h  Locally Modified           59 
+
+Add a pseudo-DMA path for use by a single client that bypasses the normal
+channel I/O and RRR stacks.  The path may read and write messages directly
+to the memory shared with the FPGA.
+
+When scratchpads use this path simulation can run in about 2/3rds the time.
