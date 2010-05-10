@@ -1280,3 +1280,18 @@ channel I/O and RRR stacks.  The path may read and write messages directly
 to the memory shared with the FPGA.
 
 When scratchpads use this path simulation can run in about 2/3rds the time.
+
+----------
+pellauer    Date: Mon May 10 18:33:39 EDT 2010  CSN: CSN-platform-acp-61
+                  Mon May 10 22:33:39 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
+ acp-m2c.awb               Locally Modified           60 
+ acp-m2c.sdc               Locally Added               0 
+ acp-m2c.sdf               Locally Added               0 
+
+
+* Adding synplify ACP support for Elliott.
+
+Michael
