@@ -1295,3 +1295,23 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
 * Adding synplify ACP support for Elliott.
 
 Michael
+
+----------
+pellauer    Date: Mon May 10 18:55:44 EDT 2010  CSN: CSN-platform-acp-62
+                  Mon May 10 22:55:44 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
+ acp-m2c.awb               Locally Modified           60 
+ acp-m2c.sdc               Locally Added               0 
+ acp-m2c.sdf               Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.awb               Locally Modified           60 
+ acp-m2c.sdc               Locally Added               0 
+ acp-m2c.sdf               Locally Added               0 
+
+
+* More Synplify support for Elliott.
+
+Michael P.
