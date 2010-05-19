@@ -1315,3 +1315,39 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
 * More Synplify support for Elliott.
 
 Michael P.
+
+----------
+kfleming    Date: Wed May 19 11:00:37 EDT 2010  CSN: CSN-platform-acp-63
+                  Wed May 19 15:00:37 UTC 2010
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Modified           62
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           62
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           62
+
+Modifying existing fpgaenvs to have associate build pipelines.
+
+----------
+pellauer    Date: Wed May 19 13:38:23 EDT 2010  CSN: CSN-platform-acp-63
+                  Wed May 19 17:38:23 UTC 2010
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Modified           62 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           62 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           62 
+
+Directory admin
+ mytags                    Locally Modified           62 
+
+Directory admin/packages
+ platform-acp              Locally Modified           62 
+
+Directory .
+ changes                   Locally Modified           62 
+
+
+Patching ACP FPGAENV for Elliott.
+
+Michael
