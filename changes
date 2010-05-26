@@ -1351,3 +1351,32 @@ Directory .
 Patching ACP FPGAENV for Elliott.
 
 Michael
+
+----------
+aparasha    Date: Wed May 26 17:05:12 EDT 2010  CSN: CSN-platform-acp-64
+                  Wed May 26 21:05:12 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices
+ nallatech-edge-v2/        Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge-v2
+ nallatech-edge-device.h   Locally Added               0 
+ nallatech-edge-device.bsv Locally Added               0 
+ non_system_edge_component.vhd Locally Added               0 
+ nallatech-edge-vhdl-import.bsv Locally Added               0 
+ comp_0_base_edge_2rx2tx.ngc Locally Added               0 
+ usr_reg_slave_if_io_example.vhd Locally Added               0 
+ edge_comp_util_pkg.vhd    Locally Added               0 
+ qdr2_ddr2_clocks.vhd      Locally Added               0 
+ nallatech-edge-device.awb Locally Added               0 
+ edge_comp_defs_pkg.vhd    Locally Added               0 
+ nallatech-edge-device.ucf Locally Added               0 
+ reset_synchroniser.vhd    Locally Added               0 
+ system_edge_component.vhd Locally Added               0 
+ nallatech-edge-device.vhd Locally Added               0 
+ usr_reg_slave_if_bram_example.vhd Locally Added               0 
+ nallatech-edge-device.cpp Locally Added               0 
+
+Checkpoint commit of current debugging state of the new Nallatech firmware.
+Doesn't work yet.
