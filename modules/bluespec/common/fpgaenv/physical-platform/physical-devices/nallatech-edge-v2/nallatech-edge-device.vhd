@@ -264,9 +264,9 @@ architecture rtl of nallatech_edge_vhdl is
     -- signal raw_clk_c : std_logic;
     
     -- the clock at which the Bluespec-Edge interface will be clocked
-    alias ifc_clk   : std_logic is osc_clk_c;
-    --alias ifc_clk   : std_logic is clk200mhz;
-    --alias ifc_rst_n : std_logic is clk200mhz_locked;
+    --alias ifc_clk   : std_logic is osc_clk_c;
+    alias ifc_clk   : std_logic is clk200mhz;
+    alias ifc_rst_n : std_logic is clk200mhz_locked;
             
     -- Angshuman - we seem to need these IBUFs
     signal ram_pg_buf : std_logic;
@@ -497,7 +497,7 @@ begin
     -- ifc_clk is an alias of some other clock net (grep this file)
 
     clk_out     <= ifc_clk;
-    rst_n_out   <= '1'; -- ifc_rst_n;
+    rst_n_out   <= ifc_rst_n;
     raw_clk_out <= ifc_clk;             -- for some reason we send NOT the real
                                         -- 100MHz raw clock but the cooked 200MHz
                                         -- clock out as the "raw" clock

@@ -15,8 +15,9 @@
 %sources -t SDF -v PRIVATE acp-m2c.sdf
 %sources -t SDC -v PRIVATE acp-m2c.sdc
 
-%library /nfs/site/disks/hasim1/local/nallatechAAL/latest/lib64/libacp.so
-%library /nfs/site/disks/hasim1/local/nallatechAAL/latest/lib64/libACP_API.a
+%library /nfs/site/disks/hasim1/local/nallatechAAL/latest/lib/libacp.so
+%library /nfs/site/disks/hasim1/local/nallatechAAL/latest/lib/libACP_API.so
+%library /nfs/site/disks/hasim1/local/nallatechAAL/latest/lib/libacp_cal.so
 %include /nfs/site/disks/hasim1/local/nallatechAAL/latest/include
 
 %param --global MAKE_ALL_TARGET    bit       "Target of 'make all'.  Most likely bit, exe or vexe."

@@ -1380,3 +1380,31 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 Checkpoint commit of current debugging state of the new Nallatech firmware.
 Doesn't work yet.
+
+----------
+mcadler     Date: Fri May 28 08:35:14 EDT 2010  CSN: CSN-platform-acp-65
+                  Fri May 28 12:35:14 UTC 2010
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-v2.apm Locally Added               0 
+ fpgaenv-acp-m2c-nallatech-no-cache-v2.apm Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
+ acp-m2c.awb               Locally Modified           64 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.awb               Locally Modified           64 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge-v2
+ nallatech-edge-device.vhd Locally Modified           64 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           64 
+
+- V2 for Nallatech works!  We don't understand why it wasn't working for
+  Angshuman.
+- Add temporary V2 fpgaenv configurations.  These will go away once MIT's machine
+  has the new firmware.
+- Fix the model clock, putting it back on the 200MHz source.
+- Add more TIGs for SRAM sync-FIFOs.
