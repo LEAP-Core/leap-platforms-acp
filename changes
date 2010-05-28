@@ -1408,3 +1408,13 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
   has the new firmware.
 - Fix the model clock, putting it back on the 200MHz source.
 - Add more TIGs for SRAM sync-FIFOs.
+
+----------
+mcadler     Date: Fri May 28 16:30:00 EDT 2010  CSN: CSN-platform-acp-66
+                  Fri May 28 20:30:00 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           65 
+
+Tweak another TIG.

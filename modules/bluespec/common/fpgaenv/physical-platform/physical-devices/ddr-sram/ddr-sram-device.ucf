@@ -215,6 +215,7 @@ INST "*_sram_device_1_prim_device/u_idelayctrl" LOC = IDELAYCTRL_X0Y11; # no und
 ##                                TIGs
 ############################################################################
 net "*_sram_device_*_syncResetQ/dGDeqPtr*[*]"      TIG;
+net "*_sram_device_*_syncResetQ/sGEnqPtr*[*]"      TIG;
 net "*_sram_device_*_syncResetQ/dSyncReg1*[*]"     TIG;
 
 net "*_sram_device_*_syncRequestQ_dD_OUT[*]"       TIG;
