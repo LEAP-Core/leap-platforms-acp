@@ -10,6 +10,8 @@
 %sources -t BSV     -v PUBLIC   npc-marshaller.bsv
 %sources -t BSV     -v PUBLIC   npc-demarshaller.bsv
 
+%param CHANNEL_H2F_FIX_ERRORS 1 "Fix errors in host to FPGA messages"
+
 %param CHANNEL_REQUEST_H2F   0  "Request ID for H2F transfer"
 %param CHANNEL_REQUEST_F2H   1  "Request ID for F2H transfer"
 

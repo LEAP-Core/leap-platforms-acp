@@ -60,8 +60,9 @@ void *NALChannelIO_Main(void *argv)
 // constructor
 PHYSICAL_CHANNEL_CLASS::PHYSICAL_CHANNEL_CLASS(
     PLATFORMS_MODULE     p,
-    PHYSICAL_DEVICES d) :
-        PLATFORMS_MODULE_CLASS(p)
+    PHYSICAL_DEVICES d)
+    : PLATFORMS_MODULE_CLASS(p),
+      correctedH2FErrs(0)
 {
     nallatechEdgeDevice = d->GetNallatechEdgeDevice();
 }
@@ -71,6 +72,11 @@ PHYSICAL_CHANNEL_CLASS::~PHYSICAL_CHANNEL_CLASS()
 {
     pthread_cancel(ioThreadID);
     pthread_join(ioThreadID, NULL);
+
+    if (correctedH2FErrs != 0)
+    {
+        cout << "Corrected host -> FPGA data errors: " << correctedH2FErrs << endl;
+    }
 }
 
 // init
@@ -93,9 +99,25 @@ PHYSICAL_CHANNEL_CLASS::Init()
     //
     for (int w = 0; w < NALLATECH_NUM_WRITE_WINDOWS; w++)
     {
-        writeWindows[w].data = nallatechEdgeDevice->GetWriteWindow(w);
-        VERIFYX(writeWindows[w].data != NULL);
+        writeWindows[w].sharedBuf = nallatechEdgeDevice->GetWriteWindow(w);
+        VERIFYX(writeWindows[w].sharedBuf != NULL);
 
+        if (CHANNEL_H2F_FIX_ERRORS)
+        {
+            // Assume the host -> FPGA channel is lossy.  Check data will be
+            // interleaved among the real data.  Messages are initially written
+            // later in the buffer.  The buffer data will be interleaved with
+            // check data before being written to the FPGA.
+            writeWindows[w].data = &writeWindows[w].sharedBuf[NALLATECH_MAX_MSG_WORDS / NALLATECH_RAW_CHUNK_WORDS];
+        }
+        else
+        {
+            // No check data will be added.  Messages will be written directly
+            // to the host -> FPGA shared memory buffer.
+            writeWindows[w].data = writeWindows[w].sharedBuf;
+        }
+        VERIFYX(writeWindows[w].data != NULL);
+    
         writeWindows[w].lock = 0;
         // Setting to 1 leaves space for the command word
         writeWindows[w].nWords = 1;
@@ -372,6 +394,30 @@ PHYSICAL_CHANNEL_CLASS::Read()
     return msg;
 }
 
+
+//
+// MaxWriteWords --
+//     Maximum words that may be written in a single burst.  The maximum changes
+//     depending on whether check bits are being added to the message.
+//
+inline UINT32
+PHYSICAL_CHANNEL_CLASS::MaxWriteWords() const
+{
+    UINT32 max_words;
+    if (CHANNEL_H2F_FIX_ERRORS)
+    {
+        max_words = (NALLATECH_MAX_MSG_WORDS * (NALLATECH_RAW_CHUNK_WORDS - 1)) /
+                    NALLATECH_RAW_CHUNK_WORDS;
+    }
+    else
+    {
+        max_words = NALLATECH_MAX_MSG_WORDS;
+    }
+
+    return max_words;
+}
+
+
 // Lock a window for writing at most msgChunks chunks
 inline void
 PHYSICAL_CHANNEL_CLASS::WriteLock(
@@ -397,7 +443,7 @@ PHYSICAL_CHANNEL_CLASS::WriteLock(
         if (CompareAndExchange(&writeWindows[curWriteWindow].lock, 0, 2))
         {
             // Is there enough space in the window?
-            if (writeWindows[curWriteWindow].nWords + msg_chunks < NALLATECH_MAX_MSG_WORDS)
+            if (writeWindows[curWriteWindow].nWords + msg_chunks < MaxWriteWords())
             {
                 // Looks good
                 return;
@@ -517,12 +563,13 @@ PHYSICAL_CHANNEL_CLASS::WriteRaw(
 // GenCommand --
 //     The command chunk at the head of a request to the FPGA.
 //
-inline NALLATECH_WORD
+inline void
 PHYSICAL_CHANNEL_CLASS::GenCommand(
+    int writeWindow,
     int h2fRawBufChunks,
     int f2hRawBufChunks,
     int waitForDataSpinCycles,
-    bool f2hDataPermitted) const
+    bool f2hDataPermitted)
 {
     NALLATECH_WORD cmd;
 
@@ -532,6 +579,13 @@ PHYSICAL_CHANNEL_CLASS::GenCommand(
     cmd |= (f2hDataPermitted ? 1 : 0);
 
     cmd <<= 16;
+
+    // Check bits don't count toward the messages that must be read
+    if (CHANNEL_H2F_FIX_ERRORS)
+    {
+        h2fRawBufChunks = (h2fRawBufChunks * (NALLATECH_RAW_CHUNK_WORDS - 1)) /
+                          NALLATECH_RAW_CHUNK_WORDS;
+    }
     // Count excludes the leading command chunk
     cmd |= (h2fRawBufChunks - 1);
 
@@ -539,7 +593,122 @@ PHYSICAL_CHANNEL_CLASS::GenCommand(
     // Count excludes the trailing last useful data pointer
     cmd |= (f2hRawBufChunks - 1);
 
-    return cmd;
+    writeWindows[writeWindow].sharedBuf[0] = cmd;
+
+    // Fix check bits
+    if (CHANNEL_H2F_FIX_ERRORS)
+    {
+        //
+        // Check bits are a simple checksum.  Fix the checksum for the first
+        // chunk.  See IOThread() below for more details.
+        //
+        NALLATECH_WORD *msg = writeWindows[writeWindow].sharedBuf;
+        NALLATECH_WORD check_bits = 0;
+
+        for (int w = 0; w < NALLATECH_RAW_CHUNK_WORDS - 1; w++)
+        {
+            check_bits += *msg++;
+        }
+
+        *msg = check_bits;
+    }
+}
+
+
+//
+// InsertCheckBits --
+//     For lossy host -> FPGA channels, insert a checksum in every chunk
+//     being written.  A simple checksum is chosen because the size of I/O
+//     buffers has relatively little effect on latency compared to time spent
+//     running instructions and the latency of the work to start an I/O
+//     transaction.  A compact CRC would require much more time to compute.
+//
+inline UINT32
+PHYSICAL_CHANNEL_CLASS::InsertCheckBits(
+    int activeWriteWindow,
+    UINT32 inBufWords)
+{
+    int chunk_idx = 0;
+    NALLATECH_WORD *m_src = writeWindows[activeWriteWindow].data;
+    NALLATECH_WORD *m_dst = writeWindows[activeWriteWindow].sharedBuf;
+    NALLATECH_WORD check_bits = 0;
+
+    //
+    // Check bits are very simple:  one word in every raw chunk is
+    // a checksum of the other words in the chunk.  That way the FPGA
+    // side needs no extra buffering.
+    //
+    for (UINT32 w = 0; w < inBufWords; w++)
+    {
+        NALLATECH_WORD s = *m_src++;
+        *m_dst++ = s;
+        check_bits += s;
+
+        if (++chunk_idx == NALLATECH_RAW_CHUNK_WORDS - 1)
+        {
+            *m_dst++ = check_bits;
+            check_bits = 0;
+            chunk_idx = 0;
+        }
+    }
+
+    // Finish the last chunk
+    if (chunk_idx != 0)
+    {
+        while (++chunk_idx != NALLATECH_RAW_CHUNK_WORDS)
+        {
+            *m_dst++ = 0;
+        }
+        *m_dst = check_bits;
+    }
+
+    // Return the updated write buffer size.
+    return m_dst - writeWindows[activeWriteWindow].sharedBuf;
+}
+
+
+//
+// ClearSentWords --
+//     For lossy host -> FPGA channels following an error, clear the portion
+//     of the buffer sent correctly.  This appears to reduce the chances of
+//     repeated errors.
+//
+inline void
+PHYSICAL_CHANNEL_CLASS::ClearSentWords(
+    int activeWriteWindow,
+    UINT32 unsentBufWords)
+{
+    int chunk_idx = 0;
+    NALLATECH_WORD *m_wrd = writeWindows[activeWriteWindow].sharedBuf;
+
+    UINT32 clear_words = (writeWindows[activeWriteWindow].nWords *
+                          (NALLATECH_RAW_CHUNK_WORDS - 1)) / NALLATECH_RAW_CHUNK_WORDS -
+                         unsentBufWords;
+
+    // Clear data and check bits
+    for (UINT32 w = 0; w < clear_words; w++)
+    {
+        *m_wrd++ = 0;
+
+        if (++chunk_idx == NALLATECH_RAW_CHUNK_WORDS - 1)
+        {
+            *m_wrd++ = 0;
+            chunk_idx = 0;
+        }
+    }
+
+    // Finish the last chunk
+    if (chunk_idx != 0)
+    {
+        NALLATECH_WORD check_bits = 0;
+
+        while (++chunk_idx != NALLATECH_RAW_CHUNK_WORDS)
+        {
+            check_bits += *m_wrd++;
+        }
+
+        *m_wrd = check_bits;
+    }
 }
 
 
@@ -570,6 +739,12 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
     UINT32 raw_read_buffer_size = NALLATECH_MIN_MSG_WORDS;
 
     //
+    // Flag for resending messages that arrived with errors.
+    //
+    bool h2f_resend = false;
+
+
+    //
     // Loop forever, managing all I/O to the FPGA.
     //
     while (true)
@@ -582,26 +757,37 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
         // reading data back at the same time.
         //
         UINT32 w_words = writeWindows[active_write_window].nWords;
-        int raw_write_buffer_size = nallatechEdgeDevice->LegalBufSize(w_words);
-        if (w_words < raw_write_buffer_size)
+
+        if (! h2f_resend)
         {
-            writeWindows[active_write_window].data[w_words] = 0;
+            // Message must end with a 0 to indicate EOM
+            if (w_words < MaxWriteWords())
+            {
+                writeWindows[active_write_window].data[w_words++] = 0;
+            }
+        
+            //
+            // Adding check bits?
+            //
+            if (CHANNEL_H2F_FIX_ERRORS)
+            {
+                w_words = InsertCheckBits(active_write_window, w_words);
+            }
         }
 
-        // Clear the counter for the write window so the data is written
-        // to the FPGA only once.  (1 leaves space for the command word.)
-        writeWindows[active_write_window].nWords = 1;
+        int raw_write_buffer_size = nallatechEdgeDevice->LegalBufSize(w_words);
+        UINT32 h2f_err_nack = 0;
 
         if (readWindows[active_read_window].nWords != 0)
         {
             //
             // The read window is busy.  Just write data to the FPGA.
             //
-            writeWindows[active_write_window].data[0] =
-                GenCommand(raw_write_buffer_size,
-                           NALLATECH_MIN_MSG_WORDS,
-                           0,
-                           false);
+            GenCommand(active_write_window,
+                       raw_write_buffer_size,
+                       NALLATECH_MIN_MSG_WORDS,
+                       0,
+                       false);
 
             // Use the dummy read window
             nallatechEdgeDevice->DoAALTransaction(active_write_window,
@@ -610,6 +796,10 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
                                                   NALLATECH_MIN_MSG_WORDS);
 
             raw_io_cnt += 1;
+            UINT32 resp = readWindows[NALLATECH_NUM_READ_WINDOWS - 1].data[NALLATECH_MIN_MSG_WORDS - 1];
+
+            // Was there a data error?
+            h2f_err_nack = (resp & 0xffff);
         }
         else
         {
@@ -628,11 +818,11 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
             //
             // Now all the details for the command word are ready.
             //
-            writeWindows[active_write_window].data[0] =
-                GenCommand(raw_write_buffer_size,
-                           raw_read_buffer_size,
-                           spin_cycles,
-                           true);
+            GenCommand(active_write_window,
+                       raw_write_buffer_size,
+                       raw_read_buffer_size,
+                       spin_cycles,
+                       true);
 
             nallatechEdgeDevice->DoAALTransaction(active_write_window,
                                                   raw_write_buffer_size,
@@ -641,7 +831,13 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
 
             // The last slot in the returned message indicates the useful
             // data in the buffer.
-            UINT32 n_words = readWindows[active_read_window].data[raw_read_buffer_size - 1];
+            UINT32 resp = readWindows[active_read_window].data[raw_read_buffer_size - 1];
+
+            // The low 16 bits is the ACK/NACK for the host -> FPGA data being valid.
+            // The value is the number of chunks not read from the correctly.
+            h2f_err_nack = (resp & 0xffff);
+
+            UINT32 n_words = resp >> 16;
             VERIFYX(n_words <= raw_read_buffer_size);
 
             if (n_words != 0)
@@ -693,20 +889,39 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
         }
 
 
-        //
-        // Try to swap write window.  If the next window is locked just
-        // stick with the current one.  It won't have any new write data
-        // but can be used to receive new read data from the FPGA on
-        // the next loop iteration.
-        //
-
-        // Grab the next window, so this thread owns two in a row.
-        int next_write_window = NextWriteWindow(active_write_window);
-        if (CompareAndExchange(&writeWindows[next_write_window].lock, 0, 1))
+        // Did the host -> FPGA message arrive intact?
+        if (h2f_err_nack == 0)
         {
-            // Got it.  Give up the old window.
-            CompareAndExchange(&writeWindows[active_write_window].lock, 1, 0);
-            active_write_window = next_write_window;
+            // Host -> FPGA data written successfully
+            writeWindows[active_write_window].nWords = 1;
+
+            //
+            // Try to swap write window.  If the next window is locked just
+            // stick with the current one.  It won't have any new write data
+            // but can be used to receive new read data from the FPGA on
+            // the next loop iteration.
+            //
+
+            // Grab the next window, so this thread owns two in a row.
+            int next_write_window = NextWriteWindow(active_write_window);
+            if (CompareAndExchange(&writeWindows[next_write_window].lock, 0, 1))
+            {
+                // Got it.  Give up the old window.
+                CompareAndExchange(&writeWindows[active_write_window].lock, 1, 0);
+                active_write_window = next_write_window;
+            }
+
+            h2f_resend = false;
+        }
+        else
+        {
+            // Host -> FPGA data transmission error.  Resend the entire message.
+            correctedH2FErrs += 1;
+            writeWindows[active_write_window].nWords = raw_write_buffer_size;
+
+            ClearSentWords(active_write_window, h2f_err_nack);
+
+            h2f_resend = true;
         }
 
 

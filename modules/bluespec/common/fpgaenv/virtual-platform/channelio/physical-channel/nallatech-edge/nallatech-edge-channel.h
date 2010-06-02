@@ -55,6 +55,7 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
     struct
     {
         NALLATECH_WORD* data;
+        NALLATECH_WORD* sharedBuf;
         UINT32 lock;
         UINT32 nWords;
     }
@@ -86,15 +87,22 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
     const NALLATECH_WORD *RawReadBufferedWords(int nWords);
     const NALLATECH_WORD *RawReadBufferPtr();
 
+    UINT32 MaxWriteWords() const;
+
     // Generate a command for passing data to the FPGA.
-    NALLATECH_WORD GenCommand(int h2fRawBufChunks,
-                              int f2hRawBufChunks,
-                              int waitForDataSpinCycles,
-                              bool f2hDataPermitted) const;
+    void GenCommand(int writeWindow,
+                    int h2fRawBufChunks,
+                    int f2hRawBufChunks,
+                    int waitForDataSpinCycles,
+                    bool f2hDataPermitted);
 
     void WriteLock(UINT32 msgBytes);
     void WriteUnlock();
     void WriteRaw(UMF_CHUNK header, UINT32 msgBytes, const void *msg);
+
+    UINT32 InsertCheckBits(int activeWriteWindow, UINT32 inBufWords);
+    void ClearSentWords(int activeWriteWindow, UINT32 unsentBufWords);
+    UINT64 correctedH2FErrs;
 
   public:
 

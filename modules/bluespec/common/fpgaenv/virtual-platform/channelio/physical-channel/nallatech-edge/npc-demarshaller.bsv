@@ -1,7 +1,24 @@
+//
+// Copyright (C) 2010 Intel Corporation
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//
+
 import Vector::*;
 import FIFO::*;
 import SpecialFIFOs::*;
-
 
 // DeMarshaller
 
@@ -9,91 +26,71 @@ import SpecialFIFOs::*;
 // Chunks are received starting from the LS chunk and ending with the MS chunk
 
 // interface
-interface NPC_DEMARSHALLER#(parameter type in_T, parameter type out_T);
-    
+interface NPC_DEMARSHALLER#(parameter type t_IN, parameter type t_OUT);
     // insert a chunk
-    method Action enq(in_T chunk);
+    method Action enq(t_IN chunk);
         
     // read the whole completed value
-    method out_T first();
+    method t_OUT first();
 
     // dequeue the completed value
     method Action deq();
-
 endinterface
 
-// module
+
+//
+// mkNPCDeMarshaller --
+//     The demarshaller assumes that t_IN tiles evenly into t_OUT.
+//
 module mkNPCDeMarshaller
     // interface:
-        (NPC_DEMARSHALLER#(in_T, out_T))
+    (NPC_DEMARSHALLER#(t_IN, t_OUT))
     provisos
-        (Bits#(in_T, in_SZ),
-         Bits#(out_T, out_SZ),
-         Div#(out_SZ, in_SZ, n_CHUNKS),
-         Log#(n_CHUNKS, idx_SZ),
-         PrimSelectable#(out_T, Bit#(1)));
+        (Bits#(t_IN, t_IN_SZ),
+         Bits#(t_OUT, t_OUT_SZ),
+         NumAlias#(TDiv#(t_OUT_SZ, t_IN_SZ), n_IN_PER_OUT),
+         Alias#(Bit#(TLog#(n_IN_PER_OUT)), t_IDX),
+         
+         // Assert that the input tiles evenly into the output
+         Mul#(n_IN_PER_OUT, t_IN_SZ, t_OUT_SZ));
     
     // =============== state ================
     
     // degree (max number of chunks) of our shift register
-    Integer degree = valueof(n_CHUNKS);
-    
-    // shift register we fill up as chunks come in.
-    Reg#(Vector#(n_CHUNKS, Bit#(in_SZ))) partialData <- mkRegU();
-    
+    let maxIdx = valueOf(TSub#(n_IN_PER_OUT, 1));
+
+    // Current partial out value
+    Reg#(t_OUT) collectOut <- mkRegU();
+
     // number of chunks remaining in current sequence
-    Reg#(Bit#(idx_SZ)) nextChunk <- mkReg(0);
+    Reg#(t_IDX) idx <- mkReg(0);
     
     // Output FIFO.
-    FIFO#(out_T) outQ <- mkBypassFIFO();
+    FIFO#(t_OUT) outQ <- mkBypassFIFO();
 
     // =============== methods ===============
-    
-    // add the chunk to the first place in the vector and
-    // shift the other elements.
 
-    method Action enq(in_T new_chunk);
-    
-        // newer chunks are closer to the MSB.
-        Vector#(n_CHUNKS, Bit#(in_SZ)) chunks = partialData;
-        chunks[nextChunk] = pack(new_chunk);
+    method Action enq(t_IN new_chunk);
+        Vector#(n_IN_PER_OUT, t_IN) in_vec = unpack(pack(collectOut));
+        in_vec[idx] = new_chunk;
 
-        if (nextChunk == fromInteger(valueOf(TSub#(n_CHUNKS, 1))))
+        t_OUT out_val = unpack(pack(in_vec));
+        collectOut <= out_val;
+
+        if (idx == fromInteger(maxIdx))
         begin
-            // Output chunk is ready
-            Bit#(out_SZ) final_val = 0;
-
-            // this is where the good stuff happens
-            // fill in the result one bit at a time
-            for (Integer x = 0; x < valueof(out_SZ); x = x + 1)
-            begin
-
-                Integer j = x / valueof(in_SZ);
-                Integer k = x % valueof(in_SZ);
-                final_val[x] = chunks[j][k];
-
-            end
-
-            outQ.enq(unpack(final_val));
-            nextChunk <= 0;
+            outQ.enq(out_val);
+            idx <= 0;
         end
         else
         begin
-            // More chunks to collect remain
-            partialData <= chunks;
-            nextChunk <= nextChunk + 1;
+            idx <= idx + 1;
         end
-        
     endmethod
-    
 
     method Action deq();
-
         outQ.deq();
-
     endmethod
 
-
-    method out_T first() = outQ.first();
-
+    method t_OUT first() = outQ.first();
 endmodule

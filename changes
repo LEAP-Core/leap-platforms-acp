@@ -1418,3 +1418,54 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
  ddr-sram-device.ucf       Locally Modified           65 
 
 Tweak another TIG.
+
+----------
+mcadler     Date: Wed Jun  2 09:23:53 EDT 2010  CSN: CSN-platform-acp-67
+                  Wed Jun  2 13:23:53 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ npc-marshaller.bsv        Locally Modified           66 
+ nallatech-edge-channel.cpp Locally Modified           66 
+ nallatech-edge-channel.h  Locally Modified           66 
+ npc-demarshaller.bsv      Locally Modified           66 
+ nallatech-edge-channel.awb Locally Modified           66 
+ nallatech-edge-channel.bsv Locally Modified           66 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge-v2
+ nallatech-edge-device.h   Locally Modified           66 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.h   Locally Modified           66 
+
+Channel integrity testing showed that data errors were in the host -> FPGA
+direction.  I have yet to see an FPGA -> host error.
+
+Added optional check bits to the host -> FPGA data stream.  ACP raw messages
+are 256 bits wide.  We break those down into 64 bit words.  For now, one
+word per 256 bit chunk is reserved for a checksum.  Even on I/O intensive
+code the penalty is about a 10% run-time increase since our throughput appears
+to be driven by the latency of preparing and initiating I/O transactions on
+the CPU.  We could experiment with reducing the UMF chunk size to 32 bits,
+thus wasting 1/8th of the buffer instead of 1/4, but that would cut our
+on-FPGA UMF throughput by 50%.
+
+Changes:
+  - Simplify the marshalling code, forcing the assumption that UMF chunks
+    tile evenly into ACP chunks.
+  - Put the data-integrity checker directly in the marshaller.  The recipient
+    polls the marshaller to find out whether the data stream is accurate.
+  - On error the FPGA drops everything following an incorrect message word
+    and requests retransmission.
+  - The host retransmits the entire block.
+  - The FPGA drops the portion already received and continues at the first
+    new word.
+
+There are definitely some message patterns that trigger higher probability of
+failure than others.
+
+The code was tested by forcing known-bad calibration values -- so bad that
+the bit file barely loads correctly.  Runs with over 10K retransmitted blocks
+were seen, with no data errors visible outside the physical channel.
+
+Checking is controlled by CHANNEL_H2F_FIX_ERRORS (on by default).

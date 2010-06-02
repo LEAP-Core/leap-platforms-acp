@@ -30,6 +30,9 @@ import Vector::*;
 
 typedef Bit#(24) F2H_SPIN_CYCLES;
 
+//
+// Request (host -> FPGA) control message
+//
 typedef struct
 {
     // Cycles the FPGA to host path may wait for data to arrive before returning.
@@ -48,6 +51,21 @@ typedef struct
 H2F_CMD
     deriving (Bits, Eq);
 
+//
+// Response (FPGA -> host) control message
+//
+typedef struct
+{
+    // The number of write (FPGA -> host) chunks with data.
+    Bit#(16) numF2HChunks;
+
+    // The number of read (host -> FPGA) chunks NOT read due to data errors.
+    // If non-zero the host is expected to retransmit the entire buffer.
+    Bit#(16) h2fError;
+}
+F2H_CMD
+    deriving (Bits, Eq);
+
 
 //
 // Internal types
@@ -58,7 +76,10 @@ typedef enum
     RSTATE_READY,
     RSTATE_START,
     RSTATE_CONT,
-    RSTATE_DONE
+    RSTATE_DONE,
+
+    RSTATE_ERROR,
+    RSTATE_RECOVER
 }
 READ_STATE
     deriving (Bits, Eq);
@@ -77,12 +98,25 @@ WRITE_STATE
 
 
 //
+// State for restarting a read following a transmission error and buffer
+// resend.
+//
+typedef struct
+{
+    READ_STATE readState;
+    UMF_MSG_LENGTH dataChunksRemaining;
+    NALLATECH_BUF_IDX rawChunksRemaining;
+}
+READ_RECOVERY_STATE
+    deriving (Bits, Eq);
+
+
+//
 // Nallatech edge channel buffer index.
 //
 typedef Bit#(TLog#(TAdd#(TDiv#(`NALLATECH_MAX_MSG_BYTES, `UMF_CHUNK_BYTES), 1))) NALLATECH_BUF_IDX;
 
 function NALLATECH_BUF_IDX chunkToBufIdx(UMF_CHUNK c) = truncate(c);
-function UMF_CHUNK bufIdxToChunk(NALLATECH_BUF_IDX i) = zeroExtend(i);
 
 
 // physical channel interface
@@ -119,13 +153,27 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     // Spin for some time waiting for a message to arrive for the host
     Reg#(Bit#(24)) spinCycles <- mkRegU();
 
+    // Host -> FPGA data error detection/correction
+    Reg#(Maybe#(READ_RECOVERY_STATE)) h2fErrRecovery <- mkReg(tagged Invalid);
+
+
     // ====================================================================
     //
     // Marshaller and DeMarshaller
     //
     // ====================================================================
-    
-    NPC_MARSHALLER#(NALLATECH_FIFO_DATA, UMF_CHUNK)   dataFromHost <- mkNPCMarshaller();
+
+    //
+    // Some ACP version suffer from data errors in host to FPGA messages.
+    // Optionally add error detection and retry to the host to FPGA channel.
+    //
+    NPC_MARSHALLER#(NALLATECH_FIFO_DATA, UMF_CHUNK) dataFromHost <-
+`ifdef CHANNEL_H2F_FIX_ERRORS_Z
+        mkNPCMarshaller();
+`else
+        mkNPCErrorDetectingMarshaller();
+`endif
+
     NPC_DEMARSHALLER#(UMF_CHUNK, NALLATECH_FIFO_DATA) dataToHost   <- mkNPCDeMarshaller();
 
     rule marshallFromDevice (True);
@@ -150,11 +198,23 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         H2F_CMD cmd = unpack(truncate(pack(dataFromHost.first())));
         dataFromHost.deq();
 
+        //
+        // We don't check for errors here.  Knowing the buffer sizes is crucial
+        // for the protocol and without a way to correct an errant message
+        // the FPGA would not know how many chunks to read or write.
+        //
+        // It appears that the first chunk is never corrupt.  If that turns
+        // out not to be the case, we will have to change the code to send
+        // enough state to recover the command word.
+        //
         rawReadChunksRemaining <= truncate(cmd.rawH2FChunks);
         rawWriteChunksRemaining <= truncate(cmd.rawF2HChunks);
         spinCycles <= cmd.waitForF2HSpinCycles;
 
-        readState <= RSTATE_START;
+        if (! isValid(h2fErrRecovery))
+            readState <= RSTATE_START;
+        else
+            readState <= RSTATE_RECOVER;
 
         if (cmd.f2hDataPermitted == 1)
             writeState <= WSTATE_TRY;
@@ -182,7 +242,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     rule h2fStart (readState == RSTATE_START);
         UMF_PACKET_HEADER header = unpack(pack(dataFromHost.first()));
         dataFromHost.deq();
-        
+
         if (rawReadChunksRemaining == 1)
         begin
             // Last chunk in the buffer.  H2F messages can't span buffers, so
@@ -190,28 +250,43 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
             readState <= RSTATE_DONE;
             noMoreReadData <= False;
         end
-        else if ((header.phyChannelPvt != 0) && ! noMoreReadData)
+        else if (! noMoreReadData)
         begin
-            //
-            // Start of a new message
-            //
-            readBuffer.enq(unpack(pack(header)));
-
-            let msg_len = header.numChunks;
-            readDataChunksRemaining <= msg_len;
-        
-            if (msg_len != 0)
+            if (dataFromHost.errorDetected())
             begin
-                readState <= RSTATE_CONT;
+                //
+                // Data error!  Stop parsing this message and request retransmission.
+                //
+                readState <= RSTATE_ERROR;
+
+                h2fErrRecovery <= tagged Valid READ_RECOVERY_STATE {
+                                      readState: RSTATE_START,
+                                      dataChunksRemaining: readDataChunksRemaining,
+                                      rawChunksRemaining: rawReadChunksRemaining };
             end
-        end
-        else
-        begin
-            // Once a header chunk indicates no message the rest of the
-            // buffer must be ignored.  This allows the software side
-            // to mark the buffer end with a single chunk instead of having
-            // to pad the entire buffer with no-message flags.
-            noMoreReadData <= True;
+            else if (header.phyChannelPvt != 0)
+            begin
+                //
+                // Start of a new message
+                //
+                readBuffer.enq(unpack(pack(header)));
+
+                let msg_len = header.numChunks;
+                readDataChunksRemaining <= msg_len;
+
+                if (msg_len != 0)
+                begin
+                    readState <= RSTATE_CONT;
+                end
+            end
+            else
+            begin
+                // Once a header chunk indicates no message the rest of the
+                // buffer must be ignored.  This allows the software side
+                // to mark the buffer end with a single chunk instead of having
+                // to pad the entire buffer with no-message flags.
+                noMoreReadData <= True;
+            end
         end
 
         rawReadChunksRemaining <= rawReadChunksRemaining - 1;
@@ -224,18 +299,36 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
         UMF_CHUNK chunk = dataFromHost.first();
         dataFromHost.deq();
         
-        // Forward the data
-        readBuffer.enq(chunk);
+        if (! dataFromHost.errorDetected())
+        begin
+            // Forward the data
+            readBuffer.enq(chunk);
 
-        if (rawReadChunksRemaining == 1)
-        begin
-            // End of the buffer.  The message better be done, too.
-            readState <= RSTATE_DONE;
+            if (rawReadChunksRemaining == 1)
+            begin
+                // End of the buffer.  The message better be done, too.
+                readState <= RSTATE_DONE;
+            end
+            else if (readDataChunksRemaining == 1)
+            begin
+                // End of message.  Is there another in the buffer?
+                readState <= RSTATE_START;
+            end
         end
-        else if (readDataChunksRemaining == 1)
+        else
         begin
-            // End of message.  Is there another in the buffer?
-            readState <= RSTATE_START;
+            //
+            // Data error!  Stop parsing this message and request retransmission.
+            //
+            if (rawReadChunksRemaining == 1)
+                readState <= RSTATE_DONE;
+            else
+                readState <= RSTATE_ERROR;
+
+            h2fErrRecovery <= tagged Valid READ_RECOVERY_STATE {
+                                  readState: RSTATE_CONT,
+                                  dataChunksRemaining: readDataChunksRemaining,
+                                  rawChunksRemaining: rawReadChunksRemaining };
         end
 
         readDataChunksRemaining <= readDataChunksRemaining - 1;
@@ -389,13 +482,71 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     //
     rule f2hCompleteWrite ((writeState == WSTATE_LAST) &&
                            (readState == RSTATE_DONE));
-        dataToHost.enq(bufIdxToChunk(numUsefulWriteChunks));
+        F2H_CMD cmd;
+        cmd.numF2HChunks = zeroExtend(numUsefulWriteChunks);
+
+        //
+        // Host -> FPGA error?
+        //
+        if (h2fErrRecovery matches tagged Valid .err)
+            cmd.h2fError = zeroExtend(err.rawChunksRemaining);
+        else
+            cmd.h2fError = 0;
+        dataFromHost.resetErrorFlag();
+
+        dataToHost.enq(zeroExtend(pack(cmd)));
 
         writeState <= WSTATE_READY;
         readState <= RSTATE_READY;
     endrule
 
     
+    // ====================================================================
+    //
+    // Error recovery
+    //
+    // ====================================================================
+    
+    //
+    // consumeErrantReadData --
+    //     An error was detected in the current host -> FPGA data stream.
+    //     Consume the remaining of the buffer.  It will be resent.
+    //
+    rule consumeErrantReadData (readState == RSTATE_ERROR);
+        dataFromHost.deq();
+
+        if (rawReadChunksRemaining == 1)
+        begin
+            readState <= RSTATE_DONE;
+        end
+
+        rawReadChunksRemaining <= rawReadChunksRemaining - 1;
+    endrule
+    
+
+    //
+    // recoverFromErrantReadData --
+    //     The previous host -> FPGA message was transmitted incorrectly and
+    //     has been resent.  This rule consumes the part of the resent data
+    //     that has already been consumed correctly.
+    //
+    rule recoverFromErrantReadData (readState == RSTATE_RECOVER);
+        let r_state = validValue(h2fErrRecovery);
+        if (r_state.rawChunksRemaining == rawReadChunksRemaining)
+        begin
+            readState <= r_state.readState;
+            readDataChunksRemaining <= r_state.dataChunksRemaining;
+
+            h2fErrRecovery <= tagged Invalid;
+        end
+        else
+        begin
+            dataFromHost.deq();
+            rawReadChunksRemaining <= rawReadChunksRemaining - 1;
+        end
+    endrule
+
+
     // ====================================================================
     //
     // Methods
