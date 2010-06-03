@@ -1469,3 +1469,18 @@ the bit file barely loads correctly.  Runs with over 10K retransmitted blocks
 were seen, with no data errors visible outside the physical channel.
 
 Checking is controlled by CHANNEL_H2F_FIX_ERRORS (on by default).
+
+----------
+aparasha    Date: Thu Jun  3 18:33:53 EDT 2010  CSN: CSN-platform-acp-68
+                  Thu Jun  3 22:33:53 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge-v2
+ nallatech-edge-vhdl-import.bsv Locally Modified           67 
+ nallatech-edge-device.vhd Locally Modified           67 
+
+Added Bluespec wrapper around Nallatech's register interface. Use with caution!
+Read the comments in the Bluespec import file and/or Nallatech's official
+documentation on the interface. The interface itself has not been tested yet,
+but the channel functionality has been tested to work correctly with this
+update.

@@ -110,7 +110,7 @@ entity nallatech_edge_vhdl is
         ram_clk270 : out std_logic;
         ram_clk_locked : out std_logic;
         
-        -- user interface
+        -- user interface (channel)
         
         tx_data_valid    : in std_logic;
         tx_data          : in std_logic_vector(255 downto 0);
@@ -118,7 +118,18 @@ entity nallatech_edge_vhdl is
 
         rx_data_read     : in std_logic;
         rx_data_ready    : out std_logic; 
-        rx_data          : out std_logic_vector(255 downto 0)
+        rx_data          : out std_logic_vector(255 downto 0);
+
+        -- user interface (register)
+
+        user_reg_clk_out   : out std_logic;
+        user_reg_wdata_out : out std_logic_vector(15 downto 0);
+        user_reg_addr_out  : out std_logic_vector(12 downto 0);
+        user_reg_rden_out  : out std_logic;
+        user_reg_wren_out  : out std_logic;
+        user_reg_wrack_in  : in  std_logic;
+        user_reg_rdy_in    : in  std_logic;
+        user_reg_rdata_in  : in  std_logic_vector(15 downto 0)
 
 		);	
 end nallatech_edge_vhdl;
@@ -556,12 +567,20 @@ begin
 		leds => leds
 		);
 	
-		
-	--tie off the user register interface port rdy signals (ports 2 and 3).
-	--By doing do ensuring that if port 2 or 3 is accidently accessed by
+    -- expose user register port 2 to Bluespec
+    user_reg_clk_out   <= user_reg_clk;
+    user_reg_wdata_out <= user_reg_wdata;
+    user_reg_addr_out  <= user_reg_addr;
+    user_reg_rden_out  <= user_reg_rden(2);
+    user_reg_wren_out  <= user_reg_wren(2);
+    user_reg_rdy(2)    <= user_reg_rdy_in or user_reg_wrack_in;
+    user_reg_rdata2    <= user_reg_rdata_in;
+    
+	--tie off the user register interface port rdy signals (port 3).
+	--By doing do ensuring that if port 3 is accidently accessed by
 	--software that the controlling state machine within the edge and M2B
 	--does not hang waiting for a response.
-	user_reg_rdy(3 downto 2)<="00";
+	user_reg_rdy(3)<='0';
 	
 	
 end rtl;

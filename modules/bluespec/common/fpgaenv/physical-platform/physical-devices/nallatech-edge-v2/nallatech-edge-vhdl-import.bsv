@@ -23,6 +23,8 @@ import Clocks::*;
 //
 
 typedef Bit#(256) NALLATECH_FIFO_DATA;
+typedef Bit#(16)  NALLATECH_REG_DATA;
+typedef Bit#(13)  NALLATECH_REG_ADDR;
 
 // nallatech-edge-vhdl-import
 
@@ -104,6 +106,12 @@ interface PRIMITIVE_NALLATECH_EDGE_DEVICE;
     interface Clock ramClk200;
     interface Clock ramClk270;
     method Bit#(1) ramClkLocked();
+    
+    //
+    // Register Clock
+    //
+        
+    interface Clock regClock;
 
     //
     // Wires to be sent to the top level
@@ -115,10 +123,32 @@ interface PRIMITIVE_NALLATECH_EDGE_DEVICE;
     // Methods for the Driver
     //
     
+    // channel interface
     method Action              enq(NALLATECH_FIFO_DATA data);
     method NALLATECH_FIFO_DATA first();
     method Action              deq();
-                          
+              
+    // register interface
+
+    // Keep the following in mind while using the register interface:
+    // 1. Most methods are un-gated, so use the Booleans regReadReq() and regWriteReq() to
+    //    figure out which requests are actually active
+    // 2. Be sure to acknowledge a write using regAckWrite(), otherwise the host system could hang!
+    //    Reads are automatically acked when you return the read value. Until then the system is
+    //    in an unsteady state so finish the read asap!
+    // 3. It might not be safe to ack the Write in the same cycle that you receive it (which
+    //    creates a combinational path from the ready to the enable), because the Edge VHDL might
+    //    use a combinational loop from our ack back into the write ready. Wait one cycle. If you
+    //    see that this is not a problem, then regAckWrite() need not be a separate method, the
+    //    ack can be hooked to the enable of the writeData() method (making it an ActionValue method).
+            
+    method NALLATECH_REG_ADDR  regAddr();
+    method Bit#(1)             regReadReq();
+    method Action              regSendReadData(NALLATECH_REG_DATA data);
+    method Bit#(1)             regWriteReq();
+    method NALLATECH_REG_DATA  regWriteData();
+    method Action              regAckWrite();
+        
 endinterface
 
 
@@ -145,6 +175,8 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
     output_clock ramClk0   (ram_clk0);
     output_clock ramClk200 (ram_clk200);
     output_clock ramClk270 (ram_clk270);
+
+    output_clock regClock (USER_REG_CLK_OUT);
 
     method ram_clk_locked ramClkLocked();
 
@@ -218,6 +250,33 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
         clocked_by (clock)
         reset_by   (reset);
                           
+    // register
+    method USER_REG_ADDR_OUT regAddr()
+        clocked_by (regClock)
+        reset_by (no_reset);
+        
+    method USER_REG_RDEN_OUT regReadReq()
+        clocked_by (regClock)
+        reset_by (no_reset);
+
+    method regSendReadData(USER_REG_RDATA_IN)
+        enable (USER_REG_RDY_IN)
+        clocked_by (regClock)
+        reset_by (no_reset);        
+        
+    method USER_REG_WREN_OUT regWriteReq()
+        clocked_by (regClock)
+        reset_by (no_reset);        
+        
+    method USER_REG_WDATA_OUT regWriteData()
+        clocked_by (regClock)
+        reset_by (no_reset);        
+
+    method regAckWrite()
+        enable (USER_REG_WRACK_IN)
+        clocked_by (regClock)
+        reset_by (no_reset);
+
     //
     // Scheduling
     //
@@ -250,7 +309,7 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
     // CF with everything else (except itself)
     schedule enq SBR (enq);
     schedule enq CF  (first, deq);
-
+        
     // first
     // CF with everything (EXPLICITLY including itself)
     schedule first CF (first, deq);
@@ -260,4 +319,24 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
     // CF with everything else (except itself)
     schedule deq SBR (deq);
         
+    // regAddr()
+    schedule regAddr CF (enq, first, deq, regAddr, regReadReq, regSendReadData, regWriteReq, regWriteData, regAckWrite);
+
+    // regReadReq()
+    schedule regReadReq CF (enq, first, deq, regReadReq, regSendReadData, regWriteReq, regWriteData, regAckWrite);
+
+    // regSendReadData()
+    schedule regSendReadData SBR (regSendReadData);
+    schedule regSendReadData CF  (enq, first, deq, regWriteReq, regWriteData, regAckWrite);
+        
+    // regWriteReq()
+    schedule regWriteReq CF (enq, first, deq, regWriteReq, regWriteData, regAckWrite);
+
+    // regWriteData()
+    schedule regWriteData CF (enq, first, deq, regWriteData, regAckWrite);
+        
+    // regAckWrite()
+    schedule regAckWrite SBR (regAckWrite);
+    schedule regAckWrite CF  (enq, first, deq);
+
 endmodule
