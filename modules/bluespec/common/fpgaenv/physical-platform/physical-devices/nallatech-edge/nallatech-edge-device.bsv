@@ -34,6 +34,16 @@ interface NALLATECH_EDGE_DRIVER;
     method NALLATECH_FIFO_DATA first();
     method Action              deq();
         
+    //
+    // The user register interface is available for debugging.  These registers
+    // are connected to user registers, port 3.
+    //
+    // Host requests update of FPGA state
+    method ActionValue#(Tuple2#(NALLATECH_REG_ADDR, NALLATECH_REG_DATA)) regWrite();
+    // Host requests read of FPGA state
+    method ActionValue#(NALLATECH_REG_ADDR) regReadReq();
+    method Action regReadRsp(NALLATECH_REG_DATA data);
+        
 endinterface
 
 // NALLATECH_EDGE_WIRES
@@ -153,6 +163,22 @@ module mkNallatechEdgeDevice
             
             sync_read_q.deq();
             
+        endmethod
+                
+        //
+        // Debug registers (not implemented)
+        //
+        // Host requests update of FPGA state
+        method ActionValue#(Tuple2#(NALLATECH_REG_ADDR, NALLATECH_REG_DATA)) regWrite() if (False);
+            return ?;
+        endmethod
+
+        // Host requests read of FPGA state
+        method ActionValue#(NALLATECH_REG_ADDR) regReadReq() if (False);
+            return ?;
+        endmethod
+
+        method Action regReadRsp(NALLATECH_REG_DATA data);
         endmethod
                 
     endinterface

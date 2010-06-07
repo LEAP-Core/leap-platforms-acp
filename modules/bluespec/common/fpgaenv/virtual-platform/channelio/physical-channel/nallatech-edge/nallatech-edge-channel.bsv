@@ -156,6 +156,9 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     // Host -> FPGA data error detection/correction
     Reg#(Maybe#(READ_RECOVERY_STATE)) h2fErrRecovery <- mkReg(tagged Invalid);
 
+    // Debug state
+    Reg#(UMF_CHUNK) lastReqHeader <- mkRegU();
+
 
     // ====================================================================
     //
@@ -196,6 +199,7 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
     rule acceptRequest ((readState == RSTATE_READY) &&
                          (writeState == WSTATE_READY));
         H2F_CMD cmd = unpack(truncate(pack(dataFromHost.first())));
+        lastReqHeader <= dataFromHost.first();
         dataFromHost.deq();
 
         //
@@ -544,6 +548,80 @@ module mkPhysicalChannel#(PHYSICAL_DRIVERS drivers)
             dataFromHost.deq();
             rawReadChunksRemaining <= rawReadChunksRemaining - 1;
         end
+    endrule
+
+
+    // ====================================================================
+    //
+    // Debug (register) interface
+    //
+    // ====================================================================
+
+    //
+    // dbgRegWrite --
+    //     The host may request updates of state here.  This is not currently
+    //     used.  A dummy bit is written (and readable in dbgRegRead below)
+    //     to force preservation of the syncFIFOs used for writing and keep
+    //     the synthesis tools from complaining about the TIG on them being
+    //     optimized away.
+    //
+    Reg#(Bit#(1)) regWriteDummy <- mkReg(0);
+
+    rule dbgRegWrite (True);
+        match {.addr, .data} <- edgeDriver.regWrite();
+        regWriteDummy <= data[0];
+    endrule
+
+
+    //
+    // dbgRegRead --
+    //     Export current state using a side channel.  The side channel
+    //     isn't perfect.  It can only be used when no ACP_MemCopy()
+    //     is in flight.
+    //
+    //     Results flow through a FIFO to avoid reading and writing a syncFIFO
+    //     in the same rule, which seems to be difficult for timing.
+    //
+    FIFO#(NALLATECH_REG_DATA) regReadQ <- mkFIFO();
+
+    rule dbgRegRead (True);
+        let addr <- edgeDriver.regReadReq();
+
+        Bit#(64) last_cmd = zeroExtend(pack(lastReqHeader));
+
+        NALLATECH_REG_DATA r = ?;
+        case (addr)
+            // 3-0 holds the most recent command
+            0: r = last_cmd[15:0];
+            1: r = last_cmd[31:16];
+            2: r = last_cmd[47:32];
+            3: r = last_cmd[63:48];
+
+            // Current read/write states
+            4: r = zeroExtend(pack(readState));
+            5: r = zeroExtend(pack(writeState));
+
+            // Number of chunks left to process
+            6: r = zeroExtend(pack(rawReadChunksRemaining));
+            7: r = zeroExtend(pack(rawWriteChunksRemaining));
+
+            // Model I/O FIFO states
+            8: r = zeroExtend(pack({ pack(writeDataQ.notEmpty()),
+                                     pack(readBuffer.notFull()) }));
+
+            // Check value (make sure register reads are returning correct values)
+          100: r ='h5309;
+          101: r = zeroExtend(regWriteDummy);
+        endcase
+        
+        regReadQ.enq(r);
+    endrule
+         
+    rule dbgRegReadRsp (True);
+        let r = regReadQ.first();
+        regReadQ.deq();
+
+        edgeDriver.regReadRsp(r);
     endrule
 
 

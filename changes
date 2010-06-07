@@ -1484,3 +1484,44 @@ Read the comments in the Bluespec import file and/or Nallatech's official
 documentation on the interface. The interface itself has not been tested yet,
 but the channel functionality has been tested to work correctly with this
 update.
+
+----------
+mcadler     Date: Mon Jun  7 14:12:42 EDT 2010  CSN: CSN-platform-acp-69
+                  Mon Jun  7 18:12:42 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified           68 
+ nallatech-edge-channel.h  Locally Modified           68 
+ nallatech-edge-channel.bsv Locally Modified           68 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge-v2
+ nallatech-edge-device.h   Locally Modified           68 
+ nallatech-edge-device.bsv Locally Modified           68 
+ nallatech-edge-vhdl-import.bsv Locally Modified           68 
+ nallatech-edge-device.awb Locally Modified           68 
+ nallatech-edge-device.ucf Locally Modified           68 
+ nallatech-edge-device.vhd Locally Modified           68 
+ nallatech-edge-device.cpp Locally Modified           68 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.h   Locally Modified           68 
+ nallatech-edge-device.bsv Locally Modified           68 
+ nallatech-edge-vhdl-import.bsv Locally Modified           68 
+
+This version fixes the deadlocks I was seeing in ACP I/O with error correction
+enabled.  The problem:  I don't know why.  I know the problem is in software
+since fixed software works with a multiple versions of FPGA logic.
+Adding seemingly gratuitous code makes the deadlock disappear.  I tried
+memory barriers around the DoAALTransaction() calls, fearing the optimizer
+was hoisting references to the I/O buffers.  No joy.  I don't see any uses
+of uninitialized variables.  I'll keep looking.
+
+Improvements with this version:
+  - Tested channel interface up to 125 MHz.  Added TIGs to sync FIFOs to
+    support this.
+  - Added user register debug interface to the V2 physical channel to
+    extract some details of the FPGA-side state machine.  (The V1 channel
+    just has compatibility hooks but doesn't support actual register reads.)
+  - Removed the example user register port 0 connection to BRAM and port 1
+    connection to LEDs since we no longer need the examples.

@@ -143,9 +143,9 @@ interface PRIMITIVE_NALLATECH_EDGE_DEVICE;
     //    ack can be hooked to the enable of the writeData() method (making it an ActionValue method).
             
     method NALLATECH_REG_ADDR  regAddr();
-    method Bit#(1)             regReadReq();
+    method Bool                regReadReq();
     method Action              regSendReadData(NALLATECH_REG_DATA data);
-    method Bit#(1)             regWriteReq();
+    method Bool                regWriteReq();
     method NALLATECH_REG_DATA  regWriteData();
     method Action              regAckWrite();
         

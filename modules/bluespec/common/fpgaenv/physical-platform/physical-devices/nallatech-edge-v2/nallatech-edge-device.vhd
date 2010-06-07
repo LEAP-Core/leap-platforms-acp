@@ -327,31 +327,31 @@ architecture rtl of nallatech_edge_vhdl is
 	
 	---------------------------------------------------------------------------
 	-- Component declaration of usr_reg_slave_if_bram_example
-	component usr_reg_slave_if_bram_example
-		port(
-			clk : in std_logic;
-			user_reg_wdata : in std_logic_vector(15 downto 0);
-			user_reg_addr : in std_logic_vector(12 downto 0);
-			user_reg_rden : in std_logic;
-			user_reg_wren : in std_logic;
-			user_reg_rdata : out std_logic_vector(15 downto 0);
-			user_reg_rdy : out std_logic);
-	end component;	 
+	--component usr_reg_slave_if_bram_example
+	--	port(
+	--		clk : in std_logic;
+	--		user_reg_wdata : in std_logic_vector(15 downto 0);
+	--		user_reg_addr : in std_logic_vector(12 downto 0);
+	--		user_reg_rden : in std_logic;
+	--		user_reg_wren : in std_logic;
+	--		user_reg_rdata : out std_logic_vector(15 downto 0);
+	--		user_reg_rdy : out std_logic);
+	--end component;	 
 	
 	
 	---------------------------------------------------------------------------
 	-- Component declaration of usr_reg_slave_if_io_example
-	component usr_reg_slave_if_io_example
-		port(
-			clk : in std_logic;
-			user_reg_wdata : in std_logic_vector(15 downto 0);
-			user_reg_addr : in std_logic_vector(12 downto 0);
-			user_reg_rden : in std_logic;
-			user_reg_wren : in std_logic;
-			user_reg_rdata : out std_logic_vector(15 downto 0);
-			user_reg_rdy : out std_logic;
-			leds : out std_logic_vector(3 downto 0));
-	end component;
+	--component usr_reg_slave_if_io_example
+	--	port(
+	--		clk : in std_logic;
+	--		user_reg_wdata : in std_logic_vector(15 downto 0);
+	--		user_reg_addr : in std_logic_vector(12 downto 0);
+	--		user_reg_rden : in std_logic;
+	--		user_reg_wren : in std_logic;
+	--		user_reg_rdata : out std_logic_vector(15 downto 0);
+	--		user_reg_rdy : out std_logic;
+	--		leds : out std_logic_vector(3 downto 0));
+	--end component;
 	
     component IBUFGDS
         port (O  : out STD_ULOGIC;
@@ -543,29 +543,33 @@ begin
 	--User register slave interface connections
 	
 	--connect up the block ram example to user register port 0
-	usr_reg_slave_if_bram_example_inst : usr_reg_slave_if_bram_example
-	port map(
-		clk => user_reg_clk,
-		user_reg_wdata => user_reg_wdata,
-		user_reg_addr => user_reg_addr,
-		user_reg_rden => user_reg_rden(0),
-		user_reg_wren => user_reg_wren(0),
-		user_reg_rdata => user_reg_rdata0,
-		user_reg_rdy => user_reg_rdy(0)
-		);
+	--usr_reg_slave_if_bram_example_inst : usr_reg_slave_if_bram_example
+	--port map(
+	--	clk => user_reg_clk,
+	--	user_reg_wdata => user_reg_wdata,
+	--	user_reg_addr => user_reg_addr,
+	--	user_reg_rden => user_reg_rden(0),
+	--	user_reg_wren => user_reg_wren(0),
+	--	user_reg_rdata => user_reg_rdata0,
+	--	user_reg_rdy => user_reg_rdy(0)
+	--	);
+	--Tie off reg_rdy instead of instantiating if_bram_example
+	user_reg_rdy(0)<='0';
 	
 	--connect up the IO example to user register port 1
-	usr_reg_slave_if_io_example_inst : usr_reg_slave_if_io_example
-	port map(
-		clk => user_reg_clk,
-		user_reg_wdata => user_reg_wdata,
-		user_reg_addr => user_reg_addr,
-		user_reg_rden => user_reg_rden(1),
-		user_reg_wren => user_reg_wren(1),
-		user_reg_rdata => user_reg_rdata1,
-		user_reg_rdy => user_reg_rdy(1),
-		leds => leds
-		);
+	--usr_reg_slave_if_io_example_inst : usr_reg_slave_if_io_example
+	--port map(
+	--	clk => user_reg_clk,
+	--	user_reg_wdata => user_reg_wdata,
+	--	user_reg_addr => user_reg_addr,
+	--	user_reg_rden => user_reg_rden(1),
+	--	user_reg_wren => user_reg_wren(1),
+	--	user_reg_rdata => user_reg_rdata1,
+	--	user_reg_rdy => user_reg_rdy(1),
+	--	leds => leds
+	--	);
+	--Tie off reg_rdy instead of instantiating if_io_example
+	user_reg_rdy(1)<='0';
 	
     -- expose user register port 2 to Bluespec
     user_reg_clk_out   <= user_reg_clk;

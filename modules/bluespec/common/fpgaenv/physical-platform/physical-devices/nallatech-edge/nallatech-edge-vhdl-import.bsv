@@ -23,6 +23,8 @@ import Clocks::*;
 //
 
 typedef Bit#(256) NALLATECH_FIFO_DATA;
+typedef Bit#(16)  NALLATECH_REG_DATA;
+typedef Bit#(13)  NALLATECH_REG_ADDR;
 
 // nallatech-edge-vhdl-import
 

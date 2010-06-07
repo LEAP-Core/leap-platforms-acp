@@ -78,6 +78,10 @@ class NALLATECH_EDGE_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
     void DoAALTransaction(int writeWindowID, int writeWords,
                           int readWindowID, int readWords);
 
+    // Register interface for debugging
+    void DebugRegWrite(UINT16 addr, UINT16 data);
+    UINT16 DebugRegRead(UINT16 addr);
+
     // Convert a request size to a legal buffer size
     inline int LegalBufSize(int words) const;
 };

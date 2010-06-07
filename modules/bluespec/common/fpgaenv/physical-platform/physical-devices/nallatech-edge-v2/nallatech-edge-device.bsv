@@ -34,6 +34,16 @@ interface NALLATECH_EDGE_DRIVER;
     method NALLATECH_FIFO_DATA first();
     method Action              deq();
         
+    //
+    // The user register interface is available for debugging.  These registers
+    // are connected to user registers, port 3.
+    //
+    // Host requests update of FPGA state
+    method ActionValue#(Tuple2#(NALLATECH_REG_ADDR, NALLATECH_REG_DATA)) regWrite();
+    // Host requests read of FPGA state
+    method ActionValue#(NALLATECH_REG_ADDR) regReadReq();
+    method Action regReadRsp(NALLATECH_REG_DATA data);
+
 endinterface
 
 // NALLATECH_EDGE_WIRES
@@ -65,6 +75,7 @@ interface SRAM_CLOCKS_DRIVER;
         
 endinterface
 
+
 // mkNallatechEdgeDevice
 
 // Take the primitive device import and cross the clock domains into the
@@ -87,6 +98,9 @@ module mkNallatechEdgeDevice
     Clock rawClock = prim_device.rawClock;
     Reset rawReset = noReset;
     
+    Clock userRegClock = prim_device.regClock;
+    Reset userRegReset <- mkAsyncReset(2, edgeReset, userRegClock);
+
     let userClockPackage <- mkUserClock_PLL(`CRYSTAL_CLOCK_FREQ,
                                             `MODEL_CLOCK_FREQ,
                                             clocked_by rawClock,
@@ -104,20 +118,28 @@ module mkNallatechEdgeDevice
     // Synchronizers
     
     SyncFIFOIfc#(NALLATECH_FIFO_DATA) sync_read_q
-                                   <- mkSyncFIFO(2, edgeClock, edgeReset, modelClock);
+        <- mkSyncFIFO(2, edgeClock, edgeReset, modelClock);
         
     SyncFIFOIfc#(NALLATECH_FIFO_DATA) sync_write_q
-                                   <- mkSyncFIFO(2, modelClock, modelReset, edgeClock);
+        <- mkSyncFIFO(2, modelClock, modelReset, edgeClock);
     
+    SyncFIFOIfc#(Tuple2#(NALLATECH_REG_ADDR, NALLATECH_REG_DATA)) sync_reg_write_q
+        <- mkSyncFIFO(2, userRegClock, userRegReset, modelClock);
+    SyncFIFOIfc#(Bool) sync_reg_write_ack_q
+        <- mkSyncFIFO(2, modelClock, modelReset, userRegClock);
+    
+    SyncFIFOIfc#(NALLATECH_REG_ADDR) sync_reg_read_req_q
+        <- mkSyncFIFO(2, userRegClock, userRegReset, modelClock);
+    SyncFIFOIfc#(NALLATECH_REG_DATA) sync_reg_read_rsp_q
+        <- mkSyncFIFO(2, modelClock, modelReset, userRegClock);
+
     //
     // Rules for synchronizing from Edge to Model domain
     //
         
     rule sync_read (True);
-            
         sync_read_q.enq(prim_device.first());
         prim_device.deq();
-        
     endrule
 
     //
@@ -125,12 +147,58 @@ module mkNallatechEdgeDevice
     //
     
     rule sync_write (True);
-        
         prim_device.enq(sync_write_q.first());
         sync_write_q.deq();
-        
     endrule
         
+
+    //
+    // User register write/read.  The protocols are very unforgiving, so we
+    // hold state in registers in the edge clock domain before trying to
+    // talk to the sync FIFO.
+    //
+    // Only one write/read request may be outstanding, so temporary registers
+    // are sufficient.
+    //
+    Reg#(Maybe#(Tuple2#(NALLATECH_REG_ADDR, NALLATECH_REG_DATA))) regWriteBuf <-
+        mkReg(tagged Invalid, clocked_by userRegClock, reset_by userRegReset);
+
+    rule userRegWrite0 (prim_device.regWriteReq() && ! isValid(regWriteBuf));
+        regWriteBuf <= tagged Valid tuple2(prim_device.regAddr(),
+                                           prim_device.regWriteData());
+    endrule
+
+    rule userRegWrite1 (regWriteBuf matches tagged Valid .w);
+        sync_reg_write_q.enq(w);
+        regWriteBuf <= tagged Invalid;
+    endrule
+
+    rule userRegWriteAck (True);
+        prim_device.regAckWrite();
+        sync_reg_write_ack_q.deq();
+    endrule
+
+    //
+    // User register read
+    //
+    Reg#(Maybe#(NALLATECH_REG_ADDR)) regReadBuf <-
+        mkReg(tagged Invalid, clocked_by userRegClock, reset_by userRegReset);
+
+    rule userRegReadReq0 (prim_device.regReadReq() && ! isValid(regReadBuf));
+        regReadBuf <= tagged Valid prim_device.regAddr();
+    endrule
+
+    rule userRegReadReq1 (regReadBuf matches tagged Valid .r);
+        sync_reg_read_req_q.enq(r);
+        regReadBuf <= tagged Invalid;
+    endrule
+
+    rule userRegReadRsp (True);
+        prim_device.regSendReadData(sync_reg_read_rsp_q.first());
+        sync_reg_read_rsp_q.deq();
+    endrule
+
+
     //
     // Drivers
     //
@@ -155,6 +223,32 @@ module mkNallatechEdgeDevice
             
         endmethod
                 
+        //
+        // Debug registers
+        //
+        // Host requests update of FPGA state
+        method ActionValue#(Tuple2#(NALLATECH_REG_ADDR, NALLATECH_REG_DATA)) regWrite();
+            let r = sync_reg_write_q.first();
+            sync_reg_write_q.deq();
+            
+            // Ack the write
+            sync_reg_write_ack_q.enq(?);
+            
+            return r;
+        endmethod
+
+        // Host requests read of FPGA state
+        method ActionValue#(NALLATECH_REG_ADDR) regReadReq();
+            let addr = sync_reg_read_req_q.first();
+            sync_reg_read_req_q.deq();
+            
+            return addr;
+        endmethod
+
+        method Action regReadRsp(NALLATECH_REG_DATA data);
+            sync_reg_read_rsp_q.enq(data);
+        endmethod
+
     endinterface
     
     // The Nallatech Edge device currently also provides clocks for any SRAM devices present.

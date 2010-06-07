@@ -102,7 +102,20 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
 
     UINT32 InsertCheckBits(int activeWriteWindow, UINT32 inBufWords);
     void ClearSentWords(int activeWriteWindow, UINT32 unsentBufWords);
+
     UINT64 correctedH2FErrs;
+    UINT64 lastErrorIdx;
+    UINT64 memCopyCalls;
+
+    void DebugState(UINT64 errorResp,
+                    int writeWindow,
+                    int h2fRawBufChunks,
+                    int readWindow,
+                    int f2hRawBufChunks,
+                    int prevWriteWindow,
+                    int prevH2FRawBufChunks,
+                    int prevReadWindow,
+                    int prevF2HRawBufChunks);
 
   public:
 

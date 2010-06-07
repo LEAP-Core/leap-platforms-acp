@@ -249,3 +249,33 @@ NALLATECH_EDGE_DEVICE_CLASS::DoAALTransaction(
 
 	ACP_MemCopy(hafu, write_pa, write_bytes, read_pa, read_bytes);
 }
+
+
+//
+// Register interface is used for debugging.  These requests are accessed
+// as regWrite, etc. in the edge driver on the FPGA.
+//
+void
+NALLATECH_EDGE_DEVICE_CLASS::DebugRegWrite(
+    UINT16 addr,
+    UINT16 data)
+{
+    ACP_WriteAFURegister(hafu,
+                         FSB_EXP_USER_REG_IF2 + (addr & 0x1fff),
+                         data,
+                         DEVICE_ID(1,0,0));
+}
+
+UINT16
+NALLATECH_EDGE_DEVICE_CLASS::DebugRegRead(
+    UINT16 addr)
+{
+    ACP_REG reg;
+
+    ACP_ReadAFURegister(hafu,
+                        FSB_EXP_USER_REG_IF2 + (addr & 0x1fff),
+                        DEVICE_ID(1,0,0),
+                        &reg);
+
+    return reg;
+}

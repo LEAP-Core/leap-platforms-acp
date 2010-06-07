@@ -32,6 +32,8 @@
 
 using namespace std;
 
+UINT64 prev_write[NALLATECH_MAX_MSG_WORDS];
+UINT64 prev_read[NALLATECH_MAX_MSG_WORDS];
 
 //
 // Pseudo DMA is a bypass of the normal I/O stack to handle scratchpad I/O
@@ -62,7 +64,9 @@ PHYSICAL_CHANNEL_CLASS::PHYSICAL_CHANNEL_CLASS(
     PLATFORMS_MODULE     p,
     PHYSICAL_DEVICES d)
     : PLATFORMS_MODULE_CLASS(p),
-      correctedH2FErrs(0)
+      correctedH2FErrs(0),
+      lastErrorIdx(0),
+      memCopyCalls(0)
 {
     nallatechEdgeDevice = d->GetNallatechEdgeDevice();
 }
@@ -659,7 +663,7 @@ PHYSICAL_CHANNEL_CLASS::InsertCheckBits(
         {
             *m_dst++ = 0;
         }
-        *m_dst = check_bits;
+        *m_dst++ = check_bits;
     }
 
     // Return the updated write buffer size.
@@ -684,6 +688,7 @@ PHYSICAL_CHANNEL_CLASS::ClearSentWords(
     UINT32 clear_words = (writeWindows[activeWriteWindow].nWords *
                           (NALLATECH_RAW_CHUNK_WORDS - 1)) / NALLATECH_RAW_CHUNK_WORDS -
                          unsentBufWords;
+    VERIFYX(clear_words <= NALLATECH_MAX_MSG_WORDS);
 
     // Clear data and check bits
     for (UINT32 w = 0; w < clear_words; w++)
@@ -718,6 +723,11 @@ PHYSICAL_CHANNEL_CLASS::ClearSentWords(
 void
 PHYSICAL_CHANNEL_CLASS::IOThread()
 {
+    int prev_write_window = 0;
+    int prev_read_window = 0;
+    UINT32 prev_write_size = 0;
+    UINT32 prev_read_size = 0;
+
     //
     // This thread starts owning write window 0.
     //
@@ -783,23 +793,26 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
             //
             // The read window is busy.  Just write data to the FPGA.
             //
-            GenCommand(active_write_window,
-                       raw_write_buffer_size,
-                       NALLATECH_MIN_MSG_WORDS,
-                       0,
-                       false);
+            if (writeWindows[active_write_window].nWords > 1)
+            {
+                GenCommand(active_write_window,
+                           raw_write_buffer_size,
+                           NALLATECH_MIN_MSG_WORDS,
+                           0,
+                           false);
 
-            // Use the dummy read window
-            nallatechEdgeDevice->DoAALTransaction(active_write_window,
-                                                  raw_write_buffer_size,
-                                                  NALLATECH_NUM_READ_WINDOWS - 1,
-                                                  NALLATECH_MIN_MSG_WORDS);
+                // Use the dummy read window
+                nallatechEdgeDevice->DoAALTransaction(active_write_window,
+                                                      raw_write_buffer_size,
+                                                      NALLATECH_NUM_READ_WINDOWS - 1,
+                                                      NALLATECH_MIN_MSG_WORDS);
 
-            raw_io_cnt += 1;
-            UINT32 resp = readWindows[NALLATECH_NUM_READ_WINDOWS - 1].data[NALLATECH_MIN_MSG_WORDS - 1];
+                raw_io_cnt += 1;
 
-            // Was there a data error?
-            h2f_err_nack = (resp & 0xffff);
+                // Was there a data error?
+                UINT32 resp = readWindows[NALLATECH_NUM_READ_WINDOWS - 1].data[NALLATECH_MIN_MSG_WORDS - 1];
+                h2f_err_nack = (resp & 0xffff);
+            }
         }
         else
         {
@@ -831,7 +844,7 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
 
             // The last slot in the returned message indicates the useful
             // data in the buffer.
-            UINT32 resp = readWindows[active_read_window].data[raw_read_buffer_size - 1];
+            UINT64 resp = readWindows[active_read_window].data[raw_read_buffer_size - 1];
 
             // The low 16 bits is the ACK/NACK for the host -> FPGA data being valid.
             // The value is the number of chunks not read from the correctly.
@@ -839,6 +852,29 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
 
             UINT32 n_words = resp >> 16;
             VERIFYX(n_words <= raw_read_buffer_size);
+
+            if (((resp >> 32) != 0) ||
+                ((n_words == 0) && ((readWindows[active_read_window].data[0] != 0) ||
+                                    (readWindows[active_read_window].data[1] != 0) ||
+                                    (readWindows[active_read_window].data[2] != 0))))
+            {
+                DebugState(resp,
+                           active_write_window,
+                           raw_write_buffer_size,
+                           active_read_window,
+                           raw_read_buffer_size,
+                           prev_write_window,
+                           prev_write_size,
+                           prev_read_window,
+                           prev_read_size);
+            }
+
+            prev_write_window = active_write_window;
+            prev_write_size = raw_write_buffer_size;
+            prev_read_window = active_read_window;
+            prev_read_size = raw_read_buffer_size;
+            memcpy(prev_write, writeWindows[prev_write_window].sharedBuf, prev_write_size);
+            memcpy(prev_read, readWindows[prev_read_window].data, prev_read_size);
 
             if (n_words != 0)
             {
@@ -888,6 +924,7 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
             }
         }
 
+        memCopyCalls += 1;  // XXX need this or fail!
 
         // Did the host -> FPGA message arrive intact?
         if (h2f_err_nack == 0)
@@ -917,6 +954,7 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
         {
             // Host -> FPGA data transmission error.  Resend the entire message.
             correctedH2FErrs += 1;
+            lastErrorIdx = memCopyCalls;
             writeWindows[active_write_window].nWords = raw_write_buffer_size;
 
             ClearSentWords(active_write_window, h2f_err_nack);
@@ -943,6 +981,41 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
 
         CpuPause();
     }
+}
+
+
+void
+PHYSICAL_CHANNEL_CLASS::DebugState(
+    UINT64 errorResp,
+    int writeWindow,
+    int h2fRawBufChunks,
+    int readWindow,
+    int f2hRawBufChunks,
+    int prevWriteWindow,
+    int prevH2FRawBufChunks,
+    int prevReadWindow,
+    int prevF2HRawBufChunks)
+{
+    int check = nallatechEdgeDevice->DebugRegRead(100);
+    printf("Check value: 0x%04x (%s)\n", check,
+            (check == 0x5309) ? "OK" : "WRONG!");
+
+    printf("Last command: 0x%04x %04x %04x %04x\n",
+            nallatechEdgeDevice->DebugRegRead(3),
+            nallatechEdgeDevice->DebugRegRead(2),
+            nallatechEdgeDevice->DebugRegRead(1),
+            nallatechEdgeDevice->DebugRegRead(0));
+    printf("Current READ state:  %d\n", nallatechEdgeDevice->DebugRegRead(4));
+    printf("READ chunks left:    %d\n", nallatechEdgeDevice->DebugRegRead(6));
+    printf("Current WRITE state: %d\n", nallatechEdgeDevice->DebugRegRead(5));
+    printf("WRITE chunks left:   %d\n", nallatechEdgeDevice->DebugRegRead(7));
+
+    int fifo_state = nallatechEdgeDevice->DebugRegRead(8);
+    printf("readBuffer: %s full\n", (fifo_state & 1) ? "NOT" : "is");
+    printf("writeDataQ: %s empty\n", (fifo_state & 2) ? "NOT" : "is");
+    printf("\n");
+
+    printf("Corrected errors:  %lld\n", correctedH2FErrs);
 }
 
 

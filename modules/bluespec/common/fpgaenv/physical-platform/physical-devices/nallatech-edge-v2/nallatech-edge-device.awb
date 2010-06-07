@@ -11,8 +11,6 @@
 %private edge_comp_util_pkg.vhd
 %private non_system_edge_component.vhd
 %private system_edge_component.vhd
-%sources -t VHD -v PRIVATE usr_reg_slave_if_bram_example.vhd
-%sources -t VHD -v PRIVATE usr_reg_slave_if_io_example.vhd
 
 %private comp_0_base_edge_2rx2tx.ngc
 %private qdr2_ddr2_clocks.vhd

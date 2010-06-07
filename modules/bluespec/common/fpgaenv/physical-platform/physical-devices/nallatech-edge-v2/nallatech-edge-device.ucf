@@ -363,9 +363,34 @@ net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst
 
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q_dD_OUT[*]"     TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/Mram_fifoMem*" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q_dD_OUT[*]"      TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/Mram_fifoMem*"  TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dGDeqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sSyncReg1[*]"   TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/sGEnqPtr[*]"   TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/dSyncReg1[*]"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/dGDeqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/sSyncReg1[*]"  TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q_dD_OUT[*]"      TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sGEnqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sSyncReg1[*]"   TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q_dD_OUT[*]"      TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/sSyncReg1[*]"   TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q_dD_OUT[*]"      TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/sSyncReg1[*]"   TIG;
+
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q_dD_OUT[*]"     TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/Mram_fifoMem*" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/sGEnqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/dSyncReg1[*]"  TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q_dD_OUT[*]"     TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q/Mram_fifoMem*" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q/sGEnqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q/dSyncReg1[*]"  TIG;
