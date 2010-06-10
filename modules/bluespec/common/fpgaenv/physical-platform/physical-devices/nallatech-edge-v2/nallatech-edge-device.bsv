@@ -134,12 +134,20 @@ module mkNallatechEdgeDevice
         <- mkSyncFIFO(2, modelClock, modelReset, userRegClock);
 
     //
-    // Rules for synchronizing from Edge to Model domain
+    // Rules for synchronizing from Edge to Model domain.  Put a FIFO between
+    // between the sync FIFO and the edge to reduce edge timing problems.
     //
-        
-    rule sync_read (True);
-        sync_read_q.enq(prim_device.first());
+
+    FIFO#(NALLATECH_FIFO_DATA) edgeReadQ <- mkFIFO(clocked_by edgeClock, reset_by edgeReset);
+
+    rule edge_read (True);
+        edgeReadQ.enq(prim_device.first());
         prim_device.deq();
+    endrule
+
+    rule sync_read (True);
+        sync_read_q.enq(edgeReadQ.first());
+        edgeReadQ.deq();
     endrule
 
     //

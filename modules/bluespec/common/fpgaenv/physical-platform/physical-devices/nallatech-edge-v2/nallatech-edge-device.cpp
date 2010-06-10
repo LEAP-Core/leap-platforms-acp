@@ -233,13 +233,6 @@ NALLATECH_EDGE_DEVICE_CLASS::DoAALTransaction(
         CallbackExit(1);
     }
 
-    //
-    // BUG: the Nallatech stack cannot handle transactions less than 64 bytes
-    //      in length, so transfer at least 64 bytes both ways
-    //
-
-    int window = NALLATECH_MAX_MSG_WORDS * sizeof(NALLATECH_WORD);
-
     if ((write_bytes < NALLATECH_MIN_MSG_BYTES) ||
         (read_bytes < NALLATECH_MIN_MSG_BYTES))
     {

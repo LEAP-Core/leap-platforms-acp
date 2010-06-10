@@ -27,5 +27,5 @@
 
 %param ACP_FSB_SOCKET 2 "Motherboard Socket ID the ACP stack is plugged into"
 
-%param NALLATECH_MAX_MSG_BYTES 8192 "Maximum bytes in a message"
+%param NALLATECH_MAX_MSG_BYTES 4096 "Maximum bytes in a message"
 %param NALLATECH_MIN_MSG_BYTES   64 "Minimum bytes in a message"

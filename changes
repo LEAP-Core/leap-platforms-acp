@@ -1525,3 +1525,24 @@ Improvements with this version:
     just has compatibility hooks but doesn't support actual register reads.)
   - Removed the example user register port 0 connection to BRAM and port 1
     connection to LEDs since we no longer need the examples.
+
+----------
+mcadler     Date: Fri Jun 11 01:03:10 EDT 2010  CSN: CSN-platform-acp-70
+                  Fri Jun 11 05:03:10 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified           69 
+ nallatech-edge-channel.h  Locally Modified           69 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge-v2
+ nallatech-edge-device.bsv Locally Modified           69 
+ nallatech-edge-device.awb Locally Modified           69 
+ nallatech-edge-device.cpp Locally Modified           69 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.awb Locally Modified           69 
+
+I/O corruption appears to happen only with 8KB buffers.  Reducing the
+maximum buffer size to 4KB works and, strangely, has 10% better performance
+on the workload I was measuring.
