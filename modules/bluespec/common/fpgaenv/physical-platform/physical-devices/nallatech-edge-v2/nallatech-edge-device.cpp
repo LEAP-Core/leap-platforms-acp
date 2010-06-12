@@ -241,6 +241,17 @@ NALLATECH_EDGE_DEVICE_CLASS::DoAALTransaction(
     }
 
 	ACP_MemCopy(hafu, write_pa, write_bytes, read_pa, read_bytes);
+
+    //
+    // Bug in ACP I/O appears to require delay to avoid corruption.  4KB vs.
+    // 8KB packets nearly eliminates the bug completely.  (4KB is now the
+    // default.)
+    //
+    if (read_bytes > (NALLATECH_MAX_MSG_BYTES / 2))
+    {
+        volatile int delay = 5;
+        while (--delay) ;
+    }
 }
 
 

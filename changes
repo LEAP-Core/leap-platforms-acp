@@ -1546,3 +1546,16 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 I/O corruption appears to happen only with 8KB buffers.  Reducing the
 maximum buffer size to 4KB works and, strangely, has 10% better performance
 on the workload I was measuring.
+
+----------
+mcadler     Date: Sat Jun 12 17:18:44 EDT 2010  CSN: CSN-platform-acp-71
+                  Sat Jun 12 21:18:44 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge-v2
+ nallatech-edge-device.cpp Locally Modified           70 
+
+Small chance of data corruption appears to remain with 4KB packets.  Adding
+a very short delay on packets 2KB or greater appears to work well with
+essentially no performance hit.  Simulations have been running for a full
+day now with no corruption.
