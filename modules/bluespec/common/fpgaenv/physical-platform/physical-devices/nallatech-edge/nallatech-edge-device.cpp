@@ -135,7 +135,11 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
 
 	printf("Initializing Base to FPGA 0 LVDS link...  ");
 
-	ret = ACP_Initialize_LVDS_Link(hsocket, DEVICE_ID(0,0,0), DEVICE_ID(1,0,0));
+	ret = ACP_Initialize_LVDS_Link(hsocket,
+                                   DEVICE_ID(0,0,0),
+                                   DEVICE_ID(0,0,0),
+                                   DEVICE_ID(1,0,0),
+                                   DEVICE_ID(1,0,0));
 
 	if (ret != 0)
 	{
@@ -229,13 +233,6 @@ NALLATECH_EDGE_DEVICE_CLASS::DoAALTransaction(
         CallbackExit(1);
     }
 
-    //
-    // BUG: the Nallatech stack cannot handle transactions less than 64 bytes
-    //      in length, so transfer at least 64 bytes both ways
-    //
-
-    int window = NALLATECH_MAX_MSG_WORDS * sizeof(NALLATECH_WORD);
-
     if ((write_bytes < NALLATECH_MIN_MSG_BYTES) ||
         (read_bytes < NALLATECH_MIN_MSG_BYTES))
     {
@@ -244,4 +241,45 @@ NALLATECH_EDGE_DEVICE_CLASS::DoAALTransaction(
     }
 
 	ACP_MemCopy(hafu, write_pa, write_bytes, read_pa, read_bytes);
+
+    //
+    // Bug in ACP I/O appears to require delay to avoid corruption.  4KB vs.
+    // 8KB packets nearly eliminates the bug completely.  (4KB is now the
+    // default.)
+    //
+    if (read_bytes > (NALLATECH_MAX_MSG_BYTES / 2))
+    {
+        volatile int delay = 5;
+        while (--delay) ;
+    }
+}
+
+
+//
+// Register interface is used for debugging.  These requests are accessed
+// as regWrite, etc. in the edge driver on the FPGA.
+//
+void
+NALLATECH_EDGE_DEVICE_CLASS::DebugRegWrite(
+    UINT16 addr,
+    UINT16 data)
+{
+    ACP_WriteAFURegister(hafu,
+                         FSB_EXP_USER_REG_IF2 + (addr & 0x1fff),
+                         data,
+                         DEVICE_ID(1,0,0));
+}
+
+UINT16
+NALLATECH_EDGE_DEVICE_CLASS::DebugRegRead(
+    UINT16 addr)
+{
+    ACP_REG reg;
+
+    ACP_ReadAFURegister(hafu,
+                        FSB_EXP_USER_REG_IF2 + (addr & 0x1fff),
+                        DEVICE_ID(1,0,0),
+                        &reg);
+
+    return reg;
 }

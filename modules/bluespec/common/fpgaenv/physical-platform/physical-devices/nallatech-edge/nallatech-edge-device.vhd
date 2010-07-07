@@ -59,7 +59,8 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use ieee.numeric_std.all;
 
-
+use work.edge_comp_defs_pkg.all;
+use work.edge_comp_util_pkg.all;
 
 entity nallatech_edge_vhdl is 
 	port( 
@@ -77,6 +78,7 @@ entity nallatech_edge_vhdl is
 		reg_en_z : in std_logic;
 		reg_rdy_z : out std_logic;
 		reg_rd_wr_z : in std_logic;
+
 		lvds_rx_lane_p : in std_logic_vector(33 downto 0);
 		lvds_rx_lane_n : in std_logic_vector(33 downto 0);
 		lvds_rx_clk_p : in std_logic_vector(1 downto 0);
@@ -85,6 +87,10 @@ entity nallatech_edge_vhdl is
 		lvds_tx_lane_n : out std_logic_vector(33 downto 0);
 		lvds_tx_clk_p : out std_logic_vector(1 downto 0);
 		lvds_tx_clk_n : out std_logic_vector(1 downto 0);
+        
+        -- lvds_link_sc_in  : in  std_logic_vector(4 downto 0);
+        -- lvds_link_sc_out : out std_logic_vector(4 downto 0);
+        
 		eeprom_scl : out std_logic;
 		eeprom_sda : inout std_logic;
 		sys_led_out : out std_logic_vector(5 downto 0);
@@ -99,12 +105,12 @@ entity nallatech_edge_vhdl is
         clk_out    : out std_logic;     -- interface clock
         rst_n_out  : out std_logic;     -- interface reset
 
-	ram_clk0   : out std_logic;
+        ram_clk0   : out std_logic;
         ram_clk200 : out std_logic;
-	ram_clk270 : out std_logic;
-	ram_clk_locked : out std_logic;
+        ram_clk270 : out std_logic;
+        ram_clk_locked : out std_logic;
         
-        -- user interface
+        -- user interface (channel)
         
         tx_data_valid    : in std_logic;
         tx_data          : in std_logic_vector(255 downto 0);
@@ -112,7 +118,18 @@ entity nallatech_edge_vhdl is
 
         rx_data_read     : in std_logic;
         rx_data_ready    : out std_logic; 
-        rx_data          : out std_logic_vector(255 downto 0)
+        rx_data          : out std_logic_vector(255 downto 0);
+
+        -- user interface (register)
+
+        user_reg_clk_out   : out std_logic;
+        user_reg_wdata_out : out std_logic_vector(15 downto 0);
+        user_reg_addr_out  : out std_logic_vector(12 downto 0);
+        user_reg_rden_out  : out std_logic;
+        user_reg_wren_out  : out std_logic;
+        user_reg_wrack_in  : in  std_logic;
+        user_reg_rdy_in    : in  std_logic;
+        user_reg_rdata_in  : in  std_logic_vector(15 downto 0)
 
 		);	
 end nallatech_edge_vhdl;
@@ -121,10 +138,18 @@ architecture rtl of nallatech_edge_vhdl is
 	
 	---------------------------------------------------------------------------
 	-- Component declaration of the "m2e_edge(rtl)" unit
-	component fsb_compute_edge_2rx2tx
+	component system_edge_component
+      generic(local_id:integer;
+              local_module_type:integer;
+              external_id:integer;
+              rx_lanes:integer;
+              tx_lanes:integer
+              );
 		port(
 			clk100p : in std_logic;
 			clk100n : in std_logic;
+
+            --expansion bus interface
 			reg_clk : in std_logic;
 			reg_reset_z : in std_logic;
 			config_data : inout std_logic_vector(7 downto 0);
@@ -134,7 +159,10 @@ architecture rtl of nallatech_edge_vhdl is
 			reg_en_z : in std_logic;
 			reg_rdy_z : out std_logic;
 			reg_rd_wr_z : in std_logic;
-			lvds_rx_lane_p : in std_logic_vector(33 downto 0);
+
+
+            --high speed lvds downto the m2b
+            lvds_rx_lane_p : in std_logic_vector(33 downto 0);
 			lvds_rx_lane_n : in std_logic_vector(33 downto 0);
 			lvds_rx_clk_p : in std_logic_vector(1 downto 0);
 			lvds_rx_clk_n : in std_logic_vector(1 downto 0);
@@ -142,19 +170,38 @@ architecture rtl of nallatech_edge_vhdl is
 			lvds_tx_lane_n : out std_logic_vector(33 downto 0);
 			lvds_tx_clk_p : out std_logic_vector(1 downto 0);
 			lvds_tx_clk_n : out std_logic_vector(1 downto 0);
-			eeprom_scl : out std_logic;
+
+            lvds_link_sc_out : out STD_LOGIC_VECTOR(4 downto 0);
+            lvds_link_sc_in : in STD_LOGIC_VECTOR(4 downto 0); 
+				
+            intra_mod_lvds_comms_control:inout std_logic_vector(47 downto 0);
+            upper_mod_lvds_comms_control:inout std_logic_vector(47 downto 0);
+
+            --serial eeprom interface
+            eeprom_scl : out std_logic;
 			eeprom_sda : inout std_logic;
+            
 			sys_led_out : out std_logic_vector(5 downto 0);
 			ram_leds:out std_logic_vector(1 downto 0);
 			ram_pwr_on : out std_logic;
 			ram_pg : in std_logic;
 			mgt_pg : in std_logic;
+
+            -----------------------------------------------------------------------
+            --user interface
+		
+            --ram clocks -- Angshuman - not RAM clocks
 			osc_clk: out std_logic;
-			ram_clk0 : out std_logic;
-			ram_clk180 : out std_logic;
-			ram_clk270 : out std_logic;
-                        clk200mhz : out std_logic;
-			ram_clk_locked : out std_logic;
+            clk200mhz : out std_logic;
+            clk200mhz_locked : out std_logic;
+            
+            -- Angshuman -- RAM clocks moved to separate component
+			--ram_clk0 : out std_logic;
+			--ram_clk180 : out std_logic;
+			--ram_clk270 : out std_logic;
+			--ram_clk_locked : out std_logic;
+
+            --user reg clocks 
 			user_reg_clk : out std_logic;
 			user_interupt : in std_logic_vector(3 downto 0);
 			user_reg_wdata : out std_logic_vector(15 downto 0);
@@ -166,8 +213,10 @@ architecture rtl of nallatech_edge_vhdl is
 			user_reg_rdata1 : in std_logic_vector(15 downto 0);
 			user_reg_rdata2 : in std_logic_vector(15 downto 0);
 			user_reg_rdata3 : in std_logic_vector(15 downto 0);
-			
+
+            --afu interface
 			clk : in std_logic;
+            
 			tx_data_valid : in std_logic;
 			tx_data : in std_logic_vector(255 downto 0);
 			tx_data_almost_full : out std_logic;
@@ -182,18 +231,54 @@ architecture rtl of nallatech_edge_vhdl is
 			);
 	end component;
 	
-	---------------------------------------------------------------------------
+    component qdr2_ddr2_clocks is
+      port (
+        -- Initialization control and reset
+        init                                                  : out std_logic;
+        pll_rst                                               : in  std_logic;
+        -- input memory clock
+        sys_clk_in                                            : in  std_logic;
+        -- sys_clk_n                                             : in  std_logic;
+        -- sys_clk                                               : in  std_logic;
+        -- ddr2 clock signals node 0
+        mem0_ddr2_clk0                                        : out std_logic;
+        mem0_ddr2_clk90                                       : out std_logic;
+        mem0_ddr2_sys_reset                                   : out std_logic;
+        -- ddr2 clock signals node 1
+        mem1_ddr2_clk0                                        : out std_logic;
+        mem1_ddr2_clk90                                       : out std_logic;
+        mem1_ddr2_sys_reset                                   : out std_logic;  
+        -- qdr2 clock signals node 0
+        mem0_qdr2_clk0                                        : out std_logic;
+        mem0_qdr2_clk180                                      : out std_logic;
+        mem0_qdr2_clk270                                      : out std_logic;
+        mem0_qdr2_sys_reset                                   : out std_logic;
+        -- qdr2 clock signals node 0
+        mem1_qdr2_clk0                                        : out std_logic;         
+        mem1_qdr2_clk180                                      : out std_logic;       
+        mem1_qdr2_clk270                                      : out std_logic;
+        mem1_qdr2_sys_reset                                   : out std_logic
+        );
+    end component;
+
+  ---------------------------------------------------------------------------
 	--M2E edge ram clock signals, now outputs:
 	--signal ram_clk0 : std_logic;
-	signal ram_clk180 : std_logic;
+	--signal ram_clk180 : std_logic;
 	--signal ram_clk270 : std_logic;
 	signal clk200mhz : std_logic;
-	signal i_ram_clk_locked : std_logic;
+    signal clk200mhz_locked : std_logic;
+	signal i_ram_clk_locked_n : std_logic;
 	
     -- raw oscillator clock
-    signal osc_clk : std_logic;
-    signal raw_clk_c : std_logic;
+    signal osc_clk_c : std_logic;
+    -- signal raw_clk_c : std_logic;
     
+    -- the clock at which the Bluespec-Edge interface will be clocked
+    --alias ifc_clk   : std_logic is osc_clk_c;
+    alias ifc_clk   : std_logic is clk200mhz;
+    alias ifc_rst_n : std_logic is clk200mhz_locked;
+            
     -- Angshuman - we seem to need these IBUFs
     signal ram_pg_buf : std_logic;
     signal mgt_pg_buf : std_logic;
@@ -215,9 +300,6 @@ architecture rtl of nallatech_edge_vhdl is
 	---------------------------------------------------------------------------
 	--AFU V0.7 interface signals
 	
-	--create an alias of the ram clock ram_clk0 to use as the data clk
-	alias clk : std_logic is ram_clk0;	
-	
 	--write (to fsb) interface						
 	signal tx_data_valid_c : std_logic;
 	signal tx_data_c : std_logic_vector(255 downto 0);
@@ -229,6 +311,9 @@ architecture rtl of nallatech_edge_vhdl is
 	signal rx_data_read_c: std_logic;
 	signal rx_data_almost_full_c :std_logic;
 	signal rx_data_empty_c:std_logic;
+
+    signal intra_mod_lvds_comms_control: std_logic_vector(47 downto 0);
+    signal upper_mod_lvds_comms_control: std_logic_vector(47 downto 0);
 
 	---------------------------------------------------------------------------
 	--LED and alarm signals
@@ -242,31 +327,31 @@ architecture rtl of nallatech_edge_vhdl is
 	
 	---------------------------------------------------------------------------
 	-- Component declaration of usr_reg_slave_if_bram_example
-	component usr_reg_slave_if_bram_example
-		port(
-			clk : in std_logic;
-			user_reg_wdata : in std_logic_vector(15 downto 0);
-			user_reg_addr : in std_logic_vector(12 downto 0);
-			user_reg_rden : in std_logic;
-			user_reg_wren : in std_logic;
-			user_reg_rdata : out std_logic_vector(15 downto 0);
-			user_reg_rdy : out std_logic);
-	end component;	 
+	--component usr_reg_slave_if_bram_example
+	--	port(
+	--		clk : in std_logic;
+	--		user_reg_wdata : in std_logic_vector(15 downto 0);
+	--		user_reg_addr : in std_logic_vector(12 downto 0);
+	--		user_reg_rden : in std_logic;
+	--		user_reg_wren : in std_logic;
+	--		user_reg_rdata : out std_logic_vector(15 downto 0);
+	--		user_reg_rdy : out std_logic);
+	--end component;	 
 	
 	
 	---------------------------------------------------------------------------
 	-- Component declaration of usr_reg_slave_if_io_example
-	component usr_reg_slave_if_io_example
-		port(
-			clk : in std_logic;
-			user_reg_wdata : in std_logic_vector(15 downto 0);
-			user_reg_addr : in std_logic_vector(12 downto 0);
-			user_reg_rden : in std_logic;
-			user_reg_wren : in std_logic;
-			user_reg_rdata : out std_logic_vector(15 downto 0);
-			user_reg_rdy : out std_logic;
-			leds : out std_logic_vector(3 downto 0));
-	end component;
+	--component usr_reg_slave_if_io_example
+	--	port(
+	--		clk : in std_logic;
+	--		user_reg_wdata : in std_logic_vector(15 downto 0);
+	--		user_reg_addr : in std_logic_vector(12 downto 0);
+	--		user_reg_rden : in std_logic;
+	--		user_reg_wren : in std_logic;
+	--		user_reg_rdata : out std_logic_vector(15 downto 0);
+	--		user_reg_rdy : out std_logic;
+	--		leds : out std_logic_vector(3 downto 0));
+	--end component;
 	
     component IBUFGDS
         port (O  : out STD_ULOGIC;
@@ -285,7 +370,14 @@ begin
 	---------------------------------------------------------------------------
 	--instantiate the M2E edge component configured for 4 transmit LVDS banks
 	--to the M2B, 2 recieve LVDS banks from the M2B and a ram speed of 200MHz
-	fsb_compute_edge_inst :fsb_compute_edge_2rx2tx
+	fsb_compute_edge_inst : system_edge_component
+    generic map(
+		local_id => DEVICE_ID(1,0,0),
+		local_module_type => FSB_COMPUTE_MOD_TYPE,
+		external_id => DEVICE_ID(0,0,0),
+		rx_lanes => 2,
+		tx_lanes => 2
+        )
 	port map(
 		-------------------------------
 		--system interface (should be connected to top level ports)	
@@ -309,7 +401,14 @@ begin
 		lvds_tx_lane_n => lvds_tx_lane_n,
 		lvds_tx_clk_p => lvds_tx_clk_p,
 		lvds_tx_clk_n => lvds_tx_clk_n,
-		eeprom_scl => eeprom_scl,
+
+        lvds_link_sc_out => open,
+        lvds_link_sc_in => (others => '0'),
+		
+        intra_mod_lvds_comms_control => intra_mod_lvds_comms_control,
+        upper_mod_lvds_comms_control => upper_mod_lvds_comms_control,
+
+        eeprom_scl => eeprom_scl,
 		eeprom_sda => eeprom_sda,
 		sys_led_out => sys_led_out,
 		ram_pwr_on => ram_pwr_on,
@@ -320,13 +419,18 @@ begin
 		-------------------------------
 		--User interfaces to the M2E edge component
 		-------------------------------
-		--RAM clock interface 
-		osc_clk => osc_clk,
-		ram_clk0 => ram_clk0,
-		ram_clk180 => ram_clk180,
-		ram_clk270 => ram_clk270,
+		--RAM clock interface -- Angshuman - these aren't RAM clocks
+		osc_clk => osc_clk_c,
 		clk200mhz => clk200mhz,
-		ram_clk_locked => i_ram_clk_locked, 
+        clk200mhz_locked => clk200mhz_locked,
+
+        -- Angshuman - the real RAM clocks that used to be exported from
+        -- the previous version of the edge component. Now we synthesize
+        -- them using a separate clocks module
+		--ram_clk0 => ram_clk0,
+		--ram_clk180 => ram_clk180,
+		--ram_clk270 => ram_clk270,
+        --ram_clk_locked => i_ram_clk_locked, 
 		-------------------------------
 		--user register slave interface
 		user_reg_clk => user_reg_clk,
@@ -342,7 +446,7 @@ begin
 		user_reg_rdata3 => user_reg_rdata3,	
 		-------------------------------
 		--AFU v0.7 interface
-		clk => clk,
+		clk => ifc_clk,
 		tx_data_valid => tx_data_valid_c,
 		
 		tx_data => tx_data_c,
@@ -358,6 +462,34 @@ begin
 		ram_leds=>ram_leds
 		);
 	
+    sram_clocks_module: qdr2_ddr2_clocks
+    port map (
+        -- Initialization control and reset
+        init => open,
+        pll_rst => '0',
+        -- input memory clock
+        sys_clk_in => osc_clk_c,
+        -- sys_clk_n => clk100n,
+        -- sys_clk => clk100p,
+        -- ddr2 clock signals node 0
+        mem0_ddr2_clk0 => open,
+        mem0_ddr2_clk90 => open,
+        mem0_ddr2_sys_reset => open,
+        -- ddr2 clock signals node 1
+        mem1_ddr2_clk0 => open,
+        mem1_ddr2_clk90 => open,
+        mem1_ddr2_sys_reset => open,
+        -- qdr2 clock signals node 0
+        mem0_qdr2_clk0 => ram_clk0,
+        mem0_qdr2_clk180 => open,
+        mem0_qdr2_clk270 => ram_clk270,
+        mem0_qdr2_sys_reset => i_ram_clk_locked_n,
+        -- qdr2 clock signals node 0
+        mem1_qdr2_clk0 => open,
+        mem1_qdr2_clk180 => open,
+        mem1_qdr2_clk270 => open,
+        mem1_qdr2_sys_reset => open
+        );
 	
 	
 	---------------------------------------------------------------------------
@@ -373,13 +505,19 @@ begin
 
     -- export clocks and reset
 
-    -- raw_clk_out <= osc_clk;
-    -- raw_clk_out <= raw_clk_c;
-    raw_clk_out <= clk;
-    clk_out     <= clk;
-    rst_n_out   <= i_ram_clk_locked;
-    ram_clk_locked <= i_ram_clk_locked;
-    ram_clk200  <= clk200MHz;
+    -- ifc_clk is an alias of some other clock net (grep this file)
+
+    clk_out     <= ifc_clk;
+    rst_n_out   <= ifc_rst_n;
+    raw_clk_out <= ifc_clk;             -- for some reason we send NOT the real
+                                        -- 100MHz raw clock but the cooked 200MHz
+                                        -- clock out as the "raw" clock
+    ram_clk_locked <= not i_ram_clk_locked_n;
+    ram_clk200     <= clk200MHz;
+
+	-- Must tie unused lvds communications control bus slice (46 downto 30) to '0'
+	upper_mod_lvds_comms_control(46 downto 30)<=(others=>'0');
+	intra_mod_lvds_comms_control(46 downto 30)<=(others=>'0');
 
     -- Angshuman - we seem to need these explicit IBUFs
     RAM_PG_IBUF : IBUF
@@ -405,36 +543,48 @@ begin
 	--User register slave interface connections
 	
 	--connect up the block ram example to user register port 0
-	usr_reg_slave_if_bram_example_inst : usr_reg_slave_if_bram_example
-	port map(
-		clk => user_reg_clk,
-		user_reg_wdata => user_reg_wdata,
-		user_reg_addr => user_reg_addr,
-		user_reg_rden => user_reg_rden(0),
-		user_reg_wren => user_reg_wren(0),
-		user_reg_rdata => user_reg_rdata0,
-		user_reg_rdy => user_reg_rdy(0)
-		);
+	--usr_reg_slave_if_bram_example_inst : usr_reg_slave_if_bram_example
+	--port map(
+	--	clk => user_reg_clk,
+	--	user_reg_wdata => user_reg_wdata,
+	--	user_reg_addr => user_reg_addr,
+	--	user_reg_rden => user_reg_rden(0),
+	--	user_reg_wren => user_reg_wren(0),
+	--	user_reg_rdata => user_reg_rdata0,
+	--	user_reg_rdy => user_reg_rdy(0)
+	--	);
+	--Tie off reg_rdy instead of instantiating if_bram_example
+	user_reg_rdy(0)<='0';
 	
 	--connect up the IO example to user register port 1
-	usr_reg_slave_if_io_example_inst : usr_reg_slave_if_io_example
-	port map(
-		clk => user_reg_clk,
-		user_reg_wdata => user_reg_wdata,
-		user_reg_addr => user_reg_addr,
-		user_reg_rden => user_reg_rden(1),
-		user_reg_wren => user_reg_wren(1),
-		user_reg_rdata => user_reg_rdata1,
-		user_reg_rdy => user_reg_rdy(1),
-		leds => leds
-		);
+	--usr_reg_slave_if_io_example_inst : usr_reg_slave_if_io_example
+	--port map(
+	--	clk => user_reg_clk,
+	--	user_reg_wdata => user_reg_wdata,
+	--	user_reg_addr => user_reg_addr,
+	--	user_reg_rden => user_reg_rden(1),
+	--	user_reg_wren => user_reg_wren(1),
+	--	user_reg_rdata => user_reg_rdata1,
+	--	user_reg_rdy => user_reg_rdy(1),
+	--	leds => leds
+	--	);
+	--Tie off reg_rdy instead of instantiating if_io_example
+	user_reg_rdy(1)<='0';
 	
-		
-	--tie off the user register interface port rdy signals (ports 2 and 3).
-	--By doing do ensuring that if port 2 or 3 is accidently accessed by
+    -- expose user register port 2 to Bluespec
+    user_reg_clk_out   <= user_reg_clk;
+    user_reg_wdata_out <= user_reg_wdata;
+    user_reg_addr_out  <= user_reg_addr;
+    user_reg_rden_out  <= user_reg_rden(2);
+    user_reg_wren_out  <= user_reg_wren(2);
+    user_reg_rdy(2)    <= user_reg_rdy_in or user_reg_wrack_in;
+    user_reg_rdata2    <= user_reg_rdata_in;
+    
+	--tie off the user register interface port rdy signals (port 3).
+	--By doing do ensuring that if port 3 is accidently accessed by
 	--software that the controlling state machine within the edge and M2B
 	--does not hang waiting for a response.
-	user_reg_rdy(3 downto 2)<="00";
+	user_reg_rdy(3)<='0';
 	
 	
 end rtl;

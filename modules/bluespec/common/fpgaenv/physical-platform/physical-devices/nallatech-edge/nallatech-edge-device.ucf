@@ -45,247 +45,240 @@ NET "CLK100N" IOSTANDARD = "LVDS_25" | LOC = AL26 | DIFF_TERM = "TRUE";
 #####################################################################################
 ##LVDS COMMS TO M2B
 ###############################
-# LANE 02	   	 tx 0:17
+
+ # LVDS IO LANE 01 FPGA 0 IO bank 13
+ 
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y5" ;
+NET  "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
 
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y7" ;
-NET  "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
-#pair1
-NET "lvds_rx_lane_p<0>" IOSTANDARD = "LVDS_25" | LOC = AA34 | diff_term="true";
-NET "lvds_rx_lane_n<0>" IOSTANDARD = "LVDS_25" | LOC = Y34 | diff_term="true";
-#pair2
-NET "lvds_rx_lane_p<1>" IOSTANDARD = "LVDS_25" | LOC = AA35 | diff_term="true";
-NET "lvds_rx_lane_n<1>" IOSTANDARD = "LVDS_25" | LOC = AA36 | diff_term="true";
-#pair3
-NET "lvds_rx_lane_p<2>" IOSTANDARD = "LVDS_25" | LOC = Y35 | diff_term="true";
-NET "lvds_rx_lane_n<2>" IOSTANDARD = "LVDS_25" | LOC = W35 | diff_term="true";
-#pair4
-NET "lvds_rx_lane_p<3>" IOSTANDARD = "LVDS_25" | LOC = V39 | diff_term="true";
-NET "lvds_rx_lane_n<3>" IOSTANDARD = "LVDS_25" | LOC = W38 | diff_term="true";
-#pair5
-NET "lvds_rx_lane_p<4>" IOSTANDARD = "LVDS_25" | LOC = G38 | diff_term="true";
-NET "lvds_rx_lane_n<4>" IOSTANDARD = "LVDS_25" | LOC = G39 | diff_term="true";
-#pair6
-NET "lvds_rx_lane_p<5>" IOSTANDARD = "LVDS_25" | LOC = E39 | diff_term="true";
-NET "lvds_rx_lane_n<5>" IOSTANDARD = "LVDS_25" | LOC = E40 | diff_term="true";
-#pair7
-NET "lvds_rx_lane_p<6>" IOSTANDARD = "LVDS_25" | LOC = H38 | diff_term="true";
-NET "lvds_rx_lane_n<6>" IOSTANDARD = "LVDS_25" | LOC = H39 | diff_term="true";
-#pair8
-NET "lvds_rx_lane_p<7>" IOSTANDARD = "LVDS_25" | LOC = F39 | diff_term="true";
-NET "lvds_rx_lane_n<7>" IOSTANDARD = "LVDS_25" | LOC = F40 | diff_term="true";
-#pair9
-NET "lvds_rx_lane_p<8>" IOSTANDARD = "LVDS_25" | LOC = T39 | diff_term="true";
-NET "lvds_rx_lane_n<8>" IOSTANDARD = "LVDS_25" | LOC = U39 | diff_term="true";
-#pair10
-NET "lvds_rx_lane_p<9>" IOSTANDARD = "LVDS_25" | LOC = T37 | diff_term="true";
-NET "lvds_rx_lane_n<9>" IOSTANDARD = "LVDS_25" | LOC = U38 | diff_term="true";
-#pair11
-NET "lvds_rx_lane_p<10>" IOSTANDARD = "LVDS_25" | LOC = P38 | diff_term="true";
-NET "lvds_rx_lane_n<10>" IOSTANDARD = "LVDS_25" | LOC = N38 | diff_term="true";
-#pair12
-NET "lvds_rx_lane_p<11>" IOSTANDARD = "LVDS_25" | LOC = R37 | diff_term="true";
-NET "lvds_rx_lane_n<11>" IOSTANDARD = "LVDS_25" | LOC = P37 | diff_term="true";
-#pair13
-NET "lvds_rx_lane_p<12>" IOSTANDARD = "LVDS_25" | LOC = H40 | diff_term="true";
-NET "lvds_rx_lane_n<12>" IOSTANDARD = "LVDS_25" | LOC = J40 | diff_term="true";
-#pair12
-NET "lvds_rx_lane_p<13>" IOSTANDARD = "LVDS_25" | LOC = K38 | diff_term="true";
-NET "lvds_rx_lane_n<13>" IOSTANDARD = "LVDS_25" | LOC = J38 | diff_term="true";
-#pair13
-NET "lvds_rx_lane_p<14>" IOSTANDARD = "LVDS_25" | LOC = K40 | diff_term="true";
-NET "lvds_rx_lane_n<14>" IOSTANDARD = "LVDS_25" | LOC = K39 | diff_term="true";
-#pair14
-NET "lvds_rx_lane_n<15>" IOSTANDARD = "LVDS_25" | LOC = R38 | diff_term="true";
-NET "lvds_rx_lane_p<15>" IOSTANDARD = "LVDS_25" | LOC = R39 | diff_term="true";
-#pair15
-NET "lvds_rx_lane_p<16>" IOSTANDARD = "LVDS_25" | LOC = N39 | diff_term="true";
-NET "lvds_rx_lane_n<16>" IOSTANDARD = "LVDS_25" | LOC = M39 | diff_term="true";
-#pair16
-NET "lvds_rx_clk_p<0>" IOSTANDARD = "LVDS_25" | LOC = M38 | diff_term="true";
-NET "lvds_rx_clk_n<0>" IOSTANDARD = "LVDS_25" | LOC = L39 | diff_term="true";
+NET "lvds_rx_lane_p[17]" IOSTANDARD = "LVDS_25" | LOC = AH40 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[17]" IOSTANDARD = "LVDS_25" | LOC = AJ40 | DIFF_TERM="TRUE";
 
-##########################
-# LANE 3 recieve 51:67
+NET "lvds_rx_lane_p[18]" IOSTANDARD = "LVDS_25" | LOC = AT41 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[18]" IOSTANDARD = "LVDS_25" | LOC = AU41 | DIFF_TERM="TRUE";
 
+NET "lvds_rx_lane_p[19]" IOSTANDARD = "LVDS_25" | LOC = AG42 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[19]" IOSTANDARD = "LVDS_25" | LOC = AH41 | DIFF_TERM="TRUE";
 
+NET "lvds_rx_lane_p[20]" IOSTANDARD = "LVDS_25" | LOC = AP42 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[20]" IOSTANDARD = "LVDS_25" | LOC = AP41 | DIFF_TERM="TRUE";
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y9" ;
-NET  "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+NET "lvds_rx_lane_p[21]" IOSTANDARD = "LVDS_25" | LOC = AF40 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[21]" IOSTANDARD = "LVDS_25" | LOC = AG41 | DIFF_TERM="TRUE";
 
+NET "lvds_rx_lane_p[22]" IOSTANDARD = "LVDS_25" | LOC = AL42 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[22]" IOSTANDARD = "LVDS_25" | LOC = AM42 | DIFF_TERM="TRUE";
 
-#apir1
-NET "lvds_rx_lane_p<17>" IOSTANDARD = "LVDS_25" | LOC = T32 | diff_term="true";
-NET "lvds_rx_lane_n<17>" IOSTANDARD = "LVDS_25" | LOC = U32 | diff_term="true";
-#pair2
-NET "lvds_rx_lane_p<18>" IOSTANDARD = "LVDS_25" | LOC = P33 | diff_term="true";
-NET "lvds_rx_lane_n<18>" IOSTANDARD = "LVDS_25" | LOC = P32 | diff_term="true";
-#pair3
-NET "lvds_rx_lane_p<19>" IOSTANDARD = "LVDS_25" | LOC = R33 | diff_term="true";
-NET "lvds_rx_lane_n<19>" IOSTANDARD = "LVDS_25" | LOC = R32 | diff_term="true";
-#pair4
-NET "lvds_rx_lane_p<20>" IOSTANDARD = "LVDS_25" | LOC = N31 | diff_term="true";
-NET "lvds_rx_lane_n<20>" IOSTANDARD = "LVDS_25" | LOC = P31 | diff_term="true";
-#pair5
-NET "lvds_rx_lane_p<21>" IOSTANDARD = "LVDS_25" | LOC = K33 | diff_term="true";
-NET "lvds_rx_lane_n<21>" IOSTANDARD = "LVDS_25" | LOC = J33 | diff_term="true";
-#pair6
-NET "lvds_rx_lane_p<22>" IOSTANDARD = "LVDS_25" | LOC = F31 | diff_term="true";
-NET "lvds_rx_lane_n<22>" IOSTANDARD = "LVDS_25" | LOC = F32 | diff_term="true";
-#pair7
-NET "lvds_rx_lane_p<23>" IOSTANDARD = "LVDS_25" | LOC = E32 | diff_term="true";
-NET "lvds_rx_lane_n<23>" IOSTANDARD = "LVDS_25" | LOC = E33 | diff_term="true";
-#pair8
-NET "lvds_rx_lane_p<24>" IOSTANDARD = "LVDS_25" | LOC = G32 | diff_term="true";
-NET "lvds_rx_lane_n<24>" IOSTANDARD = "LVDS_25" | LOC = G31 | diff_term="true";
-#pair9
-NET "lvds_rx_clk_p<1>" IOSTANDARD = "LVDS_25" | LOC = F35 | diff_term="true";
-NET "lvds_rx_clk_n<1>" IOSTANDARD = "LVDS_25" | LOC = E35 | diff_term="true";
+NET "lvds_rx_lane_p[23]" IOSTANDARD = "LVDS_25" | LOC = AF41 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[23]" IOSTANDARD = "LVDS_25" | LOC = AF42 | DIFF_TERM="TRUE";
 
-NET "lvds_rx_lane_p<25>" IOSTANDARD = "LVDS_25" | LOC = E34 | diff_term="true";
-NET "lvds_rx_lane_n<25>" IOSTANDARD = "LVDS_25" | LOC = F34 | diff_term="true";
+NET "lvds_rx_lane_p[24]" IOSTANDARD = "LVDS_25" | LOC = AE40 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[24]" IOSTANDARD = "LVDS_25" | LOC = AD40 | DIFF_TERM="TRUE";
 
-NET "lvds_rx_lane_p<26>" IOSTANDARD = "LVDS_25" | LOC = M34 | diff_term="true";
-NET "lvds_rx_lane_n<26>" IOSTANDARD = "LVDS_25" | LOC = M33 | diff_term="true";
+NET "lvds_rx_clk_p[1]" IOSTANDARD = "LVDS_25" | LOC = AB37 | DIFF_TERM="TRUE";
+NET "lvds_rx_clk_n[1]" IOSTANDARD = "LVDS_25" | LOC = AB38 | DIFF_TERM="TRUE";
 
-NET "lvds_rx_lane_p<27>" IOSTANDARD = "LVDS_25" | LOC = H34 | diff_term="true";
-NET "lvds_rx_lane_n<27>" IOSTANDARD = "LVDS_25" | LOC = G34 | diff_term="true";
+NET "lvds_rx_lane_p[25]" IOSTANDARD = "LVDS_25" | LOC = AC40 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[25]" IOSTANDARD = "LVDS_25" | LOC = AC39 | DIFF_TERM="TRUE";
 
-NET "lvds_rx_lane_p<28>" IOSTANDARD = "LVDS_25" | LOC = H31 | diff_term="true";
-NET "lvds_rx_lane_n<28>" IOSTANDARD = "LVDS_25" | LOC = J31 | diff_term="true";
+NET "lvds_rx_lane_p[26]" IOSTANDARD = "LVDS_25" | LOC = AC41 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[26]" IOSTANDARD = "LVDS_25" | LOC = AD42 | DIFF_TERM="TRUE";
 
-NET "lvds_rx_lane_p<29>" IOSTANDARD = "LVDS_25" | LOC = G33 | diff_term="true";
-NET "lvds_rx_lane_n<29>" IOSTANDARD = "LVDS_25" | LOC = H33 | diff_term="true";
+NET "lvds_rx_lane_p[27]" IOSTANDARD = "LVDS_25" | LOC = AE42 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[27]" IOSTANDARD = "LVDS_25" | LOC = AD41 | DIFF_TERM="TRUE";
 
-NET "lvds_rx_lane_p<30>" IOSTANDARD = "LVDS_25" | LOC = K32 | diff_term="true";
-NET "lvds_rx_lane_n<30>" IOSTANDARD = "LVDS_25" | LOC = J32 | diff_term="true";
+NET "lvds_rx_lane_p[28]" IOSTANDARD = "LVDS_25" | LOC = AB39 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[28]" IOSTANDARD = "LVDS_25" | LOC = AC38 | DIFF_TERM="TRUE";
 
-NET "lvds_rx_lane_p<31>" IOSTANDARD = "LVDS_25" | LOC = N33 | diff_term="true";
-NET "lvds_rx_lane_n<31>" IOSTANDARD = "LVDS_25" | LOC = N34 | diff_term="true";
+NET "lvds_rx_lane_p[29]" IOSTANDARD = "LVDS_25" | LOC = AB41 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[29]" IOSTANDARD = "LVDS_25" | LOC = AB42 | DIFF_TERM="TRUE";
 
-NET "lvds_rx_lane_p<32>" IOSTANDARD = "LVDS_25" | LOC = M32 | diff_term="true";
-NET "lvds_rx_lane_n<32>" IOSTANDARD = "LVDS_25" | LOC = M31 | diff_term="true";
+NET "lvds_rx_lane_p[30]" IOSTANDARD = "LVDS_25" | LOC = AJ42 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[30]" IOSTANDARD = "LVDS_25" | LOC = AJ41 | DIFF_TERM="TRUE";
 
-NET "lvds_rx_lane_p<33>" IOSTANDARD = "LVDS_25" | LOC = L32 | diff_term="true";
-NET "lvds_rx_lane_n<33>" IOSTANDARD = "LVDS_25" | LOC = L31 | diff_term="true";
+NET "lvds_rx_lane_p[31]" IOSTANDARD = "LVDS_25" | LOC = AR42 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[31]" IOSTANDARD = "LVDS_25" | LOC = AT42 | DIFF_TERM="TRUE";
 
+NET "lvds_rx_lane_p[32]" IOSTANDARD = "LVDS_25" | LOC = AL41 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[32]" IOSTANDARD = "LVDS_25" | LOC = AK42 | DIFF_TERM="TRUE";
 
-##########################
-# LANE 4 BANK 13 rx 0:17
+NET "lvds_rx_lane_p[33]" IOSTANDARD = "LVDS_25" | LOC = AM41 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[33]" IOSTANDARD = "LVDS_25" | LOC = AN41 | DIFF_TERM="TRUE";
 
-#pair1
-NET "lvds_tx_lane_p<0>" IOSTANDARD = "LVDS_25" | LOC = AC33;
-NET "lvds_tx_lane_n<0>" IOSTANDARD = "LVDS_25" | LOC = AD32;
-#pair2
-NET "lvds_tx_lane_p<1>" IOSTANDARD = "LVDS_25" | LOC = AD33;
-NET "lvds_tx_lane_n<1>" IOSTANDARD = "LVDS_25" | LOC = AE32;
-#pair3
-NET "lvds_tx_lane_p<2>" IOSTANDARD = "LVDS_25" | LOC = AE33;
-NET "lvds_tx_lane_n<2>" IOSTANDARD = "LVDS_25" | LOC = AE34;
-#pair4
-NET "lvds_tx_lane_p<3>" IOSTANDARD = "LVDS_25" | LOC = AE35;
-NET "lvds_tx_lane_n<3>" IOSTANDARD = "LVDS_25" | LOC = AF34;
-#pair5
-NET "lvds_tx_lane_p<4>" IOSTANDARD = "LVDS_25" | LOC = AH34;
-NET "lvds_tx_lane_n<4>" IOSTANDARD = "LVDS_25" | LOC = AG34;
-#pair6
-NET "lvds_tx_lane_p<5>" IOSTANDARD = "LVDS_25" | LOC = AL36;
-NET "lvds_tx_lane_n<5>" IOSTANDARD = "LVDS_25" | LOC = AL35;
-#pair7
-NET "lvds_tx_lane_p<6>" IOSTANDARD = "LVDS_25" | LOC = AN34;
-NET "lvds_tx_lane_n<6>" IOSTANDARD = "LVDS_25" | LOC = AM34;
-#pair8
-NET "lvds_tx_lane_p<7>" IOSTANDARD = "LVDS_25" | LOC = AJ35;
-NET "lvds_tx_lane_n<7>" IOSTANDARD = "LVDS_25" | LOC = AK35;
-#pair9
-NET "lvds_tx_clk_p<0>" IOSTANDARD = "LVDS_25" | LOC = AB33;
-NET "lvds_tx_clk_n<0>" IOSTANDARD = "LVDS_25" | LOC = AB32;
-#pair10
-NET "lvds_tx_lane_p<8>" IOSTANDARD = "LVDS_25" | LOC = AP35;
-NET "lvds_tx_lane_n<8>" IOSTANDARD = "LVDS_25" | LOC = AN36;
-#pair11
-NET "lvds_tx_lane_p<9>" IOSTANDARD = "LVDS_25" | LOC = AM36;
-NET "lvds_tx_lane_n<9>" IOSTANDARD = "LVDS_25" | LOC = AN35;
-#pair12
-NET "lvds_tx_lane_p<10>" IOSTANDARD = "LVDS_25" | LOC = AF35;
-NET "lvds_tx_lane_n<10>" IOSTANDARD = "LVDS_25" | LOC = AF36;
-#pair13
-NET "lvds_tx_lane_p<11>" IOSTANDARD = "LVDS_25" | LOC = AR37;
-NET "lvds_tx_lane_n<11>" IOSTANDARD = "LVDS_25" | LOC = AT36;
-#pair14
-NET "lvds_tx_lane_p<12>" IOSTANDARD = "LVDS_25" | LOC = AT37;
-NET "lvds_tx_lane_n<12>" IOSTANDARD = "LVDS_25" | LOC = AR38;
-#pair15
-NET "lvds_tx_lane_p<13>" IOSTANDARD = "LVDS_25" | LOC = AU38;
-NET "lvds_tx_lane_n<13>" IOSTANDARD = "LVDS_25" | LOC = AU37;
-#pair16
-NET "lvds_tx_lane_p<14>" IOSTANDARD = "LVDS_25" | LOC = AH35;
-NET "lvds_tx_lane_n<14>" IOSTANDARD = "LVDS_25" | LOC = AG36;
-#pair17
-NET "lvds_tx_lane_p<15>" IOSTANDARD = "LVDS_25" | LOC = AV39;
-NET "lvds_tx_lane_n<15>" IOSTANDARD = "LVDS_25" | LOC = AV38;
-#pair18
-NET "lvds_tx_lane_n<16>" IOSTANDARD = "LVDS_25" | LOC = AJ36;
-NET "lvds_tx_lane_p<16>" IOSTANDARD = "LVDS_25" | LOC = AH36;
+# LVDS IO LANE 02 FPGA 0 IO bank 15
+
+NET "lvds_tx_lane_p[0]" IOSTANDARD = "LVDS_25" | LOC = AA34;
+NET "lvds_tx_lane_n[0]" IOSTANDARD = "LVDS_25" | LOC = Y34;
+
+NET "lvds_tx_lane_p[1]" IOSTANDARD = "LVDS_25" | LOC = AA35;
+NET "lvds_tx_lane_n[1]" IOSTANDARD = "LVDS_25" | LOC = AA36;
+
+NET "lvds_tx_lane_p[2]" IOSTANDARD = "LVDS_25" | LOC = Y35;
+NET "lvds_tx_lane_n[2]" IOSTANDARD = "LVDS_25" | LOC = W35;
+
+NET "lvds_tx_lane_p[3]" IOSTANDARD = "LVDS_25" | LOC = V39;
+NET "lvds_tx_lane_n[3]" IOSTANDARD = "LVDS_25" | LOC = W38;
+
+NET "lvds_tx_lane_p[4]" IOSTANDARD = "LVDS_25" | LOC = G38;
+NET "lvds_tx_lane_n[4]" IOSTANDARD = "LVDS_25" | LOC = G39;
+
+NET "lvds_tx_lane_p[5]" IOSTANDARD = "LVDS_25" | LOC = E39;
+NET "lvds_tx_lane_n[5]" IOSTANDARD = "LVDS_25" | LOC = E40;
+
+NET "lvds_tx_lane_p[6]" IOSTANDARD = "LVDS_25" | LOC = H38;
+NET "lvds_tx_lane_n[6]" IOSTANDARD = "LVDS_25" | LOC = H39;
+
+NET "lvds_tx_lane_p[7]" IOSTANDARD = "LVDS_25" | LOC = F39;
+NET "lvds_tx_lane_n[7]" IOSTANDARD = "LVDS_25" | LOC = F40;
+
+NET "lvds_tx_clk_p[0]" IOSTANDARD = "LVDS_25" | LOC = T39;
+NET "lvds_tx_clk_n[0]" IOSTANDARD = "LVDS_25" | LOC = U39;
+
+NET "lvds_tx_lane_p[8]" IOSTANDARD = "LVDS_25" | LOC = T37;
+NET "lvds_tx_lane_n[8]" IOSTANDARD = "LVDS_25" | LOC = U38;
+
+NET "lvds_tx_lane_p[9]" IOSTANDARD = "LVDS_25" | LOC = P38;
+NET "lvds_tx_lane_n[9]" IOSTANDARD = "LVDS_25" | LOC = N38;
+
+NET "lvds_tx_lane_p[10]" IOSTANDARD = "LVDS_25" | LOC = R37;
+NET "lvds_tx_lane_n[10]" IOSTANDARD = "LVDS_25" | LOC = P37;
+
+NET "lvds_tx_lane_p[11]" IOSTANDARD = "LVDS_25" | LOC = H40;
+NET "lvds_tx_lane_n[11]" IOSTANDARD = "LVDS_25" | LOC = J40;
+
+NET "lvds_tx_lane_p[12]" IOSTANDARD = "LVDS_25" | LOC = K38;
+NET "lvds_tx_lane_n[12]" IOSTANDARD = "LVDS_25" | LOC = J38;
+
+NET "lvds_tx_lane_p[13]" IOSTANDARD = "LVDS_25" | LOC = K40;
+NET "lvds_tx_lane_n[13]" IOSTANDARD = "LVDS_25" | LOC = K39;
+
+NET "lvds_tx_lane_n[14]" IOSTANDARD = "LVDS_25" | LOC = R38;
+NET "lvds_tx_lane_p[14]" IOSTANDARD = "LVDS_25" | LOC = R39;
+
+NET "lvds_tx_lane_p[15]" IOSTANDARD = "LVDS_25" | LOC = N39;
+NET "lvds_tx_lane_n[15]" IOSTANDARD = "LVDS_25" | LOC = M39;
+
+NET "lvds_tx_lane_p[16]" IOSTANDARD = "LVDS_25" | LOC = M38;
+NET "lvds_tx_lane_n[16]" IOSTANDARD = "LVDS_25" | LOC = L39;
+
+# LVDS IO LANE 03 FPGA 0 IO bank 23 
+
+NET "lvds_tx_lane_p[17]" IOSTANDARD = "LVDS_25" | LOC = T32;
+NET "lvds_tx_lane_n[17]" IOSTANDARD = "LVDS_25" | LOC = U32;
+
+NET "lvds_tx_lane_p[18]" IOSTANDARD = "LVDS_25" | LOC = P33;
+NET "lvds_tx_lane_n[18]" IOSTANDARD = "LVDS_25" | LOC = P32;
+
+NET "lvds_tx_lane_p[19]" IOSTANDARD = "LVDS_25" | LOC = R33;
+NET "lvds_tx_lane_n[19]" IOSTANDARD = "LVDS_25" | LOC = R32;
+
+NET "lvds_tx_lane_p[20]" IOSTANDARD = "LVDS_25" | LOC = N31;
+NET "lvds_tx_lane_n[20]" IOSTANDARD = "LVDS_25" | LOC = P31;
+
+NET "lvds_tx_lane_p[21]" IOSTANDARD = "LVDS_25" | LOC = K33;
+NET "lvds_tx_lane_n[21]" IOSTANDARD = "LVDS_25" | LOC = J33;
+
+NET "lvds_tx_lane_p[22]" IOSTANDARD = "LVDS_25" | LOC = F31;
+NET "lvds_tx_lane_n[22]" IOSTANDARD = "LVDS_25" | LOC = F32;
+
+NET "lvds_tx_lane_p[23]" IOSTANDARD = "LVDS_25" | LOC = E32;
+NET "lvds_tx_lane_n[23]" IOSTANDARD = "LVDS_25" | LOC = E33;
+
+NET "lvds_tx_lane_p[24]" IOSTANDARD = "LVDS_25" | LOC = G32;
+NET "lvds_tx_lane_n[24]" IOSTANDARD = "LVDS_25" | LOC = G31;
+
+NET "lvds_tx_clk_p[1]" IOSTANDARD = "LVDS_25" | LOC = F35;
+NET "lvds_tx_clk_n[1]" IOSTANDARD = "LVDS_25" | LOC = E35;
+
+NET "lvds_tx_lane_p[25]" IOSTANDARD = "LVDS_25" | LOC = E34;
+NET "lvds_tx_lane_n[25]" IOSTANDARD = "LVDS_25" | LOC = F34;
+
+NET "lvds_tx_lane_p[26]" IOSTANDARD = "LVDS_25" | LOC = M34;
+NET "lvds_tx_lane_n[26]" IOSTANDARD = "LVDS_25" | LOC = M33;
+
+NET "lvds_tx_lane_p[27]" IOSTANDARD = "LVDS_25" | LOC = H34;
+NET "lvds_tx_lane_n[27]" IOSTANDARD = "LVDS_25" | LOC = G34;
+
+NET "lvds_tx_lane_p[28]" IOSTANDARD = "LVDS_25" | LOC = H31;
+NET "lvds_tx_lane_n[28]" IOSTANDARD = "LVDS_25" | LOC = J31;
+
+NET "lvds_tx_lane_p[29]" IOSTANDARD = "LVDS_25" | LOC = G33;
+NET "lvds_tx_lane_n[29]" IOSTANDARD = "LVDS_25" | LOC = H33;
+
+NET "lvds_tx_lane_p[30]" IOSTANDARD = "LVDS_25" | LOC = K32;
+NET "lvds_tx_lane_n[30]" IOSTANDARD = "LVDS_25" | LOC = J32;
+
+NET "lvds_tx_lane_p[31]" IOSTANDARD = "LVDS_25" | LOC = N33;
+NET "lvds_tx_lane_n[31]" IOSTANDARD = "LVDS_25" | LOC = N34;
+
+NET "lvds_tx_lane_p[32]" IOSTANDARD = "LVDS_25" | LOC = M32;
+NET "lvds_tx_lane_n[32]" IOSTANDARD = "LVDS_25" | LOC = M31;
+
+NET "lvds_tx_lane_p[33]" IOSTANDARD = "LVDS_25" | LOC = L32;
+NET "lvds_tx_lane_n[33]" IOSTANDARD = "LVDS_25" | LOC = L31;
 
 
-##########################
-# LANE 5 BANK17	  tx 17:33
 
-#pair1
-NET "lvds_tx_lane_p<17>" IOSTANDARD = "LVDS_25" | LOC = AK24;
-NET "lvds_tx_lane_n<17>" IOSTANDARD = "LVDS_25" | LOC = AK25;
-#pair2
-NET "lvds_tx_lane_p<18>" IOSTANDARD = "LVDS_25" | LOC = AM24;
-NET "lvds_tx_lane_n<18>" IOSTANDARD = "LVDS_25" | LOC = AN24;
-#pair3
-NET "lvds_tx_lane_p<19>" IOSTANDARD = "LVDS_25" | LOC = AN20;
-NET "lvds_tx_lane_n<19>" IOSTANDARD = "LVDS_25" | LOC = AN19;
-#pair4
-NET "lvds_tx_lane_p<20>" IOSTANDARD = "LVDS_25" | LOC = AT19;
-NET "lvds_tx_lane_n<20>" IOSTANDARD = "LVDS_25" | LOC = AR19;
-#pair5
-NET "lvds_tx_lane_p<21>" IOSTANDARD = "LVDS_25" | LOC = AN26;
-NET "lvds_tx_lane_n<21>" IOSTANDARD = "LVDS_25" | LOC = AP26;
-#pair6
-NET "lvds_tx_lane_p<22>" IOSTANDARD = "LVDS_25" | LOC = AT26;
-NET "lvds_tx_lane_n<22>" IOSTANDARD = "LVDS_25" | LOC = AR27;
-#pair7
-NET "lvds_tx_lane_p<23>" IOSTANDARD = "LVDS_25" | LOC = AR30;
-NET "lvds_tx_lane_n<23>" IOSTANDARD = "LVDS_25" | LOC = AT30;
-#pair8
-NET "lvds_tx_lane_p<24>" IOSTANDARD = "LVDS_25" | LOC = AU28;
-NET "lvds_tx_lane_n<24>" IOSTANDARD = "LVDS_25" | LOC = AT27;
-#pair9
-NET "lvds_tx_clk_p<1>" IOSTANDARD = "LVDS_25" | LOC = AR29;
-NET "lvds_tx_clk_n<1>" IOSTANDARD = "LVDS_25" | LOC = AR28;
-#pair10
-NET "lvds_tx_lane_p<25>" IOSTANDARD = "LVDS_25" | LOC = AN25;
-NET "lvds_tx_lane_n<25>" IOSTANDARD = "LVDS_25" | LOC = AP25;
-#pair11
-NET "lvds_tx_lane_p<26>" IOSTANDARD = "LVDS_25" | LOC = AT29;
-NET "lvds_tx_lane_n<26>" IOSTANDARD = "LVDS_25" | LOC = AU29;
-#pair12
-NET "lvds_tx_lane_p<27>" IOSTANDARD = "LVDS_25" | LOC = AP17;
-NET "lvds_tx_lane_n<27>" IOSTANDARD = "LVDS_25" | LOC = AR17;
-#pair13
-NET "lvds_tx_lane_p<28>" IOSTANDARD = "LVDS_25" | LOC = AT15;
-NET "lvds_tx_lane_n<28>" IOSTANDARD = "LVDS_25" | LOC = AR15;
-#pair14
-NET "lvds_tx_lane_p<29>" IOSTANDARD = "LVDS_25" | LOC = AT17;
-NET "lvds_tx_lane_n<29>" IOSTANDARD = "LVDS_25" | LOC = AT16;
-#pair15
-NET "lvds_tx_lane_p<30>" IOSTANDARD = "LVDS_25" | LOC = AT14;
-NET "lvds_tx_lane_n<30>" IOSTANDARD = "LVDS_25" | LOC = AR14;
-#pair16
-NET "lvds_tx_lane_p<31>" IOSTANDARD = "LVDS_25" | LOC = AM19;
-NET "lvds_tx_lane_n<31>" IOSTANDARD = "LVDS_25" | LOC = AL19;
-#pair17
-NET "lvds_tx_lane_p<32>" IOSTANDARD = "LVDS_25" | LOC = AN18;
-NET "lvds_tx_lane_n<32>" IOSTANDARD = "LVDS_25" | LOC = AM18;
-#pair18
-NET "lvds_tx_lane_p<33>" IOSTANDARD = "LVDS_25" | LOC = AK18;
-NET "lvds_tx_lane_n<33>" IOSTANDARD = "LVDS_25" | LOC = AK19;
+# LVDS IO LANE 04 FPGA 0 IO bank 21
+
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y3" ;
+NET  "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+
+
+NET "lvds_rx_lane_p[0]" IOSTANDARD = "LVDS_25" | LOC = AC33 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[0]" IOSTANDARD = "LVDS_25" | LOC = AD32 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[1]" IOSTANDARD = "LVDS_25" | LOC = AD33 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[1]" IOSTANDARD = "LVDS_25" | LOC = AE32 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[2]" IOSTANDARD = "LVDS_25" | LOC = AE33 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[2]" IOSTANDARD = "LVDS_25" | LOC = AE34 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_clk_p[0]" IOSTANDARD = "LVDS_25" | LOC = AE35 | DIFF_TERM="TRUE";
+NET "lvds_rx_clk_n[0]" IOSTANDARD = "LVDS_25" | LOC = AF34 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[3]" IOSTANDARD = "LVDS_25" | LOC = AH34 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[3]" IOSTANDARD = "LVDS_25" | LOC = AG34 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[4]" IOSTANDARD = "LVDS_25" | LOC = AL36 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[4]" IOSTANDARD = "LVDS_25" | LOC = AL35 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[5]" IOSTANDARD = "LVDS_25" | LOC = AN34 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[5]" IOSTANDARD = "LVDS_25" | LOC = AM34 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[6]" IOSTANDARD = "LVDS_25" | LOC = AJ35 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[6]" IOSTANDARD = "LVDS_25" | LOC = AK35 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[7]" IOSTANDARD = "LVDS_25" | LOC = AB33 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[7]" IOSTANDARD = "LVDS_25" | LOC = AB32 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[8]" IOSTANDARD = "LVDS_25" | LOC = AP35 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[8]" IOSTANDARD = "LVDS_25" | LOC = AN36 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[9]" IOSTANDARD = "LVDS_25" | LOC = AM36 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[9]" IOSTANDARD = "LVDS_25" | LOC = AN35 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[10]" IOSTANDARD = "LVDS_25" | LOC = AF35 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[10]" IOSTANDARD = "LVDS_25" | LOC = AF36 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[11]" IOSTANDARD = "LVDS_25" | LOC = AR37 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[11]" IOSTANDARD = "LVDS_25" | LOC = AT36 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[12]" IOSTANDARD = "LVDS_25" | LOC = AT37 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[12]" IOSTANDARD = "LVDS_25" | LOC = AR38 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[13]" IOSTANDARD = "LVDS_25" | LOC = AU38 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[13]" IOSTANDARD = "LVDS_25" | LOC = AU37 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[14]" IOSTANDARD = "LVDS_25" | LOC = AH35 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[14]" IOSTANDARD = "LVDS_25" | LOC = AG36 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_p[15]" IOSTANDARD = "LVDS_25" | LOC = AV39 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_n[15]" IOSTANDARD = "LVDS_25" | LOC = AV38 | DIFF_TERM="TRUE";
+
+NET "lvds_rx_lane_n[16]" IOSTANDARD = "LVDS_25" | LOC = AJ36 | DIFF_TERM="TRUE";
+NET "lvds_rx_lane_p[16]" IOSTANDARD = "LVDS_25" | LOC = AH36 | DIFF_TERM="TRUE";
 
 
 ###############################################################################
@@ -293,19 +286,33 @@ NET "lvds_tx_lane_n<33>" IOSTANDARD = "LVDS_25" | LOC = AK19;
 NET "clk100p" period=10ns high 50%;
 NET "reg_clk" period=10ns high 50%;
 
+net "*/module_control_and_status_inst/global_register_inst/lvds_loopback_mode_reg<*>" TIG;
+net "*/module_control_and_status_inst/global_register_inst/fifo_rst_reg<*>" TIG;
+net "*/module_control_and_status_inst/global_register_inst/led_mode_reg<*>" TIG;
+net "*/module_control_and_status_inst/global_register_inst/ram_power_reg<*>" TIG;
+
+net "*/clk_rdyn" TIG;
+net "*/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/link_complete" TIG;
+
+NET "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;
+
+
+
 #net "usr_reg_slave_if_io_example_inst/leds<*>" TIG;
  
 #net "m2c_edge_inst/lvds_link_est" TIG;
 #net "fsb_compute_edge_inst/system_leds_inst/leds<*>" TIG;
+net "*/system_leds_inst/rx_act_led" TIG;
+net "*/system_leds_inst/tx_act_led" TIG;
 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/training_done_retime_inst/q_i<1>" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/training_done_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/training_done_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/training_done_retime_inst/q_i<1>" TIG;
 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/synced_retime_inst/q_i<1>" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/synced_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/synced_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/synced_retime_inst/q_i<1>" TIG;
 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/manual_cal_done_retime_inst/q_i<1>" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/manual_cal_done_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/manual_cal_done_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/manual_cal_done_retime_inst/q_i<1>" TIG;
 
 
 
@@ -330,28 +337,68 @@ net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst
 #NET "m2c_edge_inst/afu_lvds_bridge_slave_inst/pll_locked_retime_inst/q_i<1>" TIG;
 #NET "m2c_edge_inst/afu_lvds_bridge_slave_inst/pll_reset" TIG;
 #NET "m2c_edge_inst/afu_lvds_bridge_slave_inst/tx_training_done100" TIG;
- 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/lvds_loopback_mode_reg<*>" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/fifo_rst_reg<*>" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/led_mode_reg<*>" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/ram_power_reg<*>" TIG;
 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/clk_rdyn" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/link_complete" TIG;
+
+
+## Commenting temporarily
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/lvds_loopback_mode_reg<*>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/fifo_rst_reg<*>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/led_mode_reg<*>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/ram_power_reg<*>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/clk_rdyn" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/link_complete" TIG;
 
 
 
 ## Angshuman's additions
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/bretime_inst2/q_i[*]" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_rst" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_tx_inst/bretime_inst_rsest/q_i[*]" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/bretime_inst2/q_i[*]" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_rst" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_tx_inst/bretime_inst_rsest/q_i[*]" TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/transmit_logic_generate.lvds_tx_inst/block_ram_fifo_module.half_lane_gen.Label1/BU2/U0/grf.rf/gcx.clkx/rd_pntr_gc[*]" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:AQ" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:BQ" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:CQ" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:DQ" TIG;
+
 
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q_dD_OUT[*]"     TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/Mram_fifoMem*" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q_dD_OUT[*]"      TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/Mram_fifoMem*"  TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dGDeqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sSyncReg1[*]"   TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/sGEnqPtr[*]"   TIG;
 net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/dSyncReg1[*]"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/dGDeqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/sSyncReg1[*]"  TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q_dD_OUT[*]"      TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sGEnqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sSyncReg1[*]"   TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q_dD_OUT[*]"      TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/sGEnqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/dSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/sSyncReg1[*]"   TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q_dD_OUT[*]"      TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/sGEnqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/dSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/sSyncReg1[*]"   TIG;
+
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q_dD_OUT[*]"     TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/Mram_fifoMem*" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/sGEnqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/dSyncReg1[*]"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/dGDeqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/sSyncReg1[*]"  TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q_dD_OUT[*]"     TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q/Mram_fifoMem*" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q/sGEnqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q/dSyncReg1[*]"  TIG;

@@ -40,7 +40,8 @@ typedef Bit#(FPGA_DDR_DUALEDGE_DATA_SZ) FPGA_DDR_DUALEDGE_DATA;
 
 // Each byte in a write may be disabled for writes using a bit mask.
 // !!! NOTE: to conform to the controller, a mask bit is 0 to request a write !!!
-typedef Bit#(TDiv#(FPGA_DDR_WORD_SZ, 8)) FPGA_DDR_WORD_MASK;
+typedef TDiv#(FPGA_DDR_WORD_SZ, 8) FPGA_DDR_BYTES_PER_WORD;
+typedef Bit#(FPGA_DDR_BYTES_PER_WORD) FPGA_DDR_WORD_MASK;
 typedef Bit#(TDiv#(FPGA_DDR_DUALEDGE_DATA_SZ, 8)) FPGA_DDR_DUALEDGE_DATA_MASK;
 
 // Capacity of the memory (addressing FPGA_DDR_WORDs):
@@ -162,6 +163,26 @@ module mkDDR2SRAMDevice
     COUNTER#(TLog#(TAdd#(`SRAM_MAX_OUTSTANDING_READS, 1))) nInflightReads <- mkLCounter(0);
     Reg#(FPGA_DDR_BURST_IDX) readBurstCnt <- mkReg(fromInteger(valueOf(FPGA_DDR_LAST_BURST_IDX)));
 
+
+    //
+    // On ACP it appears that ECC bits are interleaved among the data
+    // bits.  The problem is mask bits cover 9 bits each, not 8!  We aren't
+    // using ECC, but must be careful to spread the data bits out so
+    // they will be masked correctly.
+    //
+    function Bit#(TMul#(FPGA_DDR_BYTES_PER_WORD, 9)) insertSpaceForECC(FPGA_DDR_WORD w);
+        Vector#(FPGA_DDR_BYTES_PER_WORD, Bit#(8)) v_in = unpack(w);
+        Vector#(FPGA_DDR_BYTES_PER_WORD, Bit#(9)) v_out = map(zeroExtend, v_in);
+        return pack(v_out);
+    endfunction
+
+    function FPGA_DDR_WORD removeSpaceForECC(Bit#(TMul#(FPGA_DDR_BYTES_PER_WORD, 9)) w);
+        Vector#(FPGA_DDR_BYTES_PER_WORD, Bit#(9)) v_in = unpack(w);
+        Vector#(FPGA_DDR_BYTES_PER_WORD, Bit#(8)) v_out = map(truncate, v_in);
+        return pack(v_out);
+    endfunction
+
+
     //
     // ===== Rules =====
     //
@@ -172,8 +193,8 @@ module mkDDR2SRAMDevice
     // the clock boundary.
     (* fire_when_enabled *)
     rule readRAMDataToBuffer (prim_device.ram.dequeue_data_RDY());
-        FPGA_DDR_WORD d1 = truncate(prim_device.ram.dequeue_data_rise());
-        FPGA_DDR_WORD d2 = truncate(prim_device.ram.dequeue_data_fall());
+        let d1 = removeSpaceForECC(prim_device.ram.dequeue_data_rise());
+        let d2 = removeSpaceForECC(prim_device.ram.dequeue_data_fall());
         syncReadDataQ.enq({d1, d2});
     endrule
     
@@ -240,8 +261,8 @@ module mkDDR2SRAMDevice
         Tuple2#(FPGA_DDR_WORD_MASK, FPGA_DDR_WORD_MASK) tup2 = unpack(writeValueMask[0]);
         match {.d1, .d2} = tup;
         match {.m1, .m2} = tup2;
-        prim_device.ram.enqueue_data(zeroExtend(d1), zeroExtend(m1),
-                                     zeroExtend(d2), zeroExtend(m2));
+        prim_device.ram.enqueue_data(insertSpaceForECC(d1), m1,
+                                     insertSpaceForECC(d2), m2);
 
         if (valueOf(FPGA_DDR_LAST_BURST_IDX) == 0)
         begin
@@ -269,8 +290,8 @@ module mkDDR2SRAMDevice
         Tuple2#(FPGA_DDR_WORD_MASK, FPGA_DDR_WORD_MASK) tup2 = unpack(writeValueMask[writeBurstIdx]);
         match {.d1, .d2} = tup;
         match {.m1, .m2} = tup2;
-        prim_device.ram.enqueue_data(zeroExtend(d1), zeroExtend(m1),
-                                     zeroExtend(d2), zeroExtend(m2));
+        prim_device.ram.enqueue_data(insertSpaceForECC(d1), m1,
+                                     insertSpaceForECC(d2), m2);
         
         if (writeBurstIdx == fromInteger(valueOf(FPGA_DDR_LAST_BURST_IDX)))
         begin

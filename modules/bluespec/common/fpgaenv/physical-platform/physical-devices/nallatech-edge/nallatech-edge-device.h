@@ -79,8 +79,8 @@ class NALLATECH_EDGE_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
                           int readWindowID, int readWords);
 
     // Register interface for debugging
-    void DebugRegWrite(UINT16 addr, UINT16 data) {};
-    UINT16 DebugRegRead(UINT16 addr) {};
+    void DebugRegWrite(UINT16 addr, UINT16 data);
+    UINT16 DebugRegRead(UINT16 addr);
 
     // Convert a request size to a legal buffer size
     inline int LegalBufSize(int words) const;

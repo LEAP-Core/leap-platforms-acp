@@ -120,7 +120,7 @@ architecture arch_ddrii_top_wr_data_interface of ddrii_top_wr_data_interface is
 
 begin
 
-  user_bw_n((2*BW_WIDTH)-1 downto 0) <= (user_bw_n_rise & user_bw_n_fall);
+  user_bw_n((2*BW_WIDTH)-1 downto 0) <= (user_bw_n_fall & user_bw_n_rise);
   bw_n_rise  <= bw_n(2*BW_WIDTH -1 downto BW_WIDTH);
   bw_n_fall  <= bw_n(BW_WIDTH-1 downto 0);
 
