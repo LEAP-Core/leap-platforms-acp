@@ -1630,3 +1630,24 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
     of 8 bits).  Changed the bit mapping so that masks appear to control bytes.
 
 - Replace old driver with Nallatech v2.0.1.
+
+----------
+kfleming    Date: Sat Jul 10 17:57:07 EDT 2010  CSN: CSN-platform-acp-74
+                  Sat Jul 10 21:57:07 UTC 2010
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Modified           73 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           73 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified           73 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           73 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified           73 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.awb Locally Modified           73 
+
+
+Removed clocking parameters from nallatech-edge-device.  ACP apms now
+match the physical platforms for other boards in that clocking
+parameters live in the clock device.  This is important since MCD user
+code will now be instantiating clocking devices.

@@ -230,3 +230,6 @@ xilinx_loader=Xilinx LOADER
 [Xilinx MAP]
 File=modules/project/xilinx/xilinx_map.awb
 Packagehint=platforms
+
+[Null Clocks Device/Params]
+CRYSTAL_CLOCK_FREQ=200

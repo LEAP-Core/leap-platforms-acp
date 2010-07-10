@@ -235,3 +235,6 @@ nallatech_edge_device=Nallatech Edge Physical Device
 [JTAG Physical Channel]
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/jtag/jtag-physical-channel.awb
 Packagehint=platforms
+
+[Null Clocks Device/Params]
+CRYSTAL_CLOCK_FREQ=200

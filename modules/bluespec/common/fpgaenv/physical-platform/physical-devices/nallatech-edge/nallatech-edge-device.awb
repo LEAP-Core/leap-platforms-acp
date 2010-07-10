@@ -25,10 +25,6 @@
 ##                Parameters               ##
 #############################################
 
-%param CRYSTAL_CLOCK_FREQ 200 "Input Clock Frequency"
-
-%param --global MODEL_CLOCK_FREQ 75  "Desired model clock frequency (integer)."
-
 %param ACP_FSB_SOCKET 2 "Motherboard Socket ID the ACP stack is plugged into"
 
 %param NALLATECH_MAX_MSG_BYTES 4096 "Maximum bytes in a message"

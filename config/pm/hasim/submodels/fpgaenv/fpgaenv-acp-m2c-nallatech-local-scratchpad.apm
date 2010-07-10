@@ -167,6 +167,8 @@ xilinx_loader=Xilinx LOADER
 File=modules/project/xilinx/xilinx_map.awb
 Packagehint=platforms
 
-
 [Local Memory Interface using DDR2 Memory/Params]
 LOCAL_MEM_WORDS_PER_LINE=2
+
+[Null Clocks Device/Params]
+CRYSTAL_CLOCK_FREQ=200
