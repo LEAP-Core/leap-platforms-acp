@@ -153,11 +153,11 @@ module mkDDR2SRAMDevice
     SyncFIFOIfc#(Bool) syncResetQ <- mkSyncFIFO(2, modelClock, modelReset, controllerClock);
 
     // Request queue
-    SyncFIFOIfc#(FPGA_DDR_REQUEST) syncRequestQ <- mkSyncFIFO(2, modelClock, modelReset, controllerClock);
+    SyncFIFOIfc#(FPGA_DDR_REQUEST) syncRequestQ <- mkSyncFIFO(8, modelClock, modelReset, controllerClock);
 
     // Write data queue
     SyncFIFOIfc#(Tuple2#(FPGA_DDR_DUALEDGE_DATA, FPGA_DDR_DUALEDGE_DATA_MASK))
-        syncWriteDataQ <- mkSyncFIFO(2, modelClock, modelReset, controllerClock);
+        syncWriteDataQ <- mkSyncFIFO(8, modelClock, modelReset, controllerClock);
     
     // Keep track of the number of reads in flight
     COUNTER#(TLog#(TAdd#(`SRAM_MAX_OUTSTANDING_READS, 1))) nInflightReads <- mkLCounter(0);

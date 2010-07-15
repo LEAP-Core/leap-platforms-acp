@@ -118,20 +118,20 @@ module mkNallatechEdgeDevice
     // Synchronizers
     
     SyncFIFOIfc#(NALLATECH_FIFO_DATA) sync_read_q
-        <- mkSyncFIFO(2, edgeClock, edgeReset, modelClock);
+        <- mkSyncFIFO(6, edgeClock, edgeReset, modelClock);
         
     SyncFIFOIfc#(NALLATECH_FIFO_DATA) sync_write_q
-        <- mkSyncFIFO(2, modelClock, modelReset, edgeClock);
+        <- mkSyncFIFO(6, modelClock, modelReset, edgeClock);
     
     SyncFIFOIfc#(Tuple2#(NALLATECH_REG_ADDR, NALLATECH_REG_DATA)) sync_reg_write_q
-        <- mkSyncFIFO(2, userRegClock, userRegReset, modelClock);
+        <- mkSyncFIFO(6, userRegClock, userRegReset, modelClock);
     SyncFIFOIfc#(Bool) sync_reg_write_ack_q
-        <- mkSyncFIFO(2, modelClock, modelReset, userRegClock);
+        <- mkSyncFIFO(6, modelClock, modelReset, userRegClock);
     
     SyncFIFOIfc#(NALLATECH_REG_ADDR) sync_reg_read_req_q
-        <- mkSyncFIFO(2, userRegClock, userRegReset, modelClock);
+        <- mkSyncFIFO(6, userRegClock, userRegReset, modelClock);
     SyncFIFOIfc#(NALLATECH_REG_DATA) sync_reg_read_rsp_q
-        <- mkSyncFIFO(2, modelClock, modelReset, userRegClock);
+        <- mkSyncFIFO(6, modelClock, modelReset, userRegClock);
 
     //
     // Rules for synchronizing from Edge to Model domain.  Put a FIFO between
