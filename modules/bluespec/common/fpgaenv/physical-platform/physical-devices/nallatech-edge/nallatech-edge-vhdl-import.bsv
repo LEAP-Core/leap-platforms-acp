@@ -82,6 +82,10 @@ interface NALLATECH_EDGE_WIRES;
     
 endinterface
 
+// interface NALLATECH_COMM_CONTROL
+// This is the inout for controlling the intra FPGA communication lines
+
+typedef Inout#(Bit#(48)) NALLATECH_COMM_CONTROL;
 
 // PRIMITIVE_NALLATECH_EDGE_DEVICE
 
@@ -97,6 +101,10 @@ interface PRIMITIVE_NALLATECH_EDGE_DEVICE;
     interface Reset reset;
     
     interface Clock rawClock;
+
+    // Control for intra-fpga channel
+  
+    interface NALLATECH_COMM_CONTROL communication_control;
     
     //
     // SRAM Clocking
@@ -151,14 +159,34 @@ interface PRIMITIVE_NALLATECH_EDGE_DEVICE;
         
 endinterface
 
+// typedefs to match the nallatech function names in vhdl
+
+typedef Tuple3#(Integer,Integer,Integer) LOCAL_ID;
+typedef Tuple3#(Integer,Integer,Integer) EXTERNAL_ID;
 
 // mkPrimitiveNallatechEDGEDevice
 
 // Straightforward import of the VHDL into Bluespec.
 
 import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
+    #(LOCAL_ID localID,
+      EXTERNAL_ID externalID,
+      Integer rxLanes,
+      Integer txLanes)
     // interface:
                  (PRIMITIVE_NALLATECH_EDGE_DEVICE);
+
+    // parameters to the edge module instantiation
+    parameter local_id_layer  = tpl_1(localID);
+    parameter local_id_fpga   = tpl_2(localID);
+    parameter local_id_number = tpl_3(localID);
+
+    parameter external_id_layer  = tpl_1(externalID);
+    parameter external_id_fpga   = tpl_2(externalID);
+    parameter external_id_number = tpl_3(externalID);
+
+    parameter rx_lanes = rxLanes;
+    parameter tx_lanes = txLanes;
 
     default_clock no_clock;
     default_reset no_reset;
@@ -172,11 +200,14 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
   
     output_clock rawClock (RAW_CLK_OUT);
 
+
     output_clock ramClk0   (ram_clk0);
     output_clock ramClk200 (ram_clk200);
     output_clock ramClk270 (ram_clk270);
 
     output_clock regClock (USER_REG_CLK_OUT);
+
+    ifc_inout communication_control (INTRA_FPGA_LVDS_CTRL);	
 
     method ram_clk_locked ramClkLocked();
 

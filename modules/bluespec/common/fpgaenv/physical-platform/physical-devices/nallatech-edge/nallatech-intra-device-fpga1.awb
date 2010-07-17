@@ -1,0 +1,28 @@
+%name Nallatech Intra Physical Device FPGA1 (Master) v2
+%desc Nallatech Intra Physical Device FPGA1 (Master) v2
+
+%provides nallatech_intra_device
+
+%public  nallatech-intra-device.bsv
+%public  nallatech-intra-vhdl-import.bsv
+%public  nallatech-intra-2rx2tx-device-fpga1.bsv
+
+%private nallatech-intra-device.vhd
+%private edge_comp_defs_pkg.vhd
+%private edge_comp_util_pkg.vhd
+%private non_system_edge_component.vhd
+%private system_edge_component.vhd
+         
+%private inter_intra_mod_slv_edge_2rx2tx.ngc
+%private reset_synchroniser.vhd
+
+%public  nallatech-edge-device.h
+%private nallatech-edge-device.cpp
+
+%private nallatech-intra-device-fpga1.ucf
+
+#############################################
+##                Parameters               ##
+#############################################
+
+

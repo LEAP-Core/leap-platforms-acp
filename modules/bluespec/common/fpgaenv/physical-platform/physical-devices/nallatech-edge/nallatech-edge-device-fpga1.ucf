@@ -1,0 +1,54 @@
+###############################################################################
+# EXPANSION INTERFACE AND SYSTEM CONTROL
+NET "CONFIG_DATA[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AJ26;
+NET "CONFIG_DATA[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK27;
+NET "CONFIG_DATA[2]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AM14;
+NET "CONFIG_DATA[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN14;
+NET "CONFIG_DATA[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK29;
+NET "CONFIG_DATA[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK28;
+NET "CONFIG_DATA[6]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP13;
+NET "CONFIG_DATA[7]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN13;
+NET "REG_RDY_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL29;
+NET "REG_CLK" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK13;
+NET "REG_ADS_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL30;
+NET "REG_RESET_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK15;
+NET "REG_RD_WR_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK14;
+NET "REG_UDS_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AJ30;
+NET "REG_LDS_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK30;
+NET "REG_EN_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK12;
+
+NET "sys_led_out[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN28;
+NET "sys_led_out[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP27;
+NET "sys_led_out[2]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN30;
+NET "sys_led_out[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP30;
+NET "sys_led_out[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK17;
+NET "sys_led_out[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL17;
+
+NET "ram_pwr_on" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AL14;
+NET "ram_leds[0]" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AN29;
+NET "ram_leds[1]" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AP28;
+NET "ram_pg" IOSTANDARD = "LVCMOS25" | LOC=AM29;
+NET "mgt_pg" IOSTANDARD = "LVCMOS25" | LOC=AM13;
+
+
+NET "eeprom_scl" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP16;
+NET "eeprom_sda" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP15;
+
+NET "CLK100P" IOSTANDARD = "LVDS_25" | LOC = AL27 | DIFF_TERM = "TRUE"; # 100MHz clock
+NET "CLK100N" IOSTANDARD = "LVDS_25" | LOC = AL26 | DIFF_TERM = "TRUE";
+
+
+###############################################################################
+##TIMING CONSTRAINTS
+NET "clk100p" period=10ns high 50%;
+NET "reg_clk" period=10ns high 50%;
+
+net "*/clk_rdyn" TIG;
+net "*/module_control_and_status_inst/global_register_inst/lvds_loopback_mode_reg<*>" TIG;
+net "*/module_control_and_status_inst/global_register_inst/fifo_rst_reg<*>" TIG;
+net "*/module_control_and_status_inst/global_register_inst/led_mode_reg<*>" TIG;
+net "*/module_control_and_status_inst/global_register_inst/ram_power_reg<*>" TIG;
+net "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;
+net "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/master_init_sm_gen.lvds_master_init_sm_inst/tx_training_done" TIG;
+net "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/master_init_sm_gen.lvds_master_init_sm_inst/tx_rst" TIG;
+net "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_rst" TIG;

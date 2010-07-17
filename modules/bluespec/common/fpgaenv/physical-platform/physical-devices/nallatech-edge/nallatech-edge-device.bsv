@@ -56,10 +56,11 @@ endinterface
 
 interface NALLATECH_EDGE_DEVICE;
 
-    interface NALLATECH_EDGE_DRIVER edge_driver;
-    interface NALLATECH_EDGE_WIRES  wires;
-    interface CLOCKS_DRIVER         clocks_driver;
-    interface SRAM_CLOCKS_DRIVER    sram_clocks_driver;
+    interface NALLATECH_EDGE_DRIVER         edge_driver;
+    interface NALLATECH_EDGE_WIRES          wires;
+    interface CLOCKS_DRIVER                 clocks_driver;
+    interface SRAM_CLOCKS_DRIVER            sram_clocks_driver;
+    interface NALLATECH_COMM_CONTROL        communication_control;
         
 endinterface
 
@@ -82,13 +83,20 @@ endinterface
 // default bluespec domain. Also wrap the raw driver interfaces into
 // more structured and readable interfaces.
 
-module mkNallatechEdgeDevice
+module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
+                                        EXTERNAL_ID externalID,
+                                        Integer rxLanes,
+                                        Integer txLanes)
+
     // interface:
                  (NALLATECH_EDGE_DEVICE);
 
     // Instantiate the primitive device.
 
-    PRIMITIVE_NALLATECH_EDGE_DEVICE prim_device <- mkPrimitiveNallatechEdgeDevice();
+    PRIMITIVE_NALLATECH_EDGE_DEVICE prim_device <- mkPrimitiveNallatechEdgeDevice(localID,
+                                                                                  externalID, 
+                                                                                  rxLanes,
+                                                                                  txLanes);
 
     // Get the Clock and Reset, and do the required multiplication/division
     
@@ -282,6 +290,9 @@ module mkNallatechEdgeDevice
             
     endinterface
     
+    // Pass through communication control
+    interface communication_control = prim_device.communication_control;
+
     // Pass through the wires interface
     
     interface wires = prim_device.wires;

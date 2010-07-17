@@ -2,14 +2,14 @@
 ###############################################################################
 # EXPANSION INTERFACE AND SYSTEM CONTROL
 
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AJ26;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK27;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[2]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AM14;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN14;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK29;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK28;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[6]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP13;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_CONFIG_DATA[7]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN13;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AJ26;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK27;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[2]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AM14;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN14;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK29;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK28;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[6]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP13;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[7]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN13;
 
 NET "REG_RDY_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL29;
 NET "REG_CLK" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK13;
@@ -36,7 +36,7 @@ NET "mgt_pg" IOSTANDARD = "LVCMOS25" | LOC=AM13;
 
 
 NET "eeprom_scl" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP16;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device_EEPROM_SDA" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP15;
+NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_EEPROM_SDA" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP15;
 
 NET "CLK100P" IOSTANDARD = "LVDS_25" | LOC = AL27 | DIFF_TERM = "TRUE"; # 100MHz clock
 NET "CLK100N" IOSTANDARD = "LVDS_25" | LOC = AL26 | DIFF_TERM = "TRUE";
@@ -48,8 +48,8 @@ NET "CLK100N" IOSTANDARD = "LVDS_25" | LOC = AL26 | DIFF_TERM = "TRUE";
 
  # LVDS IO LANE 01 FPGA 0 IO bank 13
  
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y5" ;
-NET  "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y5" ;
+NET  "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
 
 
 NET "lvds_rx_lane_p[17]" IOSTANDARD = "LVDS_25" | LOC = AH40 | DIFF_TERM="TRUE";
@@ -222,8 +222,8 @@ NET "lvds_tx_lane_n[33]" IOSTANDARD = "LVDS_25" | LOC = L31;
 
 # LVDS IO LANE 04 FPGA 0 IO bank 21
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y3" ;
-NET  "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y3" ;
+NET  "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
 
 
 NET "lvds_rx_lane_p[0]" IOSTANDARD = "LVDS_25" | LOC = AC33 | DIFF_TERM="TRUE";
@@ -305,14 +305,14 @@ NET "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_
 net "*/system_leds_inst/rx_act_led" TIG;
 net "*/system_leds_inst/tx_act_led" TIG;
 
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/training_done_retime_inst/q_i<1>" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/training_done_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/training_done_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/training_done_retime_inst/q_i<1>" TIG;
 
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/synced_retime_inst/q_i<1>" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/synced_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/synced_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/synced_retime_inst/q_i<1>" TIG;
 
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/manual_cal_done_retime_inst/q_i<1>" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/manual_cal_done_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/manual_cal_done_retime_inst/q_i<1>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/manual_cal_done_retime_inst/q_i<1>" TIG;
 
 
 
@@ -341,64 +341,64 @@ net "*/system_leds_inst/tx_act_led" TIG;
 
 
 ## Commenting temporarily
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/lvds_loopback_mode_reg<*>" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/fifo_rst_reg<*>" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/led_mode_reg<*>" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/ram_power_reg<*>" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/clk_rdyn" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/link_complete" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/lvds_loopback_mode_reg<*>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/fifo_rst_reg<*>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/led_mode_reg<*>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/module_control_and_status_inst/global_register_inst/ram_power_reg<*>" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/clk_rdyn" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/link_complete" TIG;
 
 
 
 ## Angshuman's additions
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/bretime_inst2/q_i[*]" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_rst" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_tx_inst/bretime_inst_rsest/q_i[*]" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/bretime_inst2/q_i[*]" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_rst" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/fsb_slave_module_lvds_link_inst/lvds_tx_inst/bretime_inst_rsest/q_i[*]" TIG;
 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/transmit_logic_generate.lvds_tx_inst/block_ram_fifo_module.half_lane_gen.Label1/BU2/U0/grf.rf/gcx.clkx/rd_pntr_gc[*]" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:AQ" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:BQ" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:CQ" TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:DQ" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/transmit_logic_generate.lvds_tx_inst/block_ram_fifo_module.half_lane_gen.Label1/BU2/U0/grf.rf/gcx.clkx/rd_pntr_gc[*]" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:AQ" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:BQ" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:CQ" TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/slave_out_fifo_gen.lane2_gen.output_fifo_inst/BU2/U0/grf.rf/gcx.clkx/wr_pntr_gc[*]:DQ" TIG;
 
 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q_dD_OUT[*]"     TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/Mram_fifoMem*" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/sGEnqPtr[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/dSyncReg1[*]"  TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/dGDeqPtr[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_write_q/sSyncReg1[*]"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q_dD_OUT[*]"     TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/Mram_fifoMem*" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sGEnqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dSyncReg1[*]"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dGDeqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sSyncReg1[*]"  TIG;
 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q_dD_OUT[*]"      TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/Mram_fifoMem*"  TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sGEnqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dSyncReg1[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/dGDeqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_read_q/sSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q_dD_OUT[*]"      TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sGEnqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sSyncReg1[*]"   TIG;
 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q_dD_OUT[*]"      TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/Mram_fifoMem*"  TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/sGEnqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/dSyncReg1[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/dGDeqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_q/sSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q_dD_OUT[*]"      TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sGEnqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sSyncReg1[*]"   TIG;
 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q_dD_OUT[*]"      TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/Mram_fifoMem*"  TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/sGEnqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/dSyncReg1[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/dGDeqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_req_q/sSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q_dD_OUT[*]"      TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sGEnqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sSyncReg1[*]"   TIG;
 
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q_dD_OUT[*]"     TIG;
-#net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/Mram_fifoMem*" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/sGEnqPtr[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/dSyncReg1[*]"  TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/dGDeqPtr[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_write_ack_q/sSyncReg1[*]"  TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q_dD_OUT[*]"     TIG;
+#net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/Mram_fifoMem*" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sGEnqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dSyncReg1[*]"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dGDeqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sSyncReg1[*]"  TIG;
 
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q_dD_OUT[*]"     TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q/Mram_fifoMem*" TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q/sGEnqPtr[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_edge_device_sync_reg_read_rsp_q/dSyncReg1[*]"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q_dD_OUT[*]"     TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/Mram_fifoMem*" TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sGEnqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dSyncReg1[*]"  TIG;

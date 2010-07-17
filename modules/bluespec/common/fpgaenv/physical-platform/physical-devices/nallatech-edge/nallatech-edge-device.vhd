@@ -62,7 +62,21 @@ use ieee.numeric_std.all;
 use work.edge_comp_defs_pkg.all;
 use work.edge_comp_util_pkg.all;
 
-entity nallatech_edge_vhdl is 
+-- local module type is constant here, as edge devices cannot be
+-- instantiated on expansion module
+-- external_id refers to the target that we comunicate with
+entity nallatech_edge_vhdl is
+        -- these generics allow us to share code with the null module
+        generic(local_id_layer: integer;  -- layer i.e. sw is 0, all fpgas have
+                                          -- 1
+                local_id_fpga: integer;  -- fpga number, within layer (0,1)
+                local_id_number: integer;  -- ?? appears to always be 0
+                external_id_layer: integer; 
+                external_id_fpga: integer;
+                external_id_number: integer;
+                rx_lanes: integer;
+                tx_lanes: integer
+               );
 	port( 
 
         -- top level wires
@@ -129,8 +143,10 @@ entity nallatech_edge_vhdl is
         user_reg_wren_out  : out std_logic;
         user_reg_wrack_in  : in  std_logic;
         user_reg_rdy_in    : in  std_logic;
-        user_reg_rdata_in  : in  std_logic_vector(15 downto 0)
+        user_reg_rdata_in  : in  std_logic_vector(15 downto 0);
 
+        -- intra fpga interface
+        intra_fpga_lvds_ctrl : inout  std_logic_vector(47 downto 0)
 		);	
 end nallatech_edge_vhdl;
 
@@ -173,7 +189,8 @@ architecture rtl of nallatech_edge_vhdl is
 
             lvds_link_sc_out : out STD_LOGIC_VECTOR(4 downto 0);
             lvds_link_sc_in : in STD_LOGIC_VECTOR(4 downto 0); 
-				
+
+            
             intra_mod_lvds_comms_control:inout std_logic_vector(47 downto 0);
             upper_mod_lvds_comms_control:inout std_logic_vector(47 downto 0);
 
@@ -312,7 +329,6 @@ architecture rtl of nallatech_edge_vhdl is
 	signal rx_data_almost_full_c :std_logic;
 	signal rx_data_empty_c:std_logic;
 
-    signal intra_mod_lvds_comms_control: std_logic_vector(47 downto 0);
     signal upper_mod_lvds_comms_control: std_logic_vector(47 downto 0);
 
 	---------------------------------------------------------------------------
@@ -372,11 +388,11 @@ begin
 	--to the M2B, 2 recieve LVDS banks from the M2B and a ram speed of 200MHz
 	fsb_compute_edge_inst : system_edge_component
     generic map(
-		local_id => DEVICE_ID(1,0,0),
+		local_id => DEVICE_ID(local_id_layer,local_id_fpga,local_id_number),
 		local_module_type => FSB_COMPUTE_MOD_TYPE,
-		external_id => DEVICE_ID(0,0,0),
-		rx_lanes => 2,
-		tx_lanes => 2
+		external_id => DEVICE_ID(external_id_layer,external_id_fpga,external_id_number),
+		rx_lanes => rx_lanes,
+		tx_lanes => tx_lanes
         )
 	port map(
 		-------------------------------
@@ -405,7 +421,7 @@ begin
         lvds_link_sc_out => open,
         lvds_link_sc_in => (others => '0'),
 		
-        intra_mod_lvds_comms_control => intra_mod_lvds_comms_control,
+        intra_mod_lvds_comms_control => intra_fpga_lvds_ctrl,
         upper_mod_lvds_comms_control => upper_mod_lvds_comms_control,
 
         eeprom_scl => eeprom_scl,
@@ -517,7 +533,7 @@ begin
 
 	-- Must tie unused lvds communications control bus slice (46 downto 30) to '0'
 	upper_mod_lvds_comms_control(46 downto 30)<=(others=>'0');
-	intra_mod_lvds_comms_control(46 downto 30)<=(others=>'0');
+	
 
     -- Angshuman - we seem to need these explicit IBUFs
     RAM_PG_IBUF : IBUF

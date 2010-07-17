@@ -1,0 +1,36 @@
+%name Nallatech Edge Physical Device v2 (FPGA1)
+%desc Nallatech Edge Physical Device v2 (FPGA1)
+
+%provides nallatech_edge_device
+
+%public  nallatech-edge-device.bsv
+%public  nallatech-edge-vhdl-import.bsv
+
+%private nallatech-edge-device.vhd
+%private edge_comp_defs_pkg.vhd
+%private edge_comp_util_pkg.vhd
+%private non_system_edge_component.vhd
+%private system_edge_component.vhd
+
+%public  nallatech-edge-0rx0tx-device.bsv
+%private sys_edge_0rx0tx.ngc
+%private qdr2_ddr2_clocks.vhd
+%private reset_synchroniser.vhd
+
+%public  nallatech-edge-device.h
+%private nallatech-edge-device.cpp
+
+%private nallatech-edge-device-fpga1.ucf
+
+#############################################
+##                Parameters               ##
+#############################################
+
+%param CRYSTAL_CLOCK_FREQ 200 "Input Clock Frequency"
+
+%param --global MODEL_CLOCK_FREQ 75  "Desired model clock frequency (integer)."
+
+%param ACP_FSB_SOCKET 2 "Motherboard Socket ID the ACP stack is plugged into"
+
+%param NALLATECH_MAX_MSG_BYTES 4096 "Maximum bytes in a message"
+%param NALLATECH_MIN_MSG_BYTES   64 "Minimum bytes in a message"

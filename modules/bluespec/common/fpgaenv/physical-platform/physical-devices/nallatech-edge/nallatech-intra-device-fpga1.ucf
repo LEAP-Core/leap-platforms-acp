@@ -1,0 +1,254 @@
+# LVDS IO LANE 22 FPGA 1 IO bank 15 USED AS OUTPUTS
+
+NET "side_lvds_tx_lane_p[0]" IOSTANDARD = "LVDS_25" | LOC = R39;
+NET "side_lvds_tx_lane_n[0]" IOSTANDARD = "LVDS_25" | LOC = R38;
+
+NET "side_lvds_tx_lane_p[1]" IOSTANDARD = "LVDS_25" | LOC = G38;
+NET "side_lvds_tx_lane_n[1]" IOSTANDARD = "LVDS_25" | LOC = G39;
+
+NET "side_lvds_tx_lane_p[2]" IOSTANDARD = "LVDS_25" | LOC = T37;
+NET "side_lvds_tx_lane_n[2]" IOSTANDARD = "LVDS_25" | LOC = U38;
+
+NET "side_lvds_tx_lane_p[3]" IOSTANDARD = "LVDS_25" | LOC = E39;
+NET "side_lvds_tx_lane_n[3]" IOSTANDARD = "LVDS_25" | LOC = E40;
+
+NET "side_lvds_tx_lane_p[4]" IOSTANDARD = "LVDS_25" | LOC = T39;
+NET "side_lvds_tx_lane_n[4]" IOSTANDARD = "LVDS_25" | LOC = U39;
+
+NET "side_lvds_tx_lane_p[5]" IOSTANDARD = "LVDS_25" | LOC = H38;
+NET "side_lvds_tx_lane_n[5]" IOSTANDARD = "LVDS_25" | LOC = H39;
+
+NET "side_lvds_tx_lane_p[6]" IOSTANDARD = "LVDS_25" | LOC = V39;
+NET "side_lvds_tx_lane_n[6]" IOSTANDARD = "LVDS_25" | LOC = W38;
+
+NET "side_lvds_tx_lane_p[7]" IOSTANDARD = "LVDS_25" | LOC = F39;
+NET "side_lvds_tx_lane_n[7]" IOSTANDARD = "LVDS_25" | LOC = F40;
+
+NET "side_lvds_tx_clk_p[0]" IOSTANDARD = "LVDS_25" | LOC = AA35;
+NET "side_lvds_tx_clk_n[0]" IOSTANDARD = "LVDS_25" | LOC = AA36;
+
+NET "side_lvds_tx_lane_p[8]" IOSTANDARD = "LVDS_25" | LOC = H40;
+NET "side_lvds_tx_lane_n[8]" IOSTANDARD = "LVDS_25" | LOC = J40;
+
+NET "side_lvds_tx_lane_p[9]" IOSTANDARD = "LVDS_25" | LOC = K38;
+NET "side_lvds_tx_lane_n[9]" IOSTANDARD = "LVDS_25" | LOC = J38;
+
+NET "side_lvds_tx_lane_p[10]" IOSTANDARD = "LVDS_25" | LOC = Y35;
+NET "side_lvds_tx_lane_n[10]" IOSTANDARD = "LVDS_25" | LOC = W35;
+
+NET "side_lvds_tx_lane_p[11]" IOSTANDARD = "LVDS_25" | LOC = W36;
+NET "side_lvds_tx_lane_n[11]" IOSTANDARD = "LVDS_25" | LOC = W37;
+
+NET "side_lvds_tx_lane_p[12]" IOSTANDARD = "LVDS_25" | LOC = K40;
+NET "side_lvds_tx_lane_n[12]" IOSTANDARD = "LVDS_25" | LOC = K39;
+
+NET "side_lvds_tx_lane_p[13]" IOSTANDARD = "LVDS_25" | LOC = AA34;
+NET "side_lvds_tx_lane_n[13]" IOSTANDARD = "LVDS_25" | LOC = Y34;
+
+NET "side_lvds_tx_lane_p[14]" IOSTANDARD = "LVDS_25" | LOC = N39;
+NET "side_lvds_tx_lane_n[14]" IOSTANDARD = "LVDS_25" | LOC = M39;
+
+NET "side_lvds_tx_lane_p[15]" IOSTANDARD = "LVDS_25" | LOC = M38;
+NET "side_lvds_tx_lane_n[15]" IOSTANDARD = "LVDS_25" | LOC = L39;
+
+NET "side_lvds_tx_lane_p[16]" IOSTANDARD = "LVDS_25" | LOC = R37;
+NET "side_lvds_tx_lane_n[16]" IOSTANDARD = "LVDS_25" | LOC = P37;
+
+#NET "side_lvds_tx_lane_p[1]" IOSTANDARD = "LVDS_25" | LOC = P38;
+#NET "side_lvds_tx_lane_n[18]" IOSTANDARD = "LVDS_25" | LOC = N38;
+
+
+
+
+# LVDS IO LANE 23 FPGA 1 IO bank 11 USED AS OUTPUTS
+
+NET "side_lvds_tx_lane_p[17]" IOSTANDARD = "LVDS_25" | LOC = P41;
+NET "side_lvds_tx_lane_n[17]" IOSTANDARD = "LVDS_25" | LOC = R40;
+
+NET "side_lvds_tx_lane_p[18]" IOSTANDARD = "LVDS_25" | LOC = L42;
+NET "side_lvds_tx_lane_n[18]" IOSTANDARD = "LVDS_25" | LOC = M41;
+
+NET "side_lvds_tx_lane_p[19]" IOSTANDARD = "LVDS_25" | LOC = AA42;
+NET "side_lvds_tx_lane_n[19]" IOSTANDARD = "LVDS_25" | LOC = AA41;
+
+NET "side_lvds_tx_lane_p[20]" IOSTANDARD = "LVDS_25" | LOC = J42;
+NET "side_lvds_tx_lane_n[20]" IOSTANDARD = "LVDS_25" | LOC = K42;
+
+NET "side_lvds_tx_lane_p[21]" IOSTANDARD = "LVDS_25" | LOC = W40;
+NET "side_lvds_tx_lane_n[21]" IOSTANDARD = "LVDS_25" | LOC = Y40;
+
+NET "side_lvds_tx_lane_p[22]" IOSTANDARD = "LVDS_25" | LOC = U42;
+NET "side_lvds_tx_lane_n[22]" IOSTANDARD = "LVDS_25" | LOC = V41;
+
+NET "side_lvds_tx_lane_p[23]" IOSTANDARD = "LVDS_25" | LOC = T40;
+NET "side_lvds_tx_lane_n[23]" IOSTANDARD = "LVDS_25" | LOC = T41;
+
+NET "side_lvds_tx_lane_p[24]" IOSTANDARD = "LVDS_25" | LOC = N40;
+NET "side_lvds_tx_lane_n[24]" IOSTANDARD = "LVDS_25" | LOC = P40;
+
+NET "side_lvds_tx_clk_p[1]" IOSTANDARD = "LVDS_25" | LOC = T42;
+NET "side_lvds_tx_clk_n[1]" IOSTANDARD = "LVDS_25" | LOC = U41;
+
+NET "side_lvds_tx_lane_p[25]" IOSTANDARD = "LVDS_25" | LOC = V40;
+NET "side_lvds_tx_lane_n[25]" IOSTANDARD = "LVDS_25" | LOC = W41;
+
+NET "side_lvds_tx_lane_p[26]" IOSTANDARD = "LVDS_25" | LOC = W42;
+NET "side_lvds_tx_lane_n[26]" IOSTANDARD = "LVDS_25" | LOC = Y42;
+
+NET "side_lvds_tx_lane_p[27]" IOSTANDARD = "LVDS_25" | LOC = M42;
+NET "side_lvds_tx_lane_n[27]" IOSTANDARD = "LVDS_25" | LOC = N41;
+
+NET "side_lvds_tx_lane_p[28]" IOSTANDARD = "LVDS_25" | LOC = H41;
+NET "side_lvds_tx_lane_n[28]" IOSTANDARD = "LVDS_25" | LOC = J41;
+
+NET "side_lvds_tx_lane_p[29]" IOSTANDARD = "LVDS_25" | LOC = Y37;
+NET "side_lvds_tx_lane_n[29]" IOSTANDARD = "LVDS_25" | LOC = AA37;
+
+NET "side_lvds_tx_lane_p[30]" IOSTANDARD = "LVDS_25" | LOC = F41;
+NET "side_lvds_tx_lane_n[30]" IOSTANDARD = "LVDS_25" | LOC = G41;
+
+NET "side_lvds_tx_lane_p[31]" IOSTANDARD = "LVDS_25" | LOC = Y39;
+NET "side_lvds_tx_lane_n[31]" IOSTANDARD = "LVDS_25" | LOC = Y38;
+
+NET "side_lvds_tx_lane_p[32]" IOSTANDARD = "LVDS_25" | LOC = F42;
+NET "side_lvds_tx_lane_n[32]" IOSTANDARD = "LVDS_25" | LOC = G42;
+
+NET "side_lvds_tx_lane_p[33]" IOSTANDARD = "LVDS_25" | LOC = AA40;
+NET "side_lvds_tx_lane_n[33]" IOSTANDARD = "LVDS_25" | LOC = AA39;
+
+#NET "side_lvds_tx_lane_p[18]" IOSTANDARD = "LVDS_25" | LOC = L40;
+#NET "side_lvds_tx_lane_n[19]" IOSTANDARD = "LVDS_25" | LOC = L41;
+
+
+
+# LVDS IO LANE 24 FPGA 1 IO bank 13 USED AS OUTPUTS	 
+INST "comp_0_side_mod_edge_2rx2tx_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y5" ;
+NET  "comp_0_side_mod_edge_2rx2tx_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+
+
+
+
+
+NET "side_lvds_rx_lane_p[17]" IOSTANDARD = "LVDS_25" | LOC = AR42 | diff_term="true";
+NET "side_lvds_rx_lane_n[17]" IOSTANDARD = "LVDS_25" | LOC = AT42 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[18]" IOSTANDARD = "LVDS_25" | LOC = AB39 | diff_term="true";
+NET "side_lvds_rx_lane_n[18]" IOSTANDARD = "LVDS_25" | LOC = AC38 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[19]" IOSTANDARD = "LVDS_25" | LOC = AU42 | diff_term="true";
+NET "side_lvds_rx_lane_n[19]" IOSTANDARD = "LVDS_25" | LOC = AV41 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[20]" IOSTANDARD = "LVDS_25" | LOC = AB41 | diff_term="true";
+NET "side_lvds_rx_lane_n[20]" IOSTANDARD = "LVDS_25" | LOC = AB42 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[21]" IOSTANDARD = "LVDS_25" | LOC = AT41 | diff_term="true";
+NET "side_lvds_rx_lane_n[21]" IOSTANDARD = "LVDS_25" | LOC = AU41 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[22]" IOSTANDARD = "LVDS_25" | LOC = AC41 | diff_term="true";
+NET "side_lvds_rx_lane_n[22]" IOSTANDARD = "LVDS_25" | LOC = AD42 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[23]" IOSTANDARD = "LVDS_25" | LOC = AP42 | diff_term="true";
+NET "side_lvds_rx_lane_n[23]" IOSTANDARD = "LVDS_25" | LOC = AP41 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[24]" IOSTANDARD = "LVDS_25" | LOC = AE42 | diff_term="true";
+NET "side_lvds_rx_lane_n[24]" IOSTANDARD = "LVDS_25" | LOC = AD41 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[25]" IOSTANDARD = "LVDS_25" | LOC = AM41 | diff_term="true";
+NET "side_lvds_rx_lane_n[25]" IOSTANDARD = "LVDS_25" | LOC = AN41 | diff_term="true";
+
+NET "side_lvds_rx_clk_p[1]" IOSTANDARD = "LVDS_25" | LOC = AB37 | diff_term="true";
+NET "side_lvds_rx_clk_n[1]" IOSTANDARD = "LVDS_25" | LOC = AB38 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[26]" IOSTANDARD = "LVDS_25" | LOC = AC40 | diff_term="true";
+NET "side_lvds_rx_lane_n[26]" IOSTANDARD = "LVDS_25" | LOC = AC39 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[27]" IOSTANDARD = "LVDS_25" | LOC = AJ42 | diff_term="true";
+NET "side_lvds_rx_lane_n[27]" IOSTANDARD = "LVDS_25" | LOC = AJ41 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[28]" IOSTANDARD = "LVDS_25" | LOC = AL42 | diff_term="true";
+NET "side_lvds_rx_lane_n[28]" IOSTANDARD = "LVDS_25" | LOC = AM42 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[29]" IOSTANDARD = "LVDS_25" | LOC = AE40 | diff_term="true";
+NET "side_lvds_rx_lane_n[29]" IOSTANDARD = "LVDS_25" | LOC = AD40 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[30]" IOSTANDARD = "LVDS_25" | LOC = AF40 | diff_term="true";
+NET "side_lvds_rx_lane_n[30]" IOSTANDARD = "LVDS_25" | LOC = AG41 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[31]" IOSTANDARD = "LVDS_25" | LOC = AF41 | diff_term="true";
+NET "side_lvds_rx_lane_n[31]" IOSTANDARD = "LVDS_25" | LOC = AF42 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[32]" IOSTANDARD = "LVDS_25" | LOC = AH40 | diff_term="true";
+NET "side_lvds_rx_lane_n[32]" IOSTANDARD = "LVDS_25" | LOC = AJ40 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[33]" IOSTANDARD = "LVDS_25" | LOC = AG42 | diff_term="true";
+NET "side_lvds_rx_lane_n[33]" IOSTANDARD = "LVDS_25" | LOC = AH41 | diff_term="true";
+
+#NET "side_lvds_rx_lane_p[18]" IOSTANDARD = "LVDS_25" | LOC = AL41 | diff_term="true";
+#NET "side_lvds_rx_lane_n[18]" IOSTANDARD = "LVDS_25" | LOC = AK42 | diff_term="true";
+
+
+
+# LVDS IO LANE 25 FPGA 1 IO bank 17 USED AS OUTPUTS	 
+
+INST "comp_0_side_mod_edge_2rx2tx_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y4" ;
+NET  "comp_0_side_mod_edge_2rx2tx_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+
+
+
+
+NET "side_lvds_rx_lane_p[0]" IOSTANDARD = "LVDS_25" | LOC = AN39 | diff_term="true";
+NET "side_lvds_rx_lane_n[0]" IOSTANDARD = "LVDS_25" | LOC = AP38 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[1]" IOSTANDARD = "LVDS_25" | LOC = AB34 | diff_term="true";
+NET "side_lvds_rx_lane_n[1]" IOSTANDARD = "LVDS_25" | LOC = AC34 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[2]" IOSTANDARD = "LVDS_25" | LOC = AT39 | diff_term="true";
+NET "side_lvds_rx_lane_n[2]" IOSTANDARD = "LVDS_25" | LOC = AR39 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[3]" IOSTANDARD = "LVDS_25" | LOC = AC35 | diff_term="true";
+NET "side_lvds_rx_lane_n[3]" IOSTANDARD = "LVDS_25" | LOC = AB36 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[4]" IOSTANDARD = "LVDS_25" | LOC = AR40 | diff_term="true";
+NET "side_lvds_rx_lane_n[4]" IOSTANDARD = "LVDS_25" | LOC = AT40 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[5]" IOSTANDARD = "LVDS_25" | LOC = AD36 | diff_term="true";
+NET "side_lvds_rx_lane_n[5]" IOSTANDARD = "LVDS_25" | LOC = AD37 | diff_term="true";
+
+NET "side_lvds_rx_clk_p[0]" IOSTANDARD = "LVDS_25" | LOC = AV40 | diff_term="true";
+NET "side_lvds_rx_clk_n[0]" IOSTANDARD = "LVDS_25" | LOC = AU39 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[6]" IOSTANDARD = "LVDS_25" | LOC = AE37 | diff_term="true";
+NET "side_lvds_rx_lane_n[6]" IOSTANDARD = "LVDS_25" | LOC = AD38 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[7]" IOSTANDARD = "LVDS_25" | LOC = AK38 | diff_term="true";
+NET "side_lvds_rx_lane_n[7]" IOSTANDARD = "LVDS_25" | LOC = AK37 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[8]" IOSTANDARD = "LVDS_25" | LOC = AC36 | diff_term="true";
+NET "side_lvds_rx_lane_n[8]" IOSTANDARD = "LVDS_25" | LOC = AD35 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[9]" IOSTANDARD = "LVDS_25" | LOC = AE39 | diff_term="true";
+NET "side_lvds_rx_lane_n[9]" IOSTANDARD = "LVDS_25" | LOC = AE38 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[10]" IOSTANDARD = "LVDS_25" | LOC = AM37 | diff_term="true";
+NET "side_lvds_rx_lane_n[10]" IOSTANDARD = "LVDS_25" | LOC = AL37 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[11]" IOSTANDARD = "LVDS_25" | LOC = AN40 | diff_term="true";
+NET "side_lvds_rx_lane_n[11]" IOSTANDARD = "LVDS_25" | LOC = AP40 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[12]" IOSTANDARD = "LVDS_25" | LOC = AF39 | diff_term="true";
+NET "side_lvds_rx_lane_n[12]" IOSTANDARD = "LVDS_25" | LOC = AG38 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[13]" IOSTANDARD = "LVDS_25" | LOC = AN38 | diff_term="true";
+NET "side_lvds_rx_lane_n[13]" IOSTANDARD = "LVDS_25" | LOC = AM38 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[14]" IOSTANDARD = "LVDS_25" | LOC = AG37 | diff_term="true";
+NET "side_lvds_rx_lane_n[14]" IOSTANDARD = "LVDS_25" | LOC = AF37 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[15]" IOSTANDARD = "LVDS_25" | LOC = AL39 | diff_term="true";
+NET "side_lvds_rx_lane_n[15]" IOSTANDARD = "LVDS_25" | LOC = AM39 | diff_term="true";
+
+NET "side_lvds_rx_lane_p[16]" IOSTANDARD = "LVDS_25" | LOC = AJ38 | diff_term="true";
+NET "side_lvds_rx_lane_n[16]" IOSTANDARD = "LVDS_25" | LOC = AK39 | diff_term="true";
+
+#NET "side_lvds_rx_lane_p[17]" IOSTANDARD = "LVDS_25" | LOC = AJ37 | diff_term="true";
+#NET "side_lvds_rx_lane_n[17]" IOSTANDARD = "LVDS_25" | LOC = AH38 | diff_term="true";

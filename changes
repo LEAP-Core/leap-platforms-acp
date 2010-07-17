@@ -1679,3 +1679,51 @@ high as 133% (2.5ns -> 1ns latency).  RRRTest had more modest 10%
 gains.  There's actually more perf to be had here by elimating the
 sync fifos inthe edge device entirely, but this will require a larger
 code rewrite since it involves changing how the model clock gets generated.
+
+----------
+kfleming    Date: Sat Jul 17 19:03:05 EDT 2010  CSN: CSN-platform-acp-76
+                  Sat Jul 17 23:03:05 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ inter_intra_mod_mst_edge_0rx4tx.ngc Locally Added               0 
+ nallatech-edge-device.bsv Locally Modified           75 
+ inter_intra_mod_mst_edge_2rx2tx.ngc Locally Added               0 
+ nallatech-edge-0rx0tx-device.bsv Locally Added               0 
+ comp_0_base_edge_4rx0tx.ngc Locally Added               0 
+ nallatech-edge-2rx2tx-device.bsv Locally Added               0 
+ nallatech-intra-device.bsv Locally Added               0 
+ exp_0_inter_sys_edge_2rx2tx.ngc Locally Added               0 
+ sys_edge_0rx0tx.ngc       Locally Added               0 
+ nallatech-intra-vhdl-import.bsv Locally Added               0 
+ nallatech-edge-device.vhd Locally Modified           75 
+ nallatech-intra-device.vhd Locally Added               0 
+ inter_intra_mod_slv_edge_4rx0tx.ngc Locally Added               0 
+ inter_intra_mod_slv_edge_2rx2tx.ngc Locally Added               0 
+ nallatech-edge-vhdl-import.bsv Locally Modified           75 
+ exp_0_base_edge_4rx2tx.ngc Locally Added               0 
+ comp_1_base_edge_0rx4tx.ngc Locally Added               0 
+ nallatech-intra-2rx2tx-device-fpga0.bsv Locally Added               0 
+ nallatech-intra-2rx2tx-device-fpga1.bsv Locally Added               0 
+ nallatech-edge-device.awb Locally Modified           75 
+ nallatech-edge-device-fpga1.ucf Locally Added               0 
+ nallatech-intra-2rx2tx-device.bsv Locally Added               0 
+ nallatech-intra-device-fpga0.awb Locally Added               0 
+ nallatech-edge-device.ucf Locally Modified           75 
+ nallatech-intra-device-fpga1.awb Locally Added               0 
+ nallatech-edge-device-null.awb Locally Added               0 
+ nallatech-intra-device-fpga0.ucf Locally Added               0 
+ nallatech-intra-device-fpga1.ucf Locally Added               0 
+
+
+The check in is a waypoint along the line to having a multiple FPGA
+build.  Here, I have added the nallatech provided communications
+primitives and adjusted the existing edge device to support the
+interface required for these devices.  I also refactored the edge
+device to share as much code as possible between the real edge device
+(FPGA0) and the null edge device (FPGA1).  I also added Bluespec
+wrappers for the intra ACP communications primitives.  
+
+
+The next step will be to add a physical platform for FPGA1 and a new
+platform with the communication stub for FPGA0.
