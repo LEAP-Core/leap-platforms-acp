@@ -80,10 +80,6 @@ Packagehint=platforms
 File=modules/bluespec/common/fpgaenv/low-level-platform-interface/remote-memory/null/null-remote-memory.awb
 Packagehint=platforms
 
-[Nallatech Edge Physical Device]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device.awb
-Packagehint=platform-acp
-
 [Nallatech Edge Physical Channel]
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge/nallatech-edge-channel.awb
 Packagehint=platform-acp
@@ -111,7 +107,7 @@ Packagehint=platform-acp
 clocks_device=Null Clocks Device
 physical_platform_utils=Common Physical Platform Utilities
 ddr2_device=ACP DDR2 SRAM Device
-nallatech_edge_device=Nallatech Edge Physical Device
+nallatech_edge_device=Nallatech Edge Physical Device v2
 
 [RRR Common Module]
 File=modules/bluespec/common/fpgaenv/virtual-platform/rrr/rrr_common/rrr_common.awb
@@ -138,12 +134,8 @@ Packagehint=platforms
 
 [FPGA Build Pipeline/Requires]
 post_synthesis_tool=Xilinx Post-synthesis Toolchain
-synthesis_tool=XST Synthesis Tool
+synthesis_tool=XST Synthesis Tool - no basicio run
 mcd_tool=Simple MCD Tool
-
-[XST Synthesis Tool]
-File=modules/project/xilinx/xst.awb
-Packagehint=platforms
 
 [Xilinx Post-synthesis Toolchain]
 File=modules/project/xilinx/xilinx_post_synth.awb
@@ -173,4 +165,12 @@ Packagehint=platforms
 
 [Simple MCD Tool]
 File=modules/project/bluespec/mcd.awb
+Packagehint=platforms
+
+[Nallatech Edge Physical Device v2]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device.awb
+Packagehint=platform-acp
+
+[XST Synthesis Tool - no basicio run]
+File=modules/project/xilinx/xst-nobasicio.awb
 Packagehint=platforms

@@ -11,6 +11,18 @@ NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[5]" IOS
 NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[6]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP13;
 NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[7]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN13;
 
+# Synplify LOC's
+
+NET "nallatechEdgeWires_wCONFIG_DATA[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AJ26;
+NET "nallatechEdgeWires_wCONFIG_DATA[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK27;
+NET "nallatechEdgeWires_wCONFIG_DATA[2]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AM14;
+NET "nallatechEdgeWires_wCONFIG_DATA[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN14;
+NET "nallatechEdgeWires_wCONFIG_DATA[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK29;
+NET "nallatechEdgeWires_wCONFIG_DATA[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK28;
+NET "nallatechEdgeWires_wCONFIG_DATA[6]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP13;
+NET "nallatechEdgeWires_wCONFIG_DATA[7]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN13;
+
+
 NET "REG_RDY_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL29;
 NET "REG_CLK" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK13;
 NET "REG_ADS_Z" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL30;
@@ -37,6 +49,10 @@ NET "mgt_pg" IOSTANDARD = "LVCMOS25" | LOC=AM13;
 
 NET "eeprom_scl" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP16;
 NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_EEPROM_SDA" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP15;
+
+#Synplify LOC's 
+NET "nallatechEdgeWires_wSDA" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP15;
+
 
 NET "CLK100P" IOSTANDARD = "LVDS_25" | LOC = AL27 | DIFF_TERM = "TRUE"; # 100MHz clock
 NET "CLK100N" IOSTANDARD = "LVDS_25" | LOC = AL26 | DIFF_TERM = "TRUE";
