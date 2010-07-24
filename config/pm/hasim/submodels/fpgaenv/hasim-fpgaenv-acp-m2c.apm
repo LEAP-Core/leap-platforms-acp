@@ -76,6 +76,7 @@ Packagehint=platform-acp
 arches_mpi_device=Arches MPI Physical Device
 physical_platform_utils=Common Physical Platform Utilities
 clocks_device=Null Clocks Device
+led_device=General LED Device
 
 [Arches MPI Physical Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arches-mpi/arches-mpi-device.awb
@@ -168,4 +169,8 @@ CRYSTAL_CLOCK_FREQ=200
 
 [Simple MCD Tool]
 File=modules/project/bluespec/mcd.awb
+Packagehint=platforms
+
+[General LED Device]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
 Packagehint=platforms

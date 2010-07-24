@@ -1,3 +1,24 @@
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q_dD_OUT[*]"     TIG;
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/Mram_fifoMem*" TIG;
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sGEnqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dSyncReg1[*]"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dGDeqPtr[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sSyncReg1[*]"  TIG;
+
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q_dD_OUT[*]"      TIG;
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/Mram_fifoMem*"  TIG;
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sGEnqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dSyncReg1[*]"   TIG;
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dGDeqPtr[*]"    TIG;
+net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sSyncReg1[*]"   TIG;
+
+
+# Needed for lvds comms 
+net "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;
+#net "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/master_init_sm_gen.lvds_master_init_sm_inst/tx_training_done" TIG;
+#net "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/master_init_sm_gen.lvds_master_init_sm_inst/tx_rst" TIG;
+net "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_rst" TIG;
+
 # LVDS IO LANE 22 FPGA 1 IO bank 15 USED AS OUTPUTS
 
 NET "side_lvds_tx_lane_p[0]" IOSTANDARD = "LVDS_25" | LOC = R39;
@@ -122,8 +143,8 @@ NET "side_lvds_tx_lane_n[33]" IOSTANDARD = "LVDS_25" | LOC = AA39;
 
 
 # LVDS IO LANE 24 FPGA 1 IO bank 13 USED AS OUTPUTS	 
-INST "comp_0_side_mod_edge_2rx2tx_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y5" ;
-NET  "comp_0_side_mod_edge_2rx2tx_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_slvt_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y5" ;
+NET  "m_vp_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_slvt_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
 
 
 
@@ -190,8 +211,8 @@ NET "side_lvds_rx_lane_n[33]" IOSTANDARD = "LVDS_25" | LOC = AH41 | diff_term="t
 
 # LVDS IO LANE 25 FPGA 1 IO bank 17 USED AS OUTPUTS	 
 
-INST "comp_0_side_mod_edge_2rx2tx_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y4" ;
-NET  "comp_0_side_mod_edge_2rx2tx_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_slvt_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y4" ;
+NET  "m_vp_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_slvt_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
 
 
 

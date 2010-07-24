@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2010 Intel Corporation
+// Copyright (C) 2008 Intel Corporation
 //
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -16,18 +16,15 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
-import Clocks::*;
-import FIFO::*;
-import FIFOF::*;
-import Vector::*;
-import RWire::*;
+#include "asim/provides/physical_platform.h"
 
-`include "asim/provides/librl_bsv_base.bsh"
-`include "asim/provides/fpga_components.bsh"
-`include "asim/provides/clocks_device.bsh"
+PHYSICAL_DEVICES_CLASS::PHYSICAL_DEVICES_CLASS(
+    PLATFORMS_MODULE p) :
+        PLATFORMS_MODULE_CLASS(p),
+        nallatechEdgeDevice(this)
+{
+}
 
-// Stamp out a 2rx 2tx intra-fpga device 
-module mkNallatechIntraDevice (NALLATECH_INTRA_DEVICE);
-  let m <- mkNallatechIntraDeviceParametric(tuple3(1,0,0),tuple3(1,1,0),2,2);
-  return m;
-endmodule
+PHYSICAL_DEVICES_CLASS::~PHYSICAL_DEVICES_CLASS()
+{
+}

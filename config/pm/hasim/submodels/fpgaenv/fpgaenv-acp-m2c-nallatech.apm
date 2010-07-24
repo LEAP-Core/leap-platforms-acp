@@ -108,6 +108,7 @@ clocks_device=Null Clocks Device
 physical_platform_utils=Common Physical Platform Utilities
 ddr2_device=ACP DDR2 SRAM Device
 nallatech_edge_device=Nallatech Edge Physical Device v2
+led_device=General LED Device
 
 [RRR Common Module]
 File=modules/bluespec/common/fpgaenv/virtual-platform/rrr/rrr_common/rrr_common.awb
@@ -173,4 +174,8 @@ Packagehint=platform-acp
 
 [XST Synthesis Tool - no basicio run]
 File=modules/project/xilinx/xst-nobasicio.awb
+Packagehint=platforms
+
+[General LED Device]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
 Packagehint=platforms

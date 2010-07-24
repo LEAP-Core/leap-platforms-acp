@@ -116,6 +116,8 @@ entity nallatech_edge_vhdl is
         -- output clocks and resets
 
         raw_clk_out: out std_logic;     -- raw oscillator clock
+        osc_clk_out: out std_logic;     -- 100 MHz board clock, needed by intra
+                                        -- devices
         clk_out    : out std_logic;     -- interface clock
         rst_n_out  : out std_logic;     -- interface reset
 
@@ -146,7 +148,9 @@ entity nallatech_edge_vhdl is
         user_reg_rdata_in  : in  std_logic_vector(15 downto 0);
 
         -- intra fpga interface
-        intra_fpga_lvds_ctrl : inout  std_logic_vector(47 downto 0)
+        intra_fpga_lvds_ctrl : inout  std_logic_vector(47 downto 0);
+        -- user controlled leds
+        leds : in std_logic_vector(3 downto 0)
 		);	
 end nallatech_edge_vhdl;
 
@@ -208,7 +212,7 @@ architecture rtl of nallatech_edge_vhdl is
             --user interface
 		
             --ram clocks -- Angshuman - not RAM clocks
-			osc_clk: out std_logic;
+	    osc_clk: out std_logic;
             clk200mhz : out std_logic;
             clk200mhz_locked : out std_logic;
             
@@ -287,12 +291,9 @@ architecture rtl of nallatech_edge_vhdl is
     signal clk200mhz_locked : std_logic;
 	signal i_ram_clk_locked_n : std_logic;
 	
-    -- raw oscillator clock
-    signal osc_clk_c : std_logic;
-    -- signal raw_clk_c : std_logic;
+    
     
     -- the clock at which the Bluespec-Edge interface will be clocked
-    --alias ifc_clk   : std_logic is osc_clk_c;
     alias ifc_clk   : std_logic is clk200mhz;
     alias ifc_rst_n : std_logic is clk200mhz_locked;
             
@@ -300,6 +301,8 @@ architecture rtl of nallatech_edge_vhdl is
     signal ram_pg_buf : std_logic;
     signal mgt_pg_buf : std_logic;
 
+    signal clk100 : std_logic;
+        
     ---------------------------------------------------------------------------
 	--M2E user register slave interface signals
 	signal user_reg_clk : std_logic;
@@ -334,7 +337,7 @@ architecture rtl of nallatech_edge_vhdl is
 	---------------------------------------------------------------------------
 	--LED and alarm signals
 	signal sysmon_alarm : std_logic_vector(3 downto 0);
-	signal leds : std_logic_vector(3 downto 0);
+	
 
     -- Angshuman -- dummy signals to catch non-functional RAM signals from edge
     -- core. We'll let these dangle
@@ -436,7 +439,7 @@ begin
 		--User interfaces to the M2E edge component
 		-------------------------------
 		--RAM clock interface -- Angshuman - these aren't RAM clocks
-		osc_clk => osc_clk_c,
+		osc_clk => clk100,
 		clk200mhz => clk200mhz,
         clk200mhz_locked => clk200mhz_locked,
 
@@ -477,14 +480,14 @@ begin
 		leds => leds,  
 		ram_leds=>ram_leds
 		);
-	
+        
     sram_clocks_module: qdr2_ddr2_clocks
     port map (
         -- Initialization control and reset
         init => open,
         pll_rst => '0',
         -- input memory clock
-        sys_clk_in => osc_clk_c,
+        sys_clk_in => clk100,
         -- sys_clk_n => clk100n,
         -- sys_clk => clk100p,
         -- ddr2 clock signals node 0
@@ -520,7 +523,9 @@ begin
     rx_data          <= rx_data_c;
 
     -- export clocks and reset
-
+        
+    osc_clk_out <= clk100;
+        
     -- ifc_clk is an alias of some other clock net (grep this file)
 
     clk_out     <= ifc_clk;

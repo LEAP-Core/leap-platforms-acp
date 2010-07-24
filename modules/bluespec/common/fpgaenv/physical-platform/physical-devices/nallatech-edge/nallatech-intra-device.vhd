@@ -75,7 +75,7 @@ entity nallatech_intra_vhdl is
                 external_id_fpga: integer;
                 external_id_number: integer;
                 rx_lanes: integer;
-                tx_lanes: integer;
+                tx_lanes: integer
                );
 	port( 
 
@@ -98,7 +98,8 @@ entity nallatech_intra_vhdl is
         
 	        
         -- user interface (channel)
-        
+        sys_clk          : in std_logic;
+                
         tx_data_valid    : in std_logic;
         tx_data          : in std_logic_vector(255 downto 0);
         tx_data_not_full : out std_logic;
@@ -108,12 +109,11 @@ entity nallatech_intra_vhdl is
         rx_data          : out std_logic_vector(255 downto 0);
 
         -- intra fpga interface
-        intra_fpga_lvds_ctrl : inout  std_logic_vector(47 downto 0);
+        intra_fpga_lvds_ctrl : inout  std_logic_vector(47 downto 0)
 		);	
 end nallatech_intra_vhdl;
 
 architecture rtl of nallatech_intra_vhdl is
-        signal link_complete_c : std_logic;
 	--write (to fsb) interface						
 	signal tx_data_valid_c : std_logic;
 	signal tx_data_c : std_logic_vector(255 downto 0);
@@ -126,7 +126,7 @@ architecture rtl of nallatech_intra_vhdl is
 	signal rx_data_almost_full_c :std_logic;
 	signal rx_data_empty_c:std_logic;
   
-        entity non_system_edge_component is	
+        component non_system_edge_component is	
 	generic(local_id:integer;
 		local_module_type:integer;
 		external_id:integer;
@@ -137,14 +137,14 @@ architecture rtl of nallatech_intra_vhdl is
 		clk100 : in STD_LOGIC;
 		srst : in STD_LOGIC;
 		link_complete : out STD_LOGIC;
-		lvds_rx_lane_p : in std_logic_vector((17*rx_lanes)-1 downto 0);
-		lvds_rx_lane_n : in std_logic_vector((17*rx_lanes)-1 downto 0);
-		lvds_rx_clk_p : in std_logic_vector(rx_lanes-1 downto 0);
-		lvds_rx_clk_n : in std_logic_vector(rx_lanes-1 downto 0);
-		lvds_tx_lane_p : out std_logic_vector((17*tx_lanes)-1 downto 0);
-		lvds_tx_lane_n : out std_logic_vector((17*tx_lanes)-1 downto 0);
-		lvds_tx_clk_p : out std_logic_vector(tx_lanes-1 downto 0);
-		lvds_tx_clk_n : out std_logic_vector(tx_lanes-1 downto 0); 
+		lvds_rx_lane_p : in std_logic_vector(33 downto 0);
+		lvds_rx_lane_n : in std_logic_vector(33 downto 0);
+		lvds_rx_clk_p : in std_logic_vector(1 downto 0);
+		lvds_rx_clk_n : in std_logic_vector(1 downto 0);
+		lvds_tx_lane_p : out std_logic_vector(33 downto 0);
+		lvds_tx_lane_n : out std_logic_vector(33 downto 0);
+		lvds_tx_clk_p : out std_logic_vector(1 downto 0);
+		lvds_tx_clk_n : out std_logic_vector(1 downto 0); 
 		lvds_link_sc_out : out STD_LOGIC_VECTOR(4 downto 0);
 		lvds_link_sc_in : in STD_LOGIC_VECTOR(4 downto 0);
 		lvds_comms_control : inout STD_LOGIC_VECTOR(47 downto 0);
@@ -158,12 +158,13 @@ architecture rtl of nallatech_intra_vhdl is
 		rx_data_valid : out STD_LOGIC;
 		rx_data : out STD_LOGIC_VECTOR(255 downto 0)
 		);
-        end non_system_edge_component;
-  	
+        end component;
+        
+begin  	
 	---------------------------------------------------------------------------
 	--instantiate the M2E edge component configured for 4 transmit LVDS banks
 	--to the M2B, 2 recieve LVDS banks from the M2B and a ram speed of 200MHz
-	fsb_compute_edge_inst : system_edge_component
+	fsb_compute_intra_inst : non_system_edge_component
     generic map(
 		local_id => DEVICE_ID(local_id_layer,local_id_fpga,local_id_number),
 		local_module_type => FSB_COMPUTE_MOD_TYPE,
@@ -172,20 +173,22 @@ architecture rtl of nallatech_intra_vhdl is
 		tx_lanes => tx_lanes
         )
 	port map(
-      		clk100 <= clk100,
-		srst <= srst,
-		link_complete <= link_complete_c,
-		lvds_rx_lane_p <= lvds_rx_lane_p,
-		lvds_rx_lane_n <= lvds_rx_lane_n, 
-		lvds_rx_clk_p <= lvds_rx_clk_p, 
-		lvds_rx_clk_n <= lvds_rx_clk_n,
-		lvds_tx_lane_p <= lvds_tx_lane_p,
-		lvds_tx_lane_n <= lvds_tx_lane_n,
-		lvds_tx_clk_p <= lvds_tx_clk_p,
-		lvds_tx_clk_n <= lvds_tx_clk_n,
-		lvds_comms_control <= intra_fpga_lvds_ctrl,
-
-		sys_clk => ifc_clk,
+      		clk100 => clk100,
+		srst => '0',
+		link_complete => open,
+		lvds_rx_lane_p => lvds_rx_lane_p,
+		lvds_rx_lane_n => lvds_rx_lane_n, 
+		lvds_rx_clk_p => lvds_rx_clk_p, 
+		lvds_rx_clk_n => lvds_rx_clk_n,
+		lvds_tx_lane_p => lvds_tx_lane_p,
+		lvds_tx_lane_n => lvds_tx_lane_n,
+		lvds_tx_clk_p => lvds_tx_clk_p,
+		lvds_tx_clk_n => lvds_tx_clk_n,
+		lvds_comms_control => intra_fpga_lvds_ctrl,
+		lvds_link_sc_out => open,
+		lvds_link_sc_in => (others=>'0'),
+                
+		sys_clk => sys_clk,
 		tx_data_valid => tx_data_valid_c,
 		
 		tx_data => tx_data_c,
@@ -203,10 +206,10 @@ architecture rtl of nallatech_intra_vhdl is
     -- we made need to observe that the link is complete
     tx_data_valid_c  <= tx_data_valid;
     tx_data_c        <= tx_data;
-    tx_data_not_full <= (not tx_data_almost_full_c) and link_complete_c;
+    tx_data_not_full <= (not tx_data_almost_full_c);
 
     rx_data_read_c   <= rx_data_read;
-    rx_data_ready    <= (not rx_data_empty_c) and link_complete_c;
+    rx_data_ready    <= (not rx_data_empty_c);
     rx_data          <= rx_data_c;
 
 end rtl;

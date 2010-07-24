@@ -1,0 +1,10 @@
+service PLATFORM_DEBUGGER
+{
+    server hw (bsv, method) <- sw (cpp, method)
+    {
+        method StartDebug(in UINT8[8] input, out UINT8[8] status);
+    
+        method TransferCount  (in UINT8[8] dummy, out UINT64[64] curCycle);
+    };
+};
+

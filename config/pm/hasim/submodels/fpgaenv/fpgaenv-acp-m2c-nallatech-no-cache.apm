@@ -91,14 +91,12 @@ Packagehint=platforms
 File=modules/bluespec/common/fpgaenv/low-level-platform-interface/remote-memory/null/null-remote-memory.awb
 Packagehint=platforms
 
-[Nallatech Edge Physical Device]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device.awb
-Packagehint=platform-acp
 
 [ACP M2 Compute Module (Nallatech)/Requires]
 clocks_device=Null Clocks Device
 physical_platform_utils=Common Physical Platform Utilities
-nallatech_edge_device=Nallatech Edge Physical Device
+nallatech_edge_device=Nallatech Edge Physical Device v2
+led_device=General LED Device
 
 [ACP M2 Compute Module (Nallatech)]
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech/acp-m2c.awb
@@ -238,3 +236,11 @@ CRYSTAL_CLOCK_FREQ=200
 [Simple MCD Tool]
 File=modules/project/bluespec/mcd.awb
 Packagehint=platforms
+
+[General LED Device]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
+Packagehint=platforms
+
+[Nallatech Edge Physical Device v2]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device.awb
+Packagehint=platform-acp

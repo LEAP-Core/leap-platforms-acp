@@ -25,6 +25,7 @@ import RWire::*;
 `include "asim/provides/librl_bsv_base.bsh"
 `include "asim/provides/fpga_components.bsh"
 `include "asim/provides/clocks_device.bsh"
+`include "asim/provides/led_device.bsh"
 
 // NALLATECH_EDGE_DRIVER
 
@@ -60,7 +61,9 @@ interface NALLATECH_EDGE_DEVICE;
     interface NALLATECH_EDGE_WIRES          wires;
     interface CLOCKS_DRIVER                 clocks_driver;
     interface SRAM_CLOCKS_DRIVER            sram_clocks_driver;
+    interface INTRA_CLOCKS_DRIVER           intra_clocks_driver;
     interface NALLATECH_COMM_CONTROL        communication_control;
+    interface LEDS_DRIVER#(4)               leds_driver;
         
 endinterface
 
@@ -76,6 +79,8 @@ interface SRAM_CLOCKS_DRIVER;
         
 endinterface
 
+
+typedef Clock INTRA_CLOCKS_DRIVER;
 
 // mkNallatechEdgeDevice
 
@@ -105,7 +110,7 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
     
     Clock rawClock = prim_device.rawClock;
     Reset rawReset = noReset;
-    
+
     Clock userRegClock = prim_device.regClock;
     Reset userRegReset <- mkAsyncReset(2, edgeReset, userRegClock);
 
@@ -214,11 +219,25 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
         sync_reg_read_rsp_q.deq();
     endrule
 
+    // Handle the leds device
+    Reg#(Bit#(4)) ledReg <- mkSyncReg(0, modelClock, modelReset, edgeClock);
+    
+    rule driveLEDS;
+       prim_device.setLEDs(ledReg);
+    endrule 
 
     //
     // Drivers
     //
     
+    interface LEDS_DRIVER leds_driver;
+
+	method  Action setLEDs(Bit#(4) leds_in);
+            ledReg <= leds_in;
+	endmethod
+	
+    endinterface
+
     interface NALLATECH_EDGE_DRIVER edge_driver;
         
         method Action enq(NALLATECH_FIFO_DATA data);
@@ -292,6 +311,9 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
     
     // Pass through communication control
     interface communication_control = prim_device.communication_control;
+ 
+    // Pass through oscillator clock (100Mhz)
+    interface intra_clocks_driver = prim_device.oscClock;
 
     // Pass through the wires interface
     

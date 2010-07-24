@@ -35,11 +35,11 @@ interface NALLATECH_INTRA_DRIVER;
         
 endinterface
 
-// NALLATECH_EDGE_WIRES
+// NALLATECH_INTRA_WIRES
 
-// Nallatech Edge Wires are defined in the primitive device
+// Nallatech Intra Wires are defined in the primitive device
 
-// NALLATECH_EDGE_DEVICE
+// NALLATECH_INTRA_DEVICE
 
 // By convention a Device is a Driver and a Wires
 
@@ -47,82 +47,79 @@ interface NALLATECH_INTRA_DEVICE;
 
     interface NALLATECH_INTRA_DRIVER        intra_driver;
     interface NALLATECH_INTRA_WIRES         wires;
-    interface NALLATECH_COMM_CONTROL        communication_control;
-        
-endinterface
-
-// Interface SRAM_CLOCKS_DRIVER
-// An interface to pass wires from the edge driver to an SRAM device (if present)
-
-interface SRAM_CLOCKS_DRIVER;
-
-    interface Clock ramClk0;
-    interface Clock ramClk200;
-    interface Clock ramClk270;
-    method Bit#(1) ramClkLocked();
+    interface NALLATECH_INTRA_COMM_CONTROL  communication_control;
         
 endinterface
 
 
-// mkNallatechEdgeDevice
+// mkNallatechIntraDevice
 
-// Take the primitive device import and cross the clock domains into the
-// default bluespec domain. Also wrap the raw driver interfaces into
-// more structured and readable interfaces.
+// Really a very thin wrapper - there's not much beyond the fifo interface
 
-module mkNallatechEdgeDeviceParametric#(Clock clk100,
-                                        LOCAL_ID localID,
-                                        EXTERNAL_ID externalID,
-                                        Integer rxLanes,
-                                        Integer txLanes)
+module mkNallatechIntraDeviceParametric#(Clock clk100,
+                                         Clock clk200,
+                                         LOCAL_ID localID,
+                                         EXTERNAL_ID externalID,
+                                         Integer rxLanes,
+                                         Integer txLanes)
 
     // interface:
-                 (NALLATECH_EDGE_DEVICE);
+                 (NALLATECH_INTRA_DEVICE);
 
     // Instantiate the primitive device.
+ 
+    Clock clock <- exposeCurrentClock();
+    Reset reset <- exposeCurrentReset();
 
-    PRIMITIVE_NALLATECH_INTRA_DEVICE prim_device <- mkPrimitiveNallatechIntraDevice(clk100,
-                                                                                    localID,
-                                                                                    externalID, 
-                                                                                    rxLanes,
-                                                                                    txLanes);
+    Reset primitiveReset <- mkAsyncReset(2, reset, clk200);
 
+    FIFO#(NALLATECH_FIFO_DATA) intraReadQ <- mkFIFO(clocked_by clk200, reset_by primitiveReset);
 
-    //
-    // Rules for synchronizing from Edge to Model domain.  Put a FIFO between
-    // between the sync FIFO and the edge to reduce edge timing problems.
-    // maybe retaining this is a good idea?
-    //
+    PRIMITIVE_NALLATECH_INTRA_DEVICE prim_device <- 
+        mkPrimitiveNallatechIntraDevice(clk100,
+                                        localID,
+                                        externalID, 
+                                        rxLanes,
+                                        txLanes,
+                                        clocked_by clk200,
+                                        reset_by primitiveReset
+                                       );
 
-    FIFO#(NALLATECH_FIFO_DATA) edgeReadQ <- mkFIFO(clocked_by edgeClock, reset_by edgeReset);
+    SyncFIFOIfc#(NALLATECH_FIFO_DATA) sync_read_q
+        <- mkSyncFIFOToCC(6, clk200, primitiveReset);
+        
+    SyncFIFOIfc#(NALLATECH_FIFO_DATA) sync_write_q
+        <- mkSyncFIFOFromCC(6, clk200);
 
-    rule edge_read (True);
-        edgeReadQ.enq(prim_device.first());
-        prim_device.deq();
+    rule sendToPrim;
+        sync_write_q.deq();
+        prim_device.enq(sync_write_q.first());
     endrule
 
-    interface NALLATECH_EDGE_DRIVER edge_driver;
+    rule getFromPrim;
+        prim_device.deq();
+        intraReadQ.enq(prim_device.first());
+    endrule
+
+    rule getFromReadQ;
+      intraReadQ.deq();      
+      sync_read_q.enq(intraReadQ.first());
+    endrule
+
+    interface NALLATECH_INTRA_DRIVER intra_driver;
         
-        method Action enq(NALLATECH_FIFO_DATA data);
+        method enq = sync_write_q.enq;
             
-            prim_device.enq(data);
-            
-        endmethod
-            
-        method NALLATECH_FIFO_DATA first();
-            
-            return sync_read_q.first();
-            
-        endmethod
-            
-        method Action deq();
-            
-            edgeReadQ.deq();
-            
-        endmethod
+        method first = sync_read_q.first;
+
+        method deq = sync_read_q.deq;
                 
     endinterface
-    
+
+    // Pass through communication control
+
+    interface communication_control = prim_device.communication_control;
+
     // Pass through the wires interface
     
     interface wires = prim_device.wires;

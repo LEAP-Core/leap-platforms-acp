@@ -35,7 +35,7 @@ import Clocks::*;
 // We use other modules to actually do the work.
 
 interface PHYSICAL_DRIVERS;
-
+    (* prefix = "" *)    
     interface CLOCKS_DRIVER         clocksDriver;
     interface NALLATECH_EDGE_DRIVER nallatechEdgeDriver;
     interface Vector#(FPGA_DDR_BANKS, DDR2_DRIVER) ddr2Driver;
@@ -117,7 +117,7 @@ module mkPhysicalPlatform
     // Aggregate the drivers
     
     interface PHYSICAL_DRIVERS physicalDrivers;
-    
+
         interface clocksDriver        = nallatech_edge_device.clocks_driver;
         interface nallatechEdgeDriver = nallatech_edge_device.edge_driver;
         interface ddr2Driver          = ddr2_driver;

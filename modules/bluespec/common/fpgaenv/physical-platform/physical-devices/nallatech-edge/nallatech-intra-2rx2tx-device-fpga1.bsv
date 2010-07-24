@@ -27,7 +27,7 @@ import RWire::*;
 `include "asim/provides/clocks_device.bsh"
 
 // Stamp out a 2rx 2tx intra-fpga device 
-module mkNallatechIntraDevice (NALLATECH_INTRA_DEVICE);
-  let m <- mkNallatechIntraDeviceParametric(tuple3(1,1,0),tuple3(1,0,0),2,2);
+module mkNallatechIntraDevice#(Clock clk100, Clock clk200) (NALLATECH_INTRA_DEVICE);
+  let m <- mkNallatechIntraDeviceParametric(clk100,clk200,tuple3(1,1,0),tuple3(1,0,0),2,2);
   return m;
 endmodule

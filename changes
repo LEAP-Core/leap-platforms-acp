@@ -1744,3 +1744,118 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 
 Modified ucf to support both synplify and xst.
+
+----------
+kfleming    Date: Sun Jul 25 14:32:43 EDT 2010  CSN: CSN-platform-acp-78
+                  Sun Jul 25 18:32:43 UTC 2010
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Modified           77 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Added               0 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Added               0 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           77 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified           77 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           77 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified           77 
+
+Directory config/pm
+ bluespec/                 Locally Added               0 
+
+Directory config/pm/bluespec
+ demos/                    Locally Added               0 
+
+Directory config/pm/bluespec/demos
+ debugger/                 Locally Added               0 
+
+Directory config/pm/bluespec/demos/debugger
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Added               0 
+ intra_channel_debugger_nallatech_acp_fpga1.apm Locally Added               0 
+ intra_channel_debugger_nallatech_acp_jtag.apm Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
+ acp-m2c.awb               Locally Modified           77 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform
+ debuggers/                Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/debuggers
+ intra-fpga/               Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga
+ common/                   Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga/common
+ platform-debugger-common.awb Locally Added               0 
+ platform-debugger-common.bsv Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga
+ fpga0/                    Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga/fpga0
+ platform-debugger.bsv     Locally Added               0 
+ platform-debugger.dic     Locally Added               0 
+ platform-debugger.txt     Locally Added               0 
+ platform-debugger.cpp     Locally Added               0 
+ platform-debugger.rrr     Locally Added               0 
+ platform-debugger.h       Locally Added               0 
+ platform-debugger.awb     Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga
+ fpga1/                    Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga/fpga1
+ platform-debugger.bsv     Locally Added               0 
+ platform-debugger.dic     Locally Added               0 
+ platform-debugger.txt     Locally Added               0 
+ platform-debugger.cpp     Locally Added               0 
+ platform-debugger.rrr     Locally Added               0 
+ platform-debugger.h       Locally Added               0 
+ platform-debugger.awb     Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
+ acp-m2c.awb               Locally Modified           77 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.awb               Locally Modified           77 
+ acp-m2c.bsv               Locally Modified           77 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           77 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.bsv Locally Modified           77 
+ nallatech-intra-device.bsv Locally Modified           77 
+ nallatech-edge-device-intra-debugger.awb Locally Added               0 
+ nallatech-intra-vhdl-import.bsv Locally Modified           77 
+ nallatech-edge-device-fpga1.cpp Locally Added               0 
+ nallatech-edge-device.vhd Locally Modified           77 
+ nallatech-edge-device.cpp Locally Modified           77 
+ nallatech-edge-device-null.vhd Locally Added               0 
+ nallatech-edge-device-null.cpp Locally Added               0 
+ nallatech-intra-device.vhd Locally Modified           77 
+ nallatech-edge-vhdl-import.bsv Locally Modified           77 
+ nallatech-edge-device-debugger.cpp Locally Added               0 
+ nallatech-intra-2rx2tx-device-fpga0.bsv Locally Modified           77 
+ nallatech-intra-2rx2tx-device-fpga1.bsv Locally Modified           77 
+ nallatech-edge-device-fpga1.ucf Locally Modified           77 
+ nallatech-edge-device.awb Locally Modified           77 
+ nallatech-intra-2rx2tx-device.bsv Locally Removed            77 
+ nallatech-intra-device-fpga0.awb Locally Modified           77 
+ nallatech-edge-device.ucf Locally Modified           77 
+ nallatech-intra-device-fpga1.awb Locally Modified           77 
+ nallatech-edge-device-null.awb Locally Modified           77 
+ nallatech-intra-device-fpga0.ucf Locally Modified           77 
+ nallatech-intra-device-fpga1.ucf Locally Modified           77 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-jtag
+ acp-m2c.awb               Locally Modified           77 
+ acp-m2c.bsv               Locally Modified           77 
+
+
+The main addition in this large check-in is a functional test for the
+intra-fpga lvds channel.  I also managed to get control of the
+on-board leds on the ACP module.  This required setting a marginally
+undocumented register.  I also attempted to get the JTAG operational,
+but I was uncessful on the ACP.
+

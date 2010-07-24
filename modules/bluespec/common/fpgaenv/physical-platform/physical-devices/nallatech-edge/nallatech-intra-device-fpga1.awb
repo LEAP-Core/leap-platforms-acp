@@ -1,5 +1,5 @@
-%name Nallatech Intra Physical Device FPGA1 (Master) v2
-%desc Nallatech Intra Physical Device FPGA1 (Master) v2
+%name Nallatech Intra Physical Device FPGA1 (Slave) v2
+%desc Nallatech Intra Physical Device FPGA1 (Slave) v2
 
 %provides nallatech_intra_device
 
@@ -15,9 +15,6 @@
          
 %private inter_intra_mod_slv_edge_2rx2tx.ngc
 %private reset_synchroniser.vhd
-
-%public  nallatech-edge-device.h
-%private nallatech-edge-device.cpp
 
 %private nallatech-intra-device-fpga1.ucf
 

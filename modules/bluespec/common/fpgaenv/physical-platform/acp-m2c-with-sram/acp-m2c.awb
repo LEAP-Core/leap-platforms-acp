@@ -4,7 +4,7 @@
 
 %provides physical_platform
 
-%requires ddr2_device clocks_device nallatech_edge_device physical_platform_utils
+%requires ddr2_device clocks_device nallatech_edge_device physical_platform_utils led_device
 
 %sources -t BSV -v PUBLIC  acp-m2c.bsv
 %sources -t H   -v PUBLIC  acp-m2c.h

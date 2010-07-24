@@ -30,11 +30,11 @@ typedef Bit#(13)  NALLATECH_REG_ADDR;
 
 // Import the VHDL device into BSV
 
-// NALLATECH_EDGE_WIRES
+// NALLATECH_INTRA_WIRES
 
 // Wires to be sent to the top level
 
-interface NALLATECH_EDGE_WIRES;
+interface NALLATECH_INTRA_WIRES;
     
                                  
     // LVDS lanes and clocks
@@ -55,7 +55,7 @@ endinterface
 
 typedef Inout#(Bit#(48)) NALLATECH_INTRA_COMM_CONTROL;
 
-// PRIMITIVE_NALLATECH_EDGE_DEVICE
+// PRIMITIVE_NALLATECH_INTRA_DEVICE
 
 // The primitive vhdl import which we will wrap in clock-domain synchronizers.
 
@@ -68,7 +68,7 @@ interface PRIMITIVE_NALLATECH_INTRA_DEVICE;
     // Wires to be sent to the top level
     //
 
-    (* prefix = "" *) interface NALLATECH_EDGE_WIRES wires;
+    (* prefix = "" *) interface NALLATECH_INTRA_WIRES wires;
         
     //
     // Methods for the Driver
@@ -86,18 +86,18 @@ endinterface
 typedef Tuple3#(Integer,Integer,Integer) LOCAL_ID;
 typedef Tuple3#(Integer,Integer,Integer) EXTERNAL_ID;
 
-// mkPrimitiveNallatechEDGEDevice
+// mkPrimitiveNallatechIntraDevice
 
 // Straightforward import of the VHDL into Bluespec.
 
 import "BVI" nallatech_intra_vhdl = module mkPrimitiveNallatechIntraDevice
-    #(Clock clk100,
+    #(Clock clk100In,
       LOCAL_ID localID,
       EXTERNAL_ID externalID,
       Integer rxLanes,
       Integer txLanes)
     // interface:
-                 (PRIMITIVE_NALLATECH_EDGE_DEVICE);
+                 (PRIMITIVE_NALLATECH_INTRA_DEVICE);
 
     // parameters to the edge module instantiation
     parameter local_id_layer  = tpl_1(localID);
@@ -111,22 +111,22 @@ import "BVI" nallatech_intra_vhdl = module mkPrimitiveNallatechIntraDevice
     parameter rx_lanes = rxLanes;
     parameter tx_lanes = txLanes;
 
-    default_clock sys_clk;
-    default_reset srst;
+    default_clock sysClk(sys_clk, (*unused*) sysClkGate) <- exposeCurrentClock();
+    default_reset sRst(srst) <- exposeCurrentReset();
   
     //
     // Exported Clock and Reset
     //
 
-    input_clock clk100; 
+    input_clock sysClk100 (clk100,(*unused*) clk100Gate) = clk100In; 
 
-    ifc_inout communication_control (INTRA_FPGA_LVDS_CTRL);	
+    ifc_inout communication_control (INTRA_FPGA_LVDS_CTRL) clocked_by(no_clock) reset_by(no_reset);	
 
     //
     // Wires to be sent to the top level
     //
 
-    interface NALLATECH_EDGE_WIRES wires;
+    interface NALLATECH_INTRA_WIRES wires;
     
         // LVDS lanes and clocks
         method wLVDS_RX_LANE_P(LVDS_RX_LANE_P) enable ((* inhigh *) EN0) clocked_by(no_clock) reset_by(no_reset);
@@ -147,20 +147,14 @@ import "BVI" nallatech_intra_vhdl = module mkPrimitiveNallatechIntraDevice
                           
     method enq (TX_DATA)
         ready      (TX_DATA_NOT_FULL)
-        enable     (TX_DATA_VALID)
-        clocked_by (sys_clk)
-        reset_by   (srst);
+        enable     (TX_DATA_VALID);
                               
     method RX_DATA first()
-        ready      (RX_DATA_READY)
-        clocked_by (sys_clk)
-        reset_by   (srst);
+        ready      (RX_DATA_READY);
         
     method deq()
         ready      (RX_DATA_READY)
-        enable     (RX_DATA_READ)
-        clocked_by (sys_clk)
-        reset_by   (srst);
+        enable     (RX_DATA_READ);
 
     //
     // Scheduling

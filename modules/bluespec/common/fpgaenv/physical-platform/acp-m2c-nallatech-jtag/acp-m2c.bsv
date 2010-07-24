@@ -18,6 +18,7 @@
 
 import FIFO::*;
 import Clocks::*;
+import Connectable::*;
 
 // htg-v5-pcie-enabled
 
@@ -26,7 +27,8 @@ import Clocks::*;
 `include "clocks_device.bsh"
 `include "jtag_device.bsh"
 `include "nallatech_edge_device.bsh"
-
+`include "nallatech_intra_device.bsh"
+`include "led_device.bsh"
 
 // PHYSICAL_DRIVERS
 
@@ -36,9 +38,11 @@ import Clocks::*;
 
 interface PHYSICAL_DRIVERS;
 
-    interface CLOCKS_DRIVER         clocksDriver;
-    interface NALLATECH_EDGE_DRIVER nallatechEdgeDriver;
-    interface JTAG_DRIVER           jtagDriver;
+    interface CLOCKS_DRIVER           clocksDriver;
+    interface NALLATECH_EDGE_DRIVER   nallatechEdgeDriver;
+    interface NALLATECH_INTRA_DRIVER  nallatechIntraDriver;
+    interface JTAG_DRIVER             jtagDriver;
+    interface LEDS_DRIVER#(4)         ledsDriver;
 
 endinterface
 
@@ -53,8 +57,10 @@ interface TOP_LEVEL_WIRES;
 
     (* prefix = "" *)
     interface NALLATECH_EDGE_WIRES nallatechEdgeWires;
+    (* prefix = "side" *)
+    interface NALLATECH_INTRA_WIRES nallatechIntraWires;
     interface JTAG_WIRES jtagWires;    
-
+   
 endinterface
 
 // PHYSICAL_PLATFORM
@@ -90,7 +96,9 @@ module mkPhysicalPlatform
     // the device hands to us will have soft-reset wired-in.
     
     NALLATECH_EDGE_DEVICE nallatech_edge_device <- mkNallatechEdgeDevice();
-    
+    NALLATECH_INTRA_DEVICE nallatech_intra_device <- mkNallatechIntraDevice(nallatech_edge_device.intra_clocks_driver,nallatech_edge_device.clocks_driver.rawClock,clocked_by nallatech_edge_device.clocks_driver.clock, reset_by nallatech_edge_device.clocks_driver.reset);
+
+
     // Instantiate all other physical devices
     
     JTAG_DEVICE jtag_device <- mkJTAGDevice(?,
@@ -100,13 +108,20 @@ module mkPhysicalPlatform
                                             reset_by nallatech_edge_device.clocks_driver.reset);
 
 
+    // Connect the nallatech devices, as required by the Nallatech libraries 
+
+    mkConnection(nallatech_edge_device.communication_control,
+                 nallatech_intra_device.communication_control);
+
     // Aggregate the drivers
     
     interface PHYSICAL_DRIVERS physicalDrivers;
     
         interface clocksDriver        = nallatech_edge_device.clocks_driver;
         interface nallatechEdgeDriver = nallatech_edge_device.edge_driver;
-        interface jtagDriver           = jtag_device.driver;     
+        interface nallatechIntraDriver = nallatech_intra_device.intra_driver;   
+        interface jtagDriver          = jtag_device.driver;     
+        interface ledsDriver          = nallatech_edge_device.leds_driver;
 
     endinterface
     
@@ -115,8 +130,9 @@ module mkPhysicalPlatform
     interface TOP_LEVEL_WIRES topLevelWires;
     
         interface nallatechEdgeWires  = nallatech_edge_device.wires;
+        interface nallatechIntraWires = nallatech_intra_device.wires; 
         interface jtagWires           = jtag_device.wires;
- 
+
     endinterface
                
 endmodule

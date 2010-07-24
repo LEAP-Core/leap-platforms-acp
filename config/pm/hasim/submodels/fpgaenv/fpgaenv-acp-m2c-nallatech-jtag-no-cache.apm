@@ -91,10 +91,6 @@ Packagehint=platforms
 File=modules/bluespec/common/fpgaenv/low-level-platform-interface/remote-memory/null/null-remote-memory.awb
 Packagehint=platforms
 
-[Nallatech Edge Physical Device]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device.awb
-Packagehint=platform-acp
-
 [Little-Endian Unified Message Format]
 File=modules/bluespec/common/fpgaenv/virtual-platform/umf/little-endian/umf-little-endian.awb
 Packagehint=platforms
@@ -231,7 +227,8 @@ Packagehint=platforms
 clocks_device=Null Clocks Device
 physical_platform_utils=Common Physical Platform Utilities
 jtag_device=Xilinx JTAG Physical Device
-nallatech_edge_device=Nallatech Edge Physical Device
+nallatech_edge_device=Nallatech Edge Physical Device Null (FPGA1)
+led_device=General LED Device
 
 [JTAG Physical Channel]
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/jtag/jtag-physical-channel.awb
@@ -242,4 +239,13 @@ CRYSTAL_CLOCK_FREQ=200
 
 [Simple MCD Tool]
 File=modules/project/bluespec/mcd.awb
+Packagehint=platforms
+
+
+[Nallatech Edge Physical Device Null (FPGA1)]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device-null.awb
+Packagehint=platform-acp
+
+[General LED Device]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
 Packagehint=platforms

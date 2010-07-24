@@ -4,7 +4,7 @@
 
 %provides physical_platform
 
-%requires clocks_device arches_mpi_device physical_platform_utils
+%requires clocks_device arches_mpi_device physical_platform_utils led_device
 
 %sources -t BSV -v PUBLIC  acp-m2c.bsv
 %sources -t H   -v PUBLIC  acp-m2c.h

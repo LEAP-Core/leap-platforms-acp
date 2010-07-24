@@ -164,8 +164,8 @@ NET  "ddr2Wires_0_ddrii_cq"                             LOC = "AY37" ;	      # B
 NET  "ddr2Wires_0_ddrii_cq_n"                           LOC = "AY35" ;	      # Bank 29
 
 NET "ddr2Wires_0_ram_pwr_on"  IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL14;
-NET "ddr2Wires_0_ram_leds[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN29; 		#D3 or D
-NET "ddr2Wires_0_ram_leds[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP28; 		#D4 or D
+#NET "ddr2Wires_0_ram_leds[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN29; 		#D3 or D
+#NET "ddr2Wires_0_ram_leds[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP28; 		#D4 or D
 
 INST "*_sram_device_0_prim_device/u_idelayctrl" LOC = IDELAYCTRL_X0Y1; # no underscore
 

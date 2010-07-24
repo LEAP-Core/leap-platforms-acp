@@ -41,44 +41,6 @@ NALLATECH_EDGE_DEVICE_CLASS::NALLATECH_EDGE_DEVICE_CLASS(
     PLATFORMS_MODULE_CLASS(p)
 {
     workspace = NULL;
-}
-
-
-NALLATECH_EDGE_DEVICE_CLASS::~NALLATECH_EDGE_DEVICE_CLASS()
-{
-    Cleanup();
-}
-
-
-UINT64
-NALLATECH_EDGE_DEVICE_CLASS::WorkspaceBytes() const
-{
-    return
-        (NALLATECH_NUM_WRITE_WINDOWS + NALLATECH_NUM_READ_WINDOWS) *
-        NALLATECH_MAX_MSG_WORDS *
-        sizeof(NALLATECH_WORD);
-}
-
-
-NALLATECH_WORD*
-NALLATECH_EDGE_DEVICE_CLASS::GetWriteWindow(int windowID) const
-{
-    return workspace + (windowID * NALLATECH_MAX_MSG_WORDS);
-}
-
-
-NALLATECH_WORD*
-NALLATECH_EDGE_DEVICE_CLASS::GetReadWindow(int windowID) const
-{
-    return workspace + ((NALLATECH_NUM_WRITE_WINDOWS + windowID) *
-                        NALLATECH_MAX_MSG_WORDS);
-}
-
-
-// initialize hardware
-void
-NALLATECH_EDGE_DEVICE_CLASS::Init()
-{
 	int ret;
 	int i;
 
@@ -114,7 +76,7 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
         CallbackExit(1);
     }
 
-	ret = ACP_ConfigureFPGA(hsocket, bitfile, DEVICE_ID(1,0,0));
+	ret = ACP_ConfigureFPGA(hsocket, bitfile, DEVICE_ID(1,ACP_FPGA,0));
 
 	if (ret != 0)
 	{
@@ -166,6 +128,45 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
     }
 
 	printf("\tOK\n");
+}
+
+
+NALLATECH_EDGE_DEVICE_CLASS::~NALLATECH_EDGE_DEVICE_CLASS()
+{
+    Cleanup();
+}
+
+
+UINT64
+NALLATECH_EDGE_DEVICE_CLASS::WorkspaceBytes() const
+{
+    return
+        (NALLATECH_NUM_WRITE_WINDOWS + NALLATECH_NUM_READ_WINDOWS) *
+        NALLATECH_MAX_MSG_WORDS *
+        sizeof(NALLATECH_WORD);
+}
+
+
+NALLATECH_WORD*
+NALLATECH_EDGE_DEVICE_CLASS::GetWriteWindow(int windowID) const
+{
+    return workspace + (windowID * NALLATECH_MAX_MSG_WORDS);
+}
+
+
+NALLATECH_WORD*
+NALLATECH_EDGE_DEVICE_CLASS::GetReadWindow(int windowID) const
+{
+    return workspace + ((NALLATECH_NUM_WRITE_WINDOWS + windowID) *
+                        NALLATECH_MAX_MSG_WORDS);
+}
+
+
+// initialize hardware
+void
+NALLATECH_EDGE_DEVICE_CLASS::Init()
+{
+
 }
 
 // override default chain-uninit method because

@@ -1,0 +1,14 @@
+service PLATFORM_DEBUGGER
+{
+    server hw (bsv, method) <- sw (cpp, method)
+    {
+        method StartDebug(in UINT8[8] input, out UINT8[8] status);
+    
+        method TransferReq  (in UINT32[32] addr, out UINT8[8] status);
+        method TransferRsp  (in UINT8[8] dummy, out UINT64[64] curCycle, out UINT64[64] fpga0Timestamp, out UINT64[64] fpga1Timestamp, out UINT64[64] payloadFPGA0, out UINT64[64] payloadFPGA1);
+    };
+};
+
+service FOOBAR
+{
+};

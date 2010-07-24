@@ -101,6 +101,7 @@ interface PRIMITIVE_NALLATECH_EDGE_DEVICE;
     interface Reset reset;
     
     interface Clock rawClock;
+    interface Clock oscClock;
 
     // Control for intra-fpga channel
   
@@ -136,6 +137,9 @@ interface PRIMITIVE_NALLATECH_EDGE_DEVICE;
     method NALLATECH_FIFO_DATA first();
     method Action              deq();
               
+    // leds input
+    method Action setLEDs(Bit#(4) leds);
+
     // register interface
 
     // Keep the following in mind while using the register interface:
@@ -198,6 +202,7 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
     output_clock clock (CLK_OUT);
     output_reset reset (RST_N_OUT) clocked_by(clock);
   
+    output_clock oscClock (OSC_CLK_OUT);
     output_clock rawClock (RAW_CLK_OUT);
 
 
@@ -308,6 +313,10 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
         clocked_by (regClock)
         reset_by (no_reset);
 
+
+    method setLEDs(leds) enable ((* inhigh *) EN_LEDS) clocked_by(clock) reset_by(reset); 
+
+
     //
     // Scheduling
     //
@@ -333,8 +342,26 @@ import "BVI" nallatech_edge_vhdl = module mkPrimitiveNallatechEdgeDevice
               wires_wSCL, wires_wSYS_LED_OUT, /*wires_wRAM_PWR_ON, wires_wRAM_LEDS,*/ wires_wRAM_PG,
               wires_wMGT_PG,
               ramClkLocked,
-              enq, first, deq);
+              enq, first, deq, setLEDs);
     
+    // setLeds is CF with everything but itself
+
+    schedule (setLEDs)
+        
+        CF
+        
+             (wires_wCLK100P, wires_wCLK100N, wires_wREG_CLK, wires_wREG_RESET_Z, wires_wREG_UDS_Z,
+              wires_wREG_LDS_Z, wires_wREG_ADS_Z, wires_wREG_EN_Z, wires_wREG_RDY_Z, wires_wREG_RD_WR_Z,
+              wires_wLVDS_RX_LANE_P, wires_wLVDS_RX_LANE_N, wires_wLVDS_RX_CLK_P, wires_wLVDS_RX_CLK_N,
+              wires_wLVDS_TX_LANE_P, wires_wLVDS_TX_LANE_N, wires_wLVDS_TX_CLK_P, wires_wLVDS_TX_CLK_N,
+              wires_wSCL, wires_wSYS_LED_OUT, /*wires_wRAM_PWR_ON, wires_wRAM_LEDS,*/ wires_wRAM_PG,
+              wires_wMGT_PG,
+              ramClkLocked,
+              enq, first, deq);
+
+    schedule (setLEDs) C (setLEDs); 
+
+
     // enq
     // SBR with itself (a time-honored Bluespec convention)
     // CF with everything else (except itself)

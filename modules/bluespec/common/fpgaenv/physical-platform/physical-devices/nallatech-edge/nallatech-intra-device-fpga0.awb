@@ -16,9 +16,6 @@
 %private inter_intra_mod_mst_edge_2rx2tx.ngc
 %private reset_synchroniser.vhd
 
-%public  nallatech-edge-device.h
-%private nallatech-edge-device.cpp
-
 %private nallatech-intra-device-fpga0.ucf
 
 #############################################
