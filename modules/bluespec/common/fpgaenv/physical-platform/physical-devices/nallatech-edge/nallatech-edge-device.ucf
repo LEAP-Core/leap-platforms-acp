@@ -299,20 +299,8 @@ NET "lvds_rx_lane_p[16]" IOSTANDARD = "LVDS_25" | LOC = AH36 | DIFF_TERM="TRUE";
 
 ###############################################################################
 ##TIMING CONSTRAINTS
-#NET "clk100p" period=10ns high 50%;
+NET "clk100p" period=10ns high 50%;
 NET "reg_clk" period=10ns high 50%;
-
-NET "clk100p" TNM = FFS "clk100p";
-
-TIMESPEC "TS_CLK100P" = PERIOD "clk100p" 10ns high 50%;
-#     m_vp_llpi_phys_plat_nallatech_edge_device_m_userClockPackage_clock_clk_clock_CLK_OUT
-     
-#NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_userClockPackage_clock_clk_clock_CLK_OUT"    TNM_NET = FFS "m_vp_llpi_phys_plat_nallatech_edge_device_m_userClockPackage_clk_CLK_OUT"; 
-
-#TIMESPEC "TS_falsepathIntra1" = FROM "clk100p"    TO  "m_vp_llpi_phys_plat_nallatech_edge_device_m_userClockPackage_clk_CLK_OUT"  TIG;
-
-#TIMESPEC "TS_falsepathIntra2" = FROM "m_vp_llpi_phys_plat_nallatech_edge_device_m_userClockPackage_clk_CLK_OUT"    TO  "clk100p"  TIG;
-
 
 net "*/module_control_and_status_inst/global_register_inst/lvds_loopback_mode_reg<*>" TIG;
 net "*/module_control_and_status_inst/global_register_inst/fifo_rst_reg<*>" TIG;

@@ -1859,3 +1859,14 @@ on-board leds on the ACP module.  This required setting a marginally
 undocumented register.  I also attempted to get the JTAG operational,
 but I was uncessful on the ACP.
 
+
+----------
+mcadler     Date: Fri Jul 30 19:45:22 EDT 2010  CSN: CSN-platform-acp-79
+                  Fri Jul 30 23:45:22 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.ucf Locally Modified           78 
+
+Revert to previous specification of 100MHz clock.  New version was causing
+failures, even when the result had a timing score of 0.
