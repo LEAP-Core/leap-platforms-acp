@@ -172,48 +172,17 @@ Packagehint=platforms
 rrr_common=RRR Common Module
 
 [FPGA Build Pipeline]
-File=modules/project/pipelines/fpga-build-pipeline.awb
+File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
 Packagehint=platforms
 
-[Xilinx BITGEN]
-File=modules/project/xilinx/xilinx_bitgen.awb
-Packagehint=platforms
 
-[Xilinx LOADER]
-File=modules/project/xilinx/xilinx_loader.awb
-Packagehint=platforms
 
-[Xilinx NGD]
-File=modules/project/xilinx/xilinx_ngd.awb
-Packagehint=platforms
 
-[FPGA Build Pipeline/Requires]
-post_synthesis_tool=Xilinx Post-synthesis Toolchain
-synthesis_tool=XST Synthesis Tool
-mcd_tool=Simple MCD Tool
 
-[XST Synthesis Tool]
-File=modules/project/xilinx/xst.awb
-Packagehint=platforms
 
-[Xilinx Post-synthesis Toolchain]
-File=modules/project/xilinx/xilinx_post_synth.awb
-Packagehint=platforms
 
-[Xilinx PAR]
-File=modules/project/xilinx/xilinx_par.awb
-Packagehint=platforms
 
-[Xilinx Post-synthesis Toolchain/Requires]
-xilinx_ngd=Xilinx NGD
-xilinx_bitgen=Xilinx BITGEN
-xilinx_par=Xilinx PAR
-xilinx_map=Xilinx MAP
-xilinx_loader=Xilinx LOADER
 
-[Xilinx MAP]
-File=modules/project/xilinx/xilinx_map.awb
-Packagehint=platforms
 
 [ACP M2 Compute Module JTAG]
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-jtag/acp-m2c.awb
@@ -236,10 +205,6 @@ Packagehint=platforms
 
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
-
-[Simple MCD Tool]
-File=modules/project/bluespec/mcd.awb
-Packagehint=platforms
 
 
 [Nallatech Edge Physical Device Null (FPGA1)]
