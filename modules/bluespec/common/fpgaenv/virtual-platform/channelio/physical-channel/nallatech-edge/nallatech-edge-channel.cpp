@@ -526,6 +526,9 @@ PHYSICAL_CHANNEL_CLASS::WriteRaw(
         did_init = true;
 
         UMF_MESSAGE_CLASS dummy_msg;
+        dummy_msg.SetChannelID(0);
+        dummy_msg.SetServiceID(0);
+        dummy_msg.SetMethodID(0);
         dummy_msg.Clear();
 
         header_with_channel_id = dummy_msg.EncodeHeaderWithPhyChannelPvt(1);

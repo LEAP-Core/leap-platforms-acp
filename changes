@@ -1891,3 +1891,13 @@ Directory config/pm/bluespec/demos/debugger
 
 
 Fixing apms.
+
+----------
+mcadler     Date: Thu Sep  2 17:30:50 EDT 2010  CSN: CSN-platform-acp-81
+                  Thu Sep  2 21:30:50 UTC 2010
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified           80 
+
+Uninitialized value caused unpredictable failures in pseudo-DMA load responses.
