@@ -1901,3 +1901,14 @@ Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-ch
  nallatech-edge-channel.cpp Locally Modified           80 
 
 Uninitialized value caused unpredictable failures in pseudo-DMA load responses.
+
+----------
+jsemer      Date: Thu Nov 11 12:02:54 EST 2010  CSN: CSN-platforms-acp-82
+                  Thu Nov 11 17:02:54 UTC 2010
+
+
+Directory admin/packages
+ platform-acp              Locally Removed            81 
+ platforms-acp             Locally Added               - 
+
+Changed name to platforms-acp.
