@@ -1912,3 +1912,35 @@ Directory admin/packages
  platforms-acp             Locally Added               - 
 
 Changed name to platforms-acp.
+
+----------
+jsemer      Date: Fri Nov 12 10:26:37 EST 2010  CSN: CSN-platforms-acp-83
+                  Fri Nov 12 15:26:37 UTC 2010
+
+
+Directory config/pm
+ bluespec/                 Locally Removed            82 
+
+Directory config/pm/bluespec
+ demos/                    Locally Removed            82 
+
+Directory config/pm/bluespec/demos
+ debugger/                 Locally Removed            82 
+
+Directory config/pm/bluespec/demos/debugger
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Removed            82 
+ intra_channel_debugger_nallatech_acp_fpga1.apm Locally Removed            82 
+ intra_channel_debugger_nallatech_acp_jtag.apm Locally Removed            82 
+
+Directory config/pm
+ platforms/                Locally Added               0 
+
+Directory config/pm/platforms/debuggers
+ debugger/                 Locally Removed            82 
+
+Directory config/pm/platforms/debuggers/debugger
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Removed            82 
+ intra_channel_debugger_nallatech_acp_fpga1.apm Locally Removed            82 
+ intra_channel_debugger_nallatech_acp_jtag.apm Locally Removed            82 
+
+Moved location of acp platform debuggers.
