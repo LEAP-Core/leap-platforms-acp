@@ -21,8 +21,8 @@ librl_bsv=RL Bluespec Library
 build_pipeline=FPGA Build Pipeline
 
 [Standard Virtual Platform]
-File=modules/bluespec/common/fpgaenv/virtual-platform/std-virtual-platform.awb
-Packagehint=platforms
+File=modules/leap/virtual-platform/std-virtual-platform.awb
+Packagehint=leap
 
 [Standard Virtual Platform/Requires]
 virtual_devices=Standard Virtual Devices
@@ -30,27 +30,27 @@ low_level_platform_interface=Low Level Platform Interface Hybrid
 umf=Little-Endian Unified Message Format
 
 [FPGA Environment]
-File=modules/bluespec/common/fpgaenv/fpga-environment.awb
-Packagehint=platforms
+File=modules/leap/virtual-platform/fpga-environment.awb
+Packagehint=leap
 
 [Standard Virtual Devices]
 File=config/pm/hasim/submodels/fpgaenv/std-virtual-devices.apm
-Packagehint=platforms
+Packagehint=leap
 
 [RRR Clients and Servers]
-File=modules/bluespec/common/fpgaenv/virtual-platform/rrr/basic/basic-rrr.awb
-Packagehint=platforms
+File=modules/leap/virtual-platform/rrr/basic/basic-rrr.awb
+Packagehint=leap
 
 [Basic Virtual Channel Multiplexer]
-File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/basic/basic-channelio.awb
-Packagehint=platforms
+File=modules/leap/virtual-platform/channelio/basic/basic-channelio.awb
+Packagehint=leap
 
 [Basic Virtual Channel Multiplexer/Requires]
 physical_channel=Arches MPI Physical Channel
 
 [Low Level Platform Interface Hybrid]
-File=modules/bluespec/common/fpgaenv/low-level-platform-interface/hybrid-llpi.awb
-Packagehint=platforms
+File=modules/leap/virtual-platform/low-level-platform-interface/hybrid-llpi.awb
+Packagehint=leap
 
 [Low Level Platform Interface Hybrid/Requires]
 physical_platform=ACP M2 Compute Module
@@ -62,7 +62,7 @@ remote_memory=Null Remote Memory
 
 [RL Bluespec Library]
 File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
-Packagehint=platforms
+Packagehint=leap
 
 [Null Physical Platform Debugger]
 File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/null/null-debugger.awb
@@ -70,7 +70,7 @@ Packagehint=platforms
 
 [ACP M2 Compute Module]
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c/acp-m2c.awb
-Packagehint=platform-acp
+Packagehint=platforms-acp
 
 [ACP M2 Compute Module/Requires]
 arches_mpi_device=Arches MPI Physical Device
@@ -80,11 +80,11 @@ led_device=General LED Device
 
 [Arches MPI Physical Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/arches-mpi/arches-mpi-device.awb
-Packagehint=platform-acp
+Packagehint=platforms-acp
 
 [Arches MPI Physical Channel]
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/arches-mpi/arches-mpi-channel.awb
-Packagehint=platform-acp
+Packagehint=platforms-acp
 
 [Common Physical Platform Utilities]
 File=modules/bluespec/common/fpgaenv/physical-platform/utils/utils.awb
@@ -94,8 +94,8 @@ Packagehint=platforms
 LOCAL_MEM_ADDR_BITS=16
 
 [Local Memory Interface using BRAM]
-File=modules/bluespec/common/fpgaenv/low-level-platform-interface/local-mem/local-mem-bram.awb
-Packagehint=platforms
+File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-bram.awb
+Packagehint=leap
 
 [Null Clocks Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/clocks/null/null-clocks-device.awb
@@ -106,23 +106,23 @@ File=modules/bluespec/common/fpgaenv/fpga-components/hardware-fpga-components-vi
 Packagehint=platforms
 
 [Null Remote Memory]
-File=modules/bluespec/common/fpgaenv/low-level-platform-interface/remote-memory/null/null-remote-memory.awb
-Packagehint=platforms
+File=modules/leap/virtual-platform/low-level-platform-interface/remote-memory/null/null-remote-memory.awb
+Packagehint=leap
 
 [Little-Endian Unified Message Format]
 File=modules/bluespec/common/fpgaenv/virtual-platform/umf/little-endian/umf-little-endian.awb
 Packagehint=platforms
 
 [RRR Common Module]
-File=modules/bluespec/common/fpgaenv/virtual-platform/rrr/rrr_common/rrr_common.awb
-Packagehint=platforms
+File=modules/leap/virtual-platform/rrr/rrr-common/rrr-common.awb
+Packagehint=leap
 
 [RRR Clients and Servers/Requires]
 rrr_common=RRR Common Module
 
 [FPGA Build Pipeline]
 File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
-Packagehint=platforms
+Packagehint=leap
 
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200

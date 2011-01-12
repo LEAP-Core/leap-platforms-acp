@@ -1944,3 +1944,27 @@ Directory config/pm/platforms/debuggers/debugger
  intra_channel_debugger_nallatech_acp_jtag.apm Locally Removed            82 
 
 Moved location of acp platform debuggers.
+
+----------
+pellauer    Date: Wed Jan 12 16:46:29 EST 2011  CSN: CSN-platforms-acp-84
+                  Wed Jan 12 21:46:29 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified           83 
+ hasim-fpgaenv-acp-m2c.apm Locally Modified           83 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified           83 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           83 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified           83 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           83 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified           83 
+
+Directory config/pm/platforms/debuggers/acp
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Modified           83 
+ intra_channel_debugger_nallatech_acp_fpga1.apm Locally Modified           83 
+ intra_channel_debugger_nallatech_acp_jtag.apm Locally Modified           83 
+
+
+* Updating .apm submodels with new file locations, also moving to version 2.2.
+
+Michael P.

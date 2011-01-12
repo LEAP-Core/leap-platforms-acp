@@ -30,7 +30,7 @@ low_level_platform_interface=Low Level Platform Interface Hybrid
 umf=Little-Endian Unified Message Format
 
 [FPGA Environment]
-File=modules/bluespec/common/fpgaenv/fpga-environment.awb
+File=modules/leap/virtual-platform/fpga-environment.awb
 Packagehint=platforms
 
 [Standard Virtual Devices]

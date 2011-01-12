@@ -15,7 +15,7 @@ DefaultAttributes=hybrid acp bluespec
 model=HW/SW Hybrid Project Foundation
 
 [FPGA Environment]
-File=modules/bluespec/common/fpgaenv/fpga-environment.awb
+File=modules/leap/virtual-platform/fpga-environment.awb
 Packagehint=platforms
 
 [HW/SW Hybrid Project Foundation]
