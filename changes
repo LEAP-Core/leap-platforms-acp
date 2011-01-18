@@ -1968,3 +1968,35 @@ Directory config/pm/platforms/debuggers/acp
 * Updating .apm submodels with new file locations, also moving to version 2.2.
 
 Michael P.
+
+----------
+pellauer    Date: Tue Jan 18 14:51:41 EST 2011  CSN: CSN-platforms-acp-85
+                  Tue Jan 18 19:51:41 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified           84 
+ hasim-fpgaenv-acp-m2c.apm Locally Modified           84 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified           84 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           84 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified           84 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           84 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified           84 
+
+Directory config/pm/platforms/debuggers/acp
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Modified           84 
+ intra_channel_debugger_nallatech_acp_fpga1.apm Locally Modified           84 
+ intra_channel_debugger_nallatech_acp_jtag.apm Locally Modified           84 
+
+
+* Update platforms-acp .apm files to v2.2 format using "awb-shell update model"
+* There were two broken .apm files that I had to make guesses on. 
+   A) fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm had no intra device. I guessed
+      it should have the intra device for fpga0. Perhaps there should be a null
+      intra device?
+   B) fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm had a broken non-submodel 
+      build pipeline that seemed like an out-of-date version of Xilinx pipeline.
+      I replaced it with the standard Xilinx build pipeline submodel.
+      
+   If either of these changes were errors then someone should update these apms.
+   

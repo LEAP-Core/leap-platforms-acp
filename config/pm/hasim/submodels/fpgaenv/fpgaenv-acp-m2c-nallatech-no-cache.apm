@@ -3,12 +3,14 @@
 SaveParameters=0
 Description=Hybrid ACP M2 Compute Environment - No Central Cache (Nallatech)
 File=fpgaenv-acp-m2c-nallatech-no-cache
-Version=2.1
+Version=2.2
 Type=HAsim
 Name=Hybrid ACP M2 Compute Environment - No Central Cache (Nallatech)
 Class=Asim::Model
 DefaultBenchmark=
 DefaultRunOpts=
+RootName=FPGA Environment
+RootProvides=fpgaenv
 
 [Model]
 DefaultAttributes=bluespec acp-m2c
