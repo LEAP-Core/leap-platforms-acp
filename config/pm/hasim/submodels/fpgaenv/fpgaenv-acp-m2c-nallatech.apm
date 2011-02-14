@@ -19,15 +19,15 @@ model=FPGA Environment
 [FPGA Environment/Requires]
 virtual_platform=Standard Virtual Platform
 fpga_components=Hardware FPGA Components for Virtex 5
-librl_bsv=RL Bluespec Library
-build_pipeline=FPGA Build Pipeline
+librl_bsv=RL Bluespec Library Submodel
+build_pipeline=FPGA Build Pipeline Xilinx
 
 [Standard Virtual Platform]
 File=modules/leap/virtual-platform/std-virtual-platform.awb
 Packagehint=leap
 
 [Standard Virtual Platform/Requires]
-virtual_devices=Standard Virtual Devices
+virtual_devices=Standard Virtual Devices Submodel
 low_level_platform_interface=Low Level Platform Interface Hybrid
 umf=Little-Endian Unified Message Format
 
@@ -35,9 +35,6 @@ umf=Little-Endian Unified Message Format
 File=modules/leap/virtual-platform/fpga-environment.awb
 Packagehint=leap
 
-[Standard Virtual Devices]
-File=config/pm/hasim/submodels/fpgaenv/std-virtual-devices.apm
-Packagehint=leap
 
 [RRR Clients and Servers]
 File=modules/leap/virtual-platform/rrr/basic/basic-rrr.awb
@@ -119,16 +116,10 @@ Packagehint=leap
 [RRR Clients and Servers/Requires]
 rrr_common=RRR Common Module
 
-[FPGA Build Pipeline]
-File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
-Packagehint=leap
 
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
 
-[RL Bluespec Library]
-File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
-Packagehint=leap
 
 [Nallatech Edge Physical Device v2]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device.awb
@@ -137,3 +128,15 @@ Packagehint=platforms-acp
 [General LED Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
 Packagehint=platforms
+
+[FPGA Build Pipeline Xilinx]
+File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
+Packagehint=leap
+
+[Standard Virtual Devices Submodel]
+File=config/pm/hasim/submodels/fpgaenv/std-virtual-devices.apm
+Packagehint=leap
+
+[RL Bluespec Library Submodel]
+File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
+Packagehint=leap

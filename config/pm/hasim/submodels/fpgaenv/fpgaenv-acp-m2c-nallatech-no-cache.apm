@@ -19,8 +19,8 @@ model=FPGA Environment
 [FPGA Environment/Requires]
 virtual_platform=Standard Virtual Platform
 fpga_components=Hardware FPGA Components for Virtex 5
-librl_bsv=RL Bluespec Library
-build_pipeline=FPGA Build Pipeline
+librl_bsv=RL Bluespec Library Submodel
+build_pipeline=FPGA Build Pipeline Xilinx
 
 [Standard Virtual Platform]
 File=modules/leap/virtual-platform/std-virtual-platform.awb
@@ -62,9 +62,6 @@ physical_platform_debugger=Null Physical Platform Debugger
 local_mem=Local Memory Interface using BRAM
 remote_memory=Null Remote Memory
 
-[RL Bluespec Library]
-File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
-Packagehint=leap
 
 [Null Physical Platform Debugger]
 File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/null/null-debugger.awb
@@ -187,9 +184,6 @@ Packagehint=leap
 [RRR Clients and Servers/Requires]
 rrr_common=RRR Common Module
 
-[FPGA Build Pipeline]
-File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
-Packagehint=leap
 
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
@@ -203,3 +197,11 @@ Packagehint=platforms
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device.awb
 Packagehint=platforms-acp
 
+
+[FPGA Build Pipeline Xilinx]
+File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
+Packagehint=leap
+
+[RL Bluespec Library Submodel]
+File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
+Packagehint=leap

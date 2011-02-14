@@ -34,14 +34,11 @@ WAIT_FOR_HARDWARE=0
 [HW/SW Hybrid Project Foundation/Requires]
 fpgaenv=FPGA Environment
 application_env=Base Hybrid Application Environment
-project_common=Hybrid Project Common Utilities
+project_common=Default Hybrid Project Common Utilities
 
 [Base Hybrid Application Environment/Requires]
 hybrid_application=Intra FPGA Debugger Application (FPGA 0)
 
-[Hybrid Project Common Utilities]
-File=config/pm/hasim/submodels/common/project-common-default.apm
-Packagehint=leap
 
 [Hardware FPGA Components for Virtex 5]
 File=modules/bluespec/common/fpgaenv/fpga-components/hardware-fpga-components-virtex5.awb
@@ -51,9 +48,6 @@ Packagehint=platforms
 File=modules/leap/virtual-platform/low-level-platform-interface/hybrid-llpi.awb
 Packagehint=leap
 
-[RL Bluespec Library]
-File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
-Packagehint=leap
 
 [Low Level Platform Interface Hybrid/Requires]
 physical_platform=ACP M2 Compute Module JTAG
@@ -121,8 +115,8 @@ Packagehint=leap
 [FPGA Environment/Requires]
 virtual_platform=Standard Virtual Platform
 fpga_components=Hardware FPGA Components for Virtex 5
-librl_bsv=RL Bluespec Library
-build_pipeline=FPGA Build Pipeline
+librl_bsv=RL Bluespec Library Submodel
+build_pipeline=FPGA Build Pipeline Xilinx
 
 [Little-Endian Unified Message Format/Params]
 UMF_CHUNK_BYTES=8
@@ -134,9 +128,6 @@ Packagehint=leap
 [RRR Clients and Servers/Requires]
 rrr_common=RRR Common Module
 
-[FPGA Build Pipeline]
-File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
-Packagehint=leap
 
 [NULL Local Memory Interface]
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-null.awb
@@ -183,3 +174,15 @@ Packagehint=platforms-acp
 [General LED Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
 Packagehint=platforms
+
+[FPGA Build Pipeline Xilinx]
+File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
+Packagehint=leap
+
+[RL Bluespec Library Submodel]
+File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
+Packagehint=leap
+
+[Default Hybrid Project Common Utilities]
+File=config/pm/hasim/submodels/common/project-common-default.apm
+Packagehint=leap
