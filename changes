@@ -2024,3 +2024,30 @@ Directory config/pm/platforms/debuggers/acp
 * Updating platforms-acp to remove "submodel" bug and get new names of leap     
   submodels.
   
+
+----------
+kfleming    Date: Thu Feb 24 15:55:32 EST 2011  CSN: CSN-platforms-acp-87
+                  Thu Feb 24 20:55:32 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           86 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
+ acp-m2c.awb               Locally Modified           86 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0
+ acp-m2c.awb               Locally Modified           86 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
+ acp-m2c.awb               Locally Modified           86 
+ acp-m2c.sdc               Locally Modified           86 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.awb               Locally Modified           86 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-jtag
+ acp-m2c.awb               Locally Modified           86 
+
+
+fixed bit/"bit" typo in awb files
