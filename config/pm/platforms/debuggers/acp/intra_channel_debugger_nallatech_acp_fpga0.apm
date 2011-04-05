@@ -9,36 +9,26 @@ DefaultBenchmark=config/bm/bluespec/demos.cfx/benchmarks/null.cfg
 Type=HAsim
 Class=Asim::Model
 DefaultRunOpts=
-RootName=HW/SW Hybrid Project Foundation
+RootName=HW/SW Hybrid Pipeline Build
 RootProvides=model
 
 [Model]
 DefaultAttributes=hybrid acp bluespec
-model=HW/SW Hybrid Project Foundation
+model=HW/SW Hybrid Pipeline Build
 
 [FPGA Environment]
 File=modules/leap/virtual-platform/fpga-environment.awb
 Packagehint=leap
 
-[HW/SW Hybrid Project Foundation]
-File=modules/leap/build-support/project/project-hybrid.awb
-Packagehint=leap
 
 [Base Hybrid Application Environment]
 File=modules/leap/build-support/project/application-env/hybrid/base/application-env-hybrid-base.awb
 Packagehint=leap
 
-[HW/SW Hybrid Project Foundation/Params]
-WAIT_FOR_HARDWARE=0
 
-[HW/SW Hybrid Project Foundation/Requires]
-fpgaenv=FPGA Environment
-application_env=Base Hybrid Application Environment
-project_common=Default Hybrid Project Common Utilities
 
 [Base Hybrid Application Environment/Requires]
 hybrid_application=Intra FPGA Debugger Application (FPGA 0)
-
 
 [Hardware FPGA Components for Virtex 5]
 File=modules/bluespec/common/fpgaenv/fpga-components/hardware-fpga-components-virtex5.awb
@@ -47,7 +37,6 @@ Packagehint=platforms
 [Low Level Platform Interface Hybrid]
 File=modules/leap/virtual-platform/low-level-platform-interface/hybrid-llpi.awb
 Packagehint=leap
-
 
 [Low Level Platform Interface Hybrid/Requires]
 physical_platform=ACP M2 Compute Module with Intra Channel (Nallatech)
@@ -128,7 +117,6 @@ Packagehint=leap
 [RRR Clients and Servers/Requires]
 rrr_common=RRR Common Module
 
-
 [NULL Local Memory Interface]
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-null.awb
 Packagehint=leap
@@ -181,3 +169,15 @@ Packagehint=leap
 [Default Hybrid Project Common Utilities]
 File=config/pm/hasim/submodels/common/project-common-default.apm
 Packagehint=leap
+
+[HW/SW Hybrid Pipeline Build/Params]
+WAIT_FOR_HARDWARE=0
+
+[HW/SW Hybrid Pipeline Build]
+File=modules/leap/build-support/project/project-pipeline.awb
+Packagehint=leap
+
+[HW/SW Hybrid Pipeline Build/Requires]
+project_common=Default Hybrid Project Common Utilities
+fpgaenv=FPGA Environment
+application_env=Base Hybrid Application Environment

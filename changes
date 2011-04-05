@@ -2051,3 +2051,17 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-jt
 
 
 fixed bit/"bit" typo in awb files
+
+----------
+mpellaue    Date: Tue Apr  5 15:50:37 EDT 2011  CSN: CSN-platforms-acp-88
+                  Tue Apr  5 19:50:37 UTC 2011
+
+
+Directory config/pm/platforms/debuggers/acp
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Modified           87 
+ intra_channel_debugger_nallatech_acp_fpga1.apm Locally Modified           87 
+ intra_channel_debugger_nallatech_acp_jtag.apm Locally Modified           87 
+
+
+* Change all models to use Build Pipeline.
+* Change all models to use full Soft Services.
