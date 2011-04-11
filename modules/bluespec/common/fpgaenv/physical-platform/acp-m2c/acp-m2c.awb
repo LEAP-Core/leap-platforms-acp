@@ -28,3 +28,4 @@
 %param FPGA_SPEED         "-2"                "FPGA Speed Grade (Synplify)"
 %param FPGA_PACKAGE       "FF1738"            "FPGA Package (Synplify)"
 
+%param FPGA_PLATFORM      "ACP"               "FPGA Platform"

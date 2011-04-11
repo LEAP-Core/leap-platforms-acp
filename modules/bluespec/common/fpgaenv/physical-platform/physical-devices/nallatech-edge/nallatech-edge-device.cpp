@@ -23,11 +23,14 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <stdio.h>
 
 #include "stdlib.h"
 #include "ctype.h"
 #include "math.h"
 
+#include "asim/syntax.h"
+#include "asim/provides/physical_platform_utils.h"
 #include "asim/provides/nallatech_edge_device.h"
 
 using namespace std;
@@ -41,15 +44,66 @@ NALLATECH_EDGE_DEVICE_CLASS::NALLATECH_EDGE_DEVICE_CLASS(
     PLATFORMS_MODULE_CLASS(p)
 {
     workspace = NULL;
+}
+
+
+NALLATECH_EDGE_DEVICE_CLASS::~NALLATECH_EDGE_DEVICE_CLASS()
+{
+    Cleanup();
+}
+
+
+UINT64
+NALLATECH_EDGE_DEVICE_CLASS::WorkspaceBytes() const
+{
+    return
+        (NALLATECH_NUM_WRITE_WINDOWS + NALLATECH_NUM_READ_WINDOWS) *
+        NALLATECH_MAX_MSG_WORDS *
+        sizeof(NALLATECH_WORD);
+}
+
+
+NALLATECH_WORD*
+NALLATECH_EDGE_DEVICE_CLASS::GetWriteWindow(int windowID) const
+{
+    return workspace + (windowID * NALLATECH_MAX_MSG_WORDS);
+}
+
+
+NALLATECH_WORD*
+NALLATECH_EDGE_DEVICE_CLASS::GetReadWindow(int windowID) const
+{
+    return workspace + ((NALLATECH_NUM_WRITE_WINDOWS + windowID) *
+                        NALLATECH_MAX_MSG_WORDS);
+}
+
+
+// initialize hardware
+void
+NALLATECH_EDGE_DEVICE_CLASS::Init()
+{
 	int ret;
 	int i;
 
+    // Which card is allocated?  The run script will pass the FPGA device
+    // allocated in FPGA_DEV_PATH.  The socket number is the last digit of
+    // the path.
+    int acp_socket = ACP_FSB_SOCKET;  // In case no FPGA_DEV_PATH
+    if (! FPGA_DEV_PATH.empty())
+    {
+        const char n = FPGA_DEV_PATH[FPGA_DEV_PATH.length() - 1];
+        if ((n >= '0') && (n <= '9'))
+        {
+            acp_socket = n - '0';
+        }
+    }
+
 	// Open card
 	printf("Opening card...                           ");
-	hsocket = ACP_OpenSocket(ACP_FSB_SOCKET);
+	hsocket = ACP_OpenSocket(acp_socket);
     if (hsocket == NULL)
     {
-        printf("failed to open socket %d\n", ACP_FSB_SOCKET);
+        printf("failed to open socket %d\n", acp_socket);
         CallbackExit(1);
     }
 	printf("\tOK\n");
@@ -130,44 +184,6 @@ NALLATECH_EDGE_DEVICE_CLASS::NALLATECH_EDGE_DEVICE_CLASS(
 	printf("\tOK\n");
 }
 
-
-NALLATECH_EDGE_DEVICE_CLASS::~NALLATECH_EDGE_DEVICE_CLASS()
-{
-    Cleanup();
-}
-
-
-UINT64
-NALLATECH_EDGE_DEVICE_CLASS::WorkspaceBytes() const
-{
-    return
-        (NALLATECH_NUM_WRITE_WINDOWS + NALLATECH_NUM_READ_WINDOWS) *
-        NALLATECH_MAX_MSG_WORDS *
-        sizeof(NALLATECH_WORD);
-}
-
-
-NALLATECH_WORD*
-NALLATECH_EDGE_DEVICE_CLASS::GetWriteWindow(int windowID) const
-{
-    return workspace + (windowID * NALLATECH_MAX_MSG_WORDS);
-}
-
-
-NALLATECH_WORD*
-NALLATECH_EDGE_DEVICE_CLASS::GetReadWindow(int windowID) const
-{
-    return workspace + ((NALLATECH_NUM_WRITE_WINDOWS + windowID) *
-                        NALLATECH_MAX_MSG_WORDS);
-}
-
-
-// initialize hardware
-void
-NALLATECH_EDGE_DEVICE_CLASS::Init()
-{
-
-}
 
 // override default chain-uninit method because
 // we need to do something special

@@ -6,4 +6,4 @@ Lock=asim-hasim
 Description=Platform specific modules for ACP device
 Name=platforms-acp
 Tag=HEAD
-CSN=CSN-platforms-acp-88
+CSN=CSN-platforms-acp-89
