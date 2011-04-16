@@ -2,8 +2,8 @@
 [Global]
 Buildorder=1000
 Version=1
-Lock=asim-hasim
+Lock=asim-platforms
 Description=Platform specific modules for ACP device
-Name=platforms-acp
+Name=leap-platforms-acp
 Tag=HEAD
-CSN=CSN-platforms-acp-89
+CSN=CSN-leap-platforms-acp-90

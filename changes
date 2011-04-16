@@ -2094,3 +2094,14 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-jt
 Accept the ACP device ID to use from the command line in order to support
 choosing among multiple devices on the host.
 
+
+----------
+joel        Date: Fri Apr 15 20:37:35 EDT 2011  CSN: CSN-leap-platforms-acp-90
+                  Sat Apr 16 00:37:35 UTC 2011
+
+
+Directory admin/packages
+ leap-platforms-acp        Locally Added               - 
+ platforms-acp             Locally Removed            89 
+
+Changed package name from platforms-acp to leap-platforms-acp.
