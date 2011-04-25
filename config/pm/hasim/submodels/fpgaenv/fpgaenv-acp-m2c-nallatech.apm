@@ -35,7 +35,6 @@ umf=Little-Endian Unified Message Format
 File=modules/leap/virtual-platform/fpga-environment.awb
 Packagehint=leap
 
-
 [RRR Clients and Servers]
 File=modules/leap/virtual-platform/rrr/basic/basic-rrr.awb
 Packagehint=leap
@@ -61,19 +60,19 @@ remote_memory=Null Remote Memory
 
 [Null Physical Platform Debugger]
 File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/null/null-debugger.awb
-Packagehint=platforms
+Packagehint=leap-platforms
 
 [Common Physical Platform Utilities]
 File=modules/bluespec/common/fpgaenv/physical-platform/utils/utils.awb
-Packagehint=platforms
+Packagehint=leap-platforms
 
 [Null Clocks Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/clocks/null/null-clocks-device.awb
-Packagehint=platforms
+Packagehint=leap-platforms
 
 [Hardware FPGA Components for Virtex 5]
 File=modules/bluespec/common/fpgaenv/fpga-components/hardware-fpga-components-virtex5.awb
-Packagehint=platforms
+Packagehint=leap-platforms
 
 [Null Remote Memory]
 File=modules/leap/virtual-platform/low-level-platform-interface/remote-memory/null/null-remote-memory.awb
@@ -81,18 +80,18 @@ Packagehint=leap
 
 [Nallatech Edge Physical Channel]
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge/nallatech-edge-channel.awb
-Packagehint=platforms-acp
+Packagehint=leap-platforms-acp
 
 [Little-Endian Unified Message Format]
 File=modules/bluespec/common/fpgaenv/virtual-platform/umf/little-endian/umf-little-endian.awb
-Packagehint=platforms
+Packagehint=leap-platforms
 
 [Little-Endian Unified Message Format/Params]
 UMF_CHUNK_BYTES=8
 
 [ACP DDR2 SRAM Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram/ddr-sram-device.awb
-Packagehint=platforms-acp
+Packagehint=leap-platforms-acp
 
 [Local Memory Interface using DDR2 Memory]
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-ddr2.awb
@@ -100,7 +99,7 @@ Packagehint=leap
 
 [ACP M2 Compute Module With SRAM (Nallatech)]
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram/acp-m2c.awb
-Packagehint=platforms-acp
+Packagehint=leap-platforms-acp
 
 [ACP M2 Compute Module With SRAM (Nallatech)/Requires]
 clocks_device=Null Clocks Device
@@ -116,18 +115,16 @@ Packagehint=leap
 [RRR Clients and Servers/Requires]
 rrr_common=RRR Common Module
 
-
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
 
-
 [Nallatech Edge Physical Device v2]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device.awb
-Packagehint=platforms-acp
+Packagehint=leap-platforms-acp
 
 [General LED Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
-Packagehint=platforms
+Packagehint=leap-platforms
 
 [FPGA Build Pipeline Xilinx]
 File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm

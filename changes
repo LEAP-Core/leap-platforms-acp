@@ -2105,3 +2105,22 @@ Directory admin/packages
  platforms-acp             Locally Removed            89 
 
 Changed package name from platforms-acp to leap-platforms-acp.
+
+----------
+mcadler     Date: Mon Apr 25 17:18:54 EDT 2011  CSN: CSN-leap-platforms-acp-91
+                  Mon Apr 25 21:18:54 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified           90 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           90 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           90 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0
+ acp-m2c.h                 Locally Modified           90 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
+ acp-m2c.h                 Locally Modified           90 
+
+- A few modules still needed to include asim/syntax.h
+- Update apm dependence.
