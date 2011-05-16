@@ -1,11 +1,11 @@
 
 [Global]
 SaveParameters=0
-Description=Hybrid ACP M2 Compute Environment - No Central Cache - FPGA0 (Nallatech)
+Description=Hybrid ACP Dual Compute Environment FPGA0 (Nallatech)
 File=fpgaenv-acp-m2c-nallatech-no-cache-fpga0
 Version=2.2
 Type=HAsim
-Name=Hybrid ACP M2 Compute Environment - No Central Cache - FPGA0 (Nallatech)
+Name=Hybrid ACP Dual Compute Environment FPGA0 (Nallatech)
 Class=Asim::Model
 DefaultBenchmark=
 DefaultRunOpts=
@@ -55,7 +55,7 @@ File=modules/leap/virtual-platform/low-level-platform-interface/hybrid-llpi.awb
 Packagehint=leap
 
 [Low Level Platform Interface Hybrid/Requires]
-physical_platform=ACP M2 Compute Module with Intra Channel (Nallatech)
+physical_platform=ACP FPGA with Intra Channel (Nallatech)
 channelio=Basic Virtual Channel Multiplexer
 rrr=RRR Clients and Servers
 physical_platform_debugger=Null Physical Platform Debugger
@@ -184,20 +184,9 @@ Packagehint=leap-platforms-acp
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
 
-[ACP M2 Compute Module with Intra Channel (Nallatech)]
-File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0/acp-m2c.awb
-Packagehint=leap-platforms-acp
-
 [General LED Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
 Packagehint=leap-platforms
-
-[ACP M2 Compute Module with Intra Channel (Nallatech)/Requires]
-clocks_device=Null Clocks Device
-nallatech_intra_device=Nallatech Intra Physical Device FPGA0 (Master) v2
-led_device=General LED Device
-physical_platform_utils=Common Physical Platform Utilities
-nallatech_edge_device=Nallatech Edge Physical Device v2
 
 [FPGA Build Pipeline Xilinx]
 File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
@@ -206,3 +195,14 @@ Packagehint=leap
 [RL Bluespec Library Submodel]
 File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
 Packagehint=leap
+
+[ACP FPGA with Intra Channel (Nallatech)/Requires]
+clocks_device=Null Clocks Device
+nallatech_intra_device=Nallatech Intra Physical Device FPGA0 (Master) v2
+led_device=General LED Device
+physical_platform_utils=Common Physical Platform Utilities
+nallatech_edge_device=Nallatech Edge Physical Device v2
+
+[ACP FPGA with Intra Channel (Nallatech)]
+File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0/acp-m2c.awb
+Packagehint=leap-platforms-acp

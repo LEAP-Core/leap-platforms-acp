@@ -1,6 +1,6 @@
 
-%name ACP M2 Compute Module with Intra Channel (Nallatech)
-%desc ACP M2 Compute Module with Intra Channel (Nallatech)
+%name ACP FPGA with Intra Channel (Nallatech)
+%desc ACP FPGA with Intra Channel (Nallatech)
 
 %provides physical_platform
 

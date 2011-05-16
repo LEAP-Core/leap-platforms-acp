@@ -2124,3 +2124,18 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
 
 - A few modules still needed to include asim/syntax.h
 - Update apm dependence.
+
+----------
+kfleming    Date: Mon May 16 09:15:49 EDT 2011  CSN: CSN-leap-platforms-acp-92
+                  Mon May 16 13:15:49 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified           91 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified           91 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0
+ acp-m2c.awb               Locally Modified           91 
+
+
+Renamed intra-acp modules slightly to match eachother. 
