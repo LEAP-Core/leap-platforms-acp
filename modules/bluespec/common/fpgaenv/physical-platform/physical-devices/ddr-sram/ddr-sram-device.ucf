@@ -300,32 +300,40 @@ INST "*_sram_device_1_prim_device/u_idelayctrl" LOC = IDELAYCTRL_X0Y11; # no und
 ############################################################################
 ##                                TIGs
 ############################################################################
-net "*_sram_device_*_syncResetQ/dGDeqPtr*[*]"      TIG;
-net "*_sram_device_*_syncResetQ/sGEnqPtr*[*]"      TIG;
-net "*_sram_device_*_syncResetQ/dSyncReg1*[*]"     TIG;
+INST "*_sram_device_*_syncResetQ/dGDeqPtr*"         TNM=TG_ram_clk;
+INST "*_sram_device_*_syncResetQ/sGEnqPtr*"         TNM=TG_model_clk;
+INST "*_sram_device_*_syncResetQ/dSyncReg1*"        TNM=TG_ram_clk;
+INST "*_sram_device_*_syncResetQ/sSyncReg1*"        TNM=TG_model_clk;
 
-net "*_sram_device_*_syncRequestQ_dD_OUT[*]"       TIG;
-net "*_sram_device_*_syncRequestQ/Mram_fifoMem*"   TIG;
-net "*_sram_device_*_syncRequestQ/dGDeqPtr*[*]"    TIG;
-net "*_sram_device_*_syncRequestQ/sGEnqPtr*[*]"    TIG;
-net "*_sram_device_*_syncRequestQ/dSyncReg1*[*]"   TIG;
+INST "*_sram_device_*_syncRequestQ/Mram_fifoMem*"   TNM=TG_model_clk;
+INST "*_sram_device_*_syncRequestQ/dDoutReg*"       TNM=TG_ram_clk;
+INST "*_sram_device_*_syncRequestQ/dDoutReg*"       TIG;
+INST "*_sram_device_*_syncRequestQ/dGDeqPtr*"       TNM=TG_ram_clk;
+INST "*_sram_device_*_syncRequestQ/sGEnqPtr*"       TNM=TG_model_clk;
+INST "*_sram_device_*_syncRequestQ/dSyncReg1*"      TNM=TG_ram_clk;
+INST "*_sram_device_*_syncRequestQ/sSyncReg1*"      TNM=TG_model_clk;
 
-net "*_sram_device_*_syncWriteDataQ_dD_OUT[*]"     TIG;
-#net "*_sram_device_*_syncWriteDataQ/Mram_fifoMem*" TIG;
-net "*_sram_device_*_syncWriteDataQ/dGDeqPtr*[*]"  TIG;
-net "*_sram_device_*_syncWriteDataQ/sGEnqPtr*[*]"  TIG;
-net "*_sram_device_*_syncWriteDataQ/dSyncReg1*[*]" TIG;
+INST "*_sram_device_*_syncWriteDataQ/Mram_fifoMem*" TNM=TG_model_clk;
+INST "*_sram_device_*_syncWriteDataQ/dDoutReg*"     TNM=TG_ram_clk;
+INST "*_sram_device_*_syncWriteDataQ/dDoutReg*"     TIG;
+INST "*_sram_device_*_syncWriteDataQ/dGDeqPtr*"     TNM=TG_ram_clk;
+INST "*_sram_device_*_syncWriteDataQ/sGEnqPtr*"     TNM=TG_model_clk;
+INST "*_sram_device_*_syncWriteDataQ/dSyncReg1*"    TNM=TG_ram_clk;
+INST "*_sram_device_*_syncWriteDataQ/sSyncReg1*"    TNM=TG_model_clk;
 
-net "*_sram_device_*_syncReadDataQ_dD_OUT[*]"      TIG;
-net "*_sram_device_*_syncReadDataQ/Mram_fifoMem*"  TIG;
-net "*_sram_device_*_syncReadDataQ/dGDeqPtr*[*]"   TIG;
-net "*_sram_device_*_syncReadDataQ/sGEnqPtr*[*]"   TIG;
-net "*_sram_device_*_syncReadDataQ/sSyncReg1*[*]"  TIG;
+INST "*_sram_device_*_syncReadDataQ/Mram_fifoMem*"  TNM=TG_ram_clk;
+INST "*_sram_device_*_syncReadDataQ/dDoutReg*"      TNM=TG_model_clk;
+INST "*_sram_device_*_syncReadDataQ/dDoutReg*"      TIG;
+INST "*_sram_device_*_syncReadDataQ/dGDeqPtr*"      TNM=TG_model_clk;
+INST "*_sram_device_*_syncReadDataQ/sGEnqPtr*"      TNM=TG_ram_clk;
+INST "*_sram_device_*_syncReadDataQ/dSyncReg1*"     TNM=TG_model_clk;
+INST "*_sram_device_*_syncReadDataQ/sSyncReg1*"     TNM=TG_ram_clk;
+
+TIMESPEC TS_model_clk_to_ram_clk=FROM TG_model_clk TO TG_ram_clk TIG;
+TIMESPEC TS_ram_clk_to_model_clk=FROM TG_ram_clk TO TG_model_clk TIG;
 
 
 # areagroup constraints targeting sram serdes
-
-
 INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_top_0/U_DDRII_PHY_TOP/U_DDRII_PHY_IO/U_DDRII_PHY_DQ_IO/MEMORY_WIDTH_36.CQ_INST[0].Q_PER_CQ_INST[14].U_ISERDES_NODELAY_CQ" LOC = ILOGIC_X0Y64;
 #INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_top_0/U_DDRII_PHY_TOP/U_DDRII_PHY_IO/U_DDRII_PHY_DQ_IO/MEMORY_WIDTH_36.CQ_INST[0].Q_PER_CQ_INST[14].U_IODELAY_CQ" LOC = IODELAY_X0Y64;
 #INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_top_0/U_DDRII_PHY_TOP/U_DDRII_PHY_IO/U_DDRII_PHY_DQ_IO/DATA_WIDTH_INST[14].ODDR_DDRII_D" LOC = OLOGIC_X0Y64;

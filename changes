@@ -2139,3 +2139,26 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fp
 
 
 Renamed intra-acp modules slightly to match eachother. 
+
+----------
+mcadler     Date: Mon May 16 16:40:26 EDT 2011  CSN: CSN-leap-platforms-acp-93
+                  Mon May 16 20:40:26 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           92 
+ ddr-sram-vhdl-import.bsv  Locally Modified           92 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-vhdl-import.bsv Locally Modified           92 
+ nallatech-edge-device.ucf Locally Modified           92 
+
+Significant cleanup of timing for clock-crossing FIFOs.  Bluespec changed the
+implementation of SyncFIFO starting with 2011.04.C.  The constraints here
+require 2011.04.C or later.
+
+- Describe clock crossing as a transition from one time group to another.
+  The old code just listed netlist locations.
+- Use INST instead of NET.  NET targets seem to get optimized away
+  by Xst unpredictably.
+- Remove a bunch of old, commented out, TIGs.

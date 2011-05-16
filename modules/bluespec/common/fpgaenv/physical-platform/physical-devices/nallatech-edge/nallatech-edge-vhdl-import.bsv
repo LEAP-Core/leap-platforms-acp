@@ -43,7 +43,7 @@ interface NALLATECH_EDGE_WIRES;
     // config registers
     (* enable = "REG_CLK"     *) method Action             wREG_CLK();
     (* enable = "REG_RESET_Z" *) method Action             wREG_RESET_Z();    
-    (* prefix = ""            *) interface Inout#(Bit#(8)) wCONFIG_DATA;
+    (* prefix = "REG_CONFIG_DATA" *) interface Inout#(Bit#(8)) wCONFIG_DATA;
     (* enable = "REG_UDS_Z"   *) method Action             wREG_UDS_Z();
     (* enable = "REG_LDS_Z"   *) method Action             wREG_LDS_Z();
     (* enable = "REG_ADS_Z"   *) method Action             wREG_ADS_Z();
@@ -67,7 +67,7 @@ interface NALLATECH_EDGE_WIRES;
 
     // EEPROMs
     (* result = "EEPROM_SCL" *) method Bit#(1)            wSCL;
-    (* prefix = ""           *) interface Inout#(Bit#(1)) wSDA;
+    (* prefix = "EEPROM_SDA" *) interface Inout#(Bit#(1)) wSDA;
 
     // LEDs
     (* result = "SYS_LED_OUT" *) method Bit#(6) wSYS_LED_OUT();

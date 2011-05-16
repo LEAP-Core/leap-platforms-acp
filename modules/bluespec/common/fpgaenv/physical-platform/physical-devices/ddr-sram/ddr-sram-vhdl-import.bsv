@@ -75,7 +75,7 @@ interface DDR2_WIRES;
     (* result = "ram_leds"   *) method Bit#(2) w_ram_leds();
 
     // RAM 1 or 5
-    (* prefix = "" *) interface Inout#(Bit#(`SRAM_DATA_WIDTH)) w_ddrii_dq;
+    (* prefix = "w_ddrii_dq" *) interface Inout#(Bit#(`SRAM_DATA_WIDTH)) w_ddrii_dq;
 
     (* result = "ddrii_sa" *) method Bit#(`SRAM_ADDR_WIDTH) w_ddrii_sa();
     (* result = "ddrii_ld_n" *) method Bit#(1) w_ddrii_ld_n();
