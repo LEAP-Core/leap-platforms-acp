@@ -1,17 +1,21 @@
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q_dD_OUT[*]"     TIG;
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/Mram_fifoMem*" TIG;
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sGEnqPtr[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dSyncReg1[*]"  TIG;
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dGDeqPtr[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sSyncReg1[*]"  TIG;
 
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q_dD_OUT[*]"      TIG;
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/Mram_fifoMem*"  TIG;
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sGEnqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dSyncReg1[*]"   TIG;
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dGDeqPtr[*]"    TIG;
-net "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sSyncReg1[*]"   TIG;
+# We should pick up the clock declarations from the main file. 
 
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/Mram_fifoMem*" TNM=TG_model_clk;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dDoutReg*"     TNM=TG_edge_clk;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dDoutReg*"     TIG;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dGDeqPtr*"     TNM=TG_edge_clk;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sGEnqPtr*"     TNM=TG_model_clk;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dSyncReg1*"    TNM=TG_edge_clk;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sSyncReg1*"    TNM=TG_model_clk;
+
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/Mram_fifoMem*" TNM=TG_edge_clk;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dDoutReg*"     TNM=TG_model_clk;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dDoutReg*"     TIG;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dGDeqPtr*"     TNM=TG_model_clk;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sGEnqPtr*"     TNM=TG_edge_clk;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dSyncReg1*"    TNM=TG_model_clk;
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sSyncReg1*"    TNM=TG_edge_clk;
 
 # Needed for lvds comms 
 net "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;

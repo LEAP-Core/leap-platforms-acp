@@ -37,11 +37,16 @@ NET "CLK100N" IOSTANDARD = "LVDS_25" | LOC = AL26 | DIFF_TERM = "TRUE";
 
 ###############################################################################
 ##TIMING CONSTRAINTS
-NET "clk100p" period=10ns high 50%;
-NET "reg_clk" period=10ns high 50%;
+###############################################################################
+##TIMING CONSTRAINTS
+NET "clk100p" TNM_NET=TG_clk100p;
+TIMESPEC TS_clk100p=PERIOD TG_clk100p 10ns HIGH 50%;
 
-net "*/clk_rdyn" TIG;
-net "*/module_control_and_status_inst/global_register_inst/lvds_loopback_mode_reg<*>" TIG;
-net "*/module_control_and_status_inst/global_register_inst/fifo_rst_reg<*>" TIG;
-net "*/module_control_and_status_inst/global_register_inst/led_mode_reg<*>" TIG;
-net "*/module_control_and_status_inst/global_register_inst/ram_power_reg<*>" TIG;
+NET "reg_clk" TNM_NET=TG_reg_clk;
+TIMESPEC TS_reg_clk=PERIOD TG_reg_clk 10ns HIGH 50%;
+
+NET "*/module_control_and_status_inst/global_register_inst/lvds_loopback_mode_reg<*>" TIG;
+NET "*/module_control_and_status_inst/global_register_inst/fifo_rst_reg<*>" TIG;
+NET "*/module_control_and_status_inst/global_register_inst/led_mode_reg<*>" TIG;
+NET "*/module_control_and_status_inst/global_register_inst/ram_power_reg<*>" TIG;
+INST "*/module_control_and_status_inst/module_sysmon_inst/SYSMON_INST" TIG;

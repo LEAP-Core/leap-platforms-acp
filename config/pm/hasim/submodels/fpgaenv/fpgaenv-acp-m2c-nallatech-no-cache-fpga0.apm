@@ -20,7 +20,7 @@ model=FPGA Environment
 virtual_platform=Standard Virtual Platform
 fpga_components=Hardware FPGA Components for Virtex 5
 librl_bsv=RL Bluespec Library Submodel
-build_pipeline=FPGA Build Pipeline Xilinx
+build_pipeline=FPGA Build Pipeline Xilinx (MultiFPGA)
 
 [Standard Virtual Platform]
 File=modules/leap/virtual-platform/std-virtual-platform.awb
@@ -188,10 +188,6 @@ CRYSTAL_CLOCK_FREQ=200
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
 Packagehint=leap-platforms
 
-[FPGA Build Pipeline Xilinx]
-File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
-Packagehint=leap
-
 [RL Bluespec Library Submodel]
 File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
 Packagehint=leap
@@ -206,3 +202,7 @@ nallatech_edge_device=Nallatech Edge Physical Device v2
 [ACP FPGA with Intra Channel (Nallatech)]
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0/acp-m2c.awb
 Packagehint=leap-platforms-acp
+
+[FPGA Build Pipeline Xilinx (MultiFPGA)]
+File=config/pm/leap/submodels/pipelines/build-pipeline-xilinx-multifpga.apm
+Packagehint=multifpga
