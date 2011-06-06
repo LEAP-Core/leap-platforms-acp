@@ -20,7 +20,7 @@ model=FPGA Environment
 virtual_platform=Standard Virtual Platform
 fpga_components=Hardware FPGA Components for Virtex 5
 librl_bsv=RL Bluespec Library Submodel
-build_pipeline=FPGA Build Pipeline Xilinx (Synplify)
+build_pipeline=FPGA Build Pipeline Xilinx
 
 [Standard Virtual Platform]
 File=modules/leap/virtual-platform/std-virtual-platform.awb
@@ -185,7 +185,6 @@ rrr_common=RRR Common Module
 
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
-MODEL_CLOCK_DIVIDER=8
 
 [General LED Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
@@ -199,6 +198,9 @@ Packagehint=leap-platforms-acp
 File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
 Packagehint=leap
 
-[FPGA Build Pipeline Xilinx (Synplify)]
-File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx-synplify.apm
+[FPGA Build Pipeline Xilinx]
+File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
 Packagehint=leap
+
+[FPGA Build Pipeline Xilinx/Params]
+XST_INSERT_IOBUF=0

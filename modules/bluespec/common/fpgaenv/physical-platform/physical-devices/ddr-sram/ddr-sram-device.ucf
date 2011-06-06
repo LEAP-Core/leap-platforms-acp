@@ -300,6 +300,7 @@ INST "*_sram_device_1_prim_device/u_idelayctrl" LOC = IDELAYCTRL_X0Y11; # no und
 ############################################################################
 ##                                TIGs
 ############################################################################
+
 INST "*_sram_device_*_syncResetQ/dGDeqPtr*"         TNM=TG_ram_clk;
 INST "*_sram_device_*_syncResetQ/sGEnqPtr*"         TNM=TG_model_clk;
 INST "*_sram_device_*_syncResetQ/dSyncReg1*"        TNM=TG_ram_clk;
@@ -328,6 +329,12 @@ INST "*_sram_device_*_syncReadDataQ/dGDeqPtr*"      TNM=TG_model_clk;
 INST "*_sram_device_*_syncReadDataQ/sGEnqPtr*"      TNM=TG_ram_clk;
 INST "*_sram_device_*_syncReadDataQ/dSyncReg1*"     TNM=TG_model_clk;
 INST "*_sram_device_*_syncReadDataQ/sSyncReg1*"     TNM=TG_ram_clk;
+
+## Add these when SRAM_DEBUG awb option is enabled
+#INST "*_sram_device_*_syncStatus/sDataSyncIn*"      TNM=TG_ram_clk;
+#INST "*_sram_device_*_syncStatus/dD_OUT*"           TNM=TG_model_clk;
+#INST "*_sram_device_*_syncStatus/sync/sToggleReg*"  TNM=TG_ram_clk;
+#INST "*_sram_device_*_syncStatus/sync/dSyncReg1*"   TNM=TG_model_clk;
 
 TIMESPEC TS_model_clk_to_ram_clk=FROM TG_model_clk TO TG_ram_clk TIG;
 TIMESPEC TS_ram_clk_to_model_clk=FROM TG_ram_clk TO TG_model_clk TIG;

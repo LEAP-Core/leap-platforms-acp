@@ -2182,3 +2182,27 @@ Two changes:
 
 1) Intra builds now use multifpga flow (and may be briefly broken by this?)
 2) Tweaked ACP ucf accoring to Adler
+
+----------
+mcadler     Date: Mon Jun  6 15:51:25 EDT 2011  CSN: CSN-leap-platforms-acp-95
+                  Mon Jun  6 19:51:25 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ hasim-fpgaenv-acp-m2c.apm Locally Removed            94 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           94 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified           94 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified           94 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified           94 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified           94 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.vhd Locally Modified           94 
+ qdr2_ddr2_clocks.vhd      Locally Modified           94 
+
+- Get rid of the Arches FPGA environment.  As configured, it doesn't work.
+- Remove debugging TIGs from SRAM definition.
+- Don't request IOBUF insertion for top level modules.  Buffering is already
+  provided by the Nallatech libraries.

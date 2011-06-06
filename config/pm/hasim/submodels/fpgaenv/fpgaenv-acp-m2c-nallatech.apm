@@ -137,3 +137,6 @@ Packagehint=leap
 [RL Bluespec Library Submodel]
 File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
 Packagehint=leap
+
+[FPGA Build Pipeline Xilinx/Params]
+XST_INSERT_IOBUF=0

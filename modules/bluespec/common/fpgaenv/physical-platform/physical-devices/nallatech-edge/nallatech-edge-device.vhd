@@ -482,7 +482,7 @@ begin
 		);
         
     sram_clocks_module: qdr2_ddr2_clocks
-    port map (
+      port map (
         -- Initialization control and reset
         init => open,
         pll_rst => '0',

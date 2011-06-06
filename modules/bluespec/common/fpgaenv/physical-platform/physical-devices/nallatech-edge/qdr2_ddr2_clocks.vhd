@@ -54,7 +54,7 @@ library unisim;
 
 entity qdr2_ddr2_clocks is
   generic (
-    idelayctrl_use                                        : boolean := true;
+    idelayctrl_use                                        : boolean := false;
     memory_clk_speed                                      : integer := 0
     );
   port (
