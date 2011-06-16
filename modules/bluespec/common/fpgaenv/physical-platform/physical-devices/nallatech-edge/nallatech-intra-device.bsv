@@ -22,9 +22,10 @@ import FIFOF::*;
 import Vector::*;
 import RWire::*;
 
-`include "asim/provides/librl_bsv_base.bsh"
-`include "asim/provides/fpga_components.bsh"
-`include "asim/provides/clocks_device.bsh"
+`include "awb/provides/librl_bsv_base.bsh"
+`include "awb/provides/fpga_components.bsh"
+`include "awb/provides/clocks_device.bsh"
+`include "awb/provides/umf.bsh"
 
 
 interface NALLATECH_INTRA_DRIVER;
@@ -32,6 +33,13 @@ interface NALLATECH_INTRA_DRIVER;
     method Action              enq(NALLATECH_FIFO_DATA data);
     method NALLATECH_FIFO_DATA first();
     method Action              deq();
+        
+endinterface
+
+interface NALLATECH_UMF_INTRA_DRIVER;
+
+    method Action              write(UMF_CHUNK data);
+    method ActionValue#(UMF_CHUNK) read();
         
 endinterface
 
@@ -46,6 +54,7 @@ endinterface
 interface NALLATECH_INTRA_DEVICE;
 
     interface NALLATECH_INTRA_DRIVER        intra_driver;
+    interface NALLATECH_UMF_INTRA_DRIVER    umf_intra_driver;
     interface NALLATECH_INTRA_WIRES         wires;
     interface NALLATECH_INTRA_COMM_CONTROL  communication_control;
         
@@ -113,6 +122,19 @@ module mkNallatechIntraDeviceParametric#(Clock clk100,
         method first = sync_read_q.first;
 
         method deq = sync_read_q.deq;
+                
+    endinterface
+
+    interface NALLATECH_UMF_INTRA_DRIVER umf_intra_driver;
+        
+        method ActionValue#(UMF_CHUNK) read;
+          sync_read_q.deq();
+          return truncate(sync_read_q.first());
+        endmethod
+            
+        method Action write(UMF_CHUNK data);
+          sync_write_q.enq(zeroExtend(data));
+        endmethod
                 
     endinterface
 

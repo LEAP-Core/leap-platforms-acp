@@ -2206,3 +2206,26 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 - Remove debugging TIGs from SRAM definition.
 - Don't request IOBUF insertion for top level modules.  Buffering is already
   provided by the Nallatech libraries.
+
+----------
+kfleming    Date: Thu Jun 16 13:22:09 EDT 2011  CSN: CSN-leap-platforms-acp-96
+                  Thu Jun 16 17:22:09 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified           95 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified           95 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           95 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0
+ acp-m2c.awb               Locally Modified           95 
+ acp-m2c.bsv               Locally Modified           95 
+ acp-m2c.bsh               Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-intra-device.bsv Locally Modified           95 
+ nallatech-edge-device-fpga1.ucf Locally Modified           95 
+ nallatech-intra-device-fpga0.ucf Locally Modified           95 
+
+
+Upgraded nallatech acp targets to use the new ucf style and added an interface for ucf chunks to the intra physical device.

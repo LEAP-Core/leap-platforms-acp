@@ -40,6 +40,7 @@ interface PHYSICAL_DRIVERS;
     interface CLOCKS_DRIVER          clocksDriver;
     interface NALLATECH_EDGE_DRIVER  nallatechEdgeDriver;
     interface NALLATECH_INTRA_DRIVER nallatechIntraDriver;
+    interface NALLATECH_UMF_INTRA_DRIVER nallatechUMFIntraDriver;
     interface LEDS_DRIVER#(4)         ledsDriver;
 
 endinterface
@@ -93,7 +94,7 @@ module mkPhysicalPlatform
     // the device hands to us will have soft-reset wired-in.
     
     NALLATECH_EDGE_DEVICE  nallatech_edge_device  <- mkNallatechEdgeDevice();
-    NALLATECH_INTRA_DEVICE nallatech_intra_device <- mkNallatechIntraDevice(nallatech_edge_device.intra_clocks_driver,nallatech_edge_device.clocks_driver.rawClock,clocked_by nallatech_edge_device.clocks_driver.clock, reset_by nallatech_edge_device.clocks_driver.reset);
+    NALLATECH_INTRA_DEVICE nallatech_intra_device <- mkNallatechIntraDevice(nallatech_edge_device.intra_clocks_driver,nallatech_edge_device.clocks_driver.rawClock, clocked_by nallatech_edge_device.clocks_driver.clock, reset_by nallatech_edge_device.clocks_driver.reset);
     
     // Instantiate all other physical devices
     
@@ -108,6 +109,7 @@ module mkPhysicalPlatform
     
         interface clocksDriver        = nallatech_edge_device.clocks_driver;
         interface nallatechEdgeDriver = nallatech_edge_device.edge_driver;
+        interface nallatechUMFIntraDriver = nallatech_intra_device.umf_intra_driver;
         interface nallatechIntraDriver = nallatech_intra_device.intra_driver; 
         interface ledsDriver          = nallatech_edge_device.leds_driver;
 

@@ -50,3 +50,9 @@ NET "*/module_control_and_status_inst/global_register_inst/fifo_rst_reg<*>" TIG;
 NET "*/module_control_and_status_inst/global_register_inst/led_mode_reg<*>" TIG;
 NET "*/module_control_and_status_inst/global_register_inst/ram_power_reg<*>" TIG;
 INST "*/module_control_and_status_inst/module_sysmon_inst/SYSMON_INST" TIG;
+
+TIMESPEC TS_model_clk_to_edge_clk=FROM TG_model_clk TO TG_edge_clk TIG;
+TIMESPEC TS_edge_clk_to_model_clk=FROM TG_edge_clk TO TG_model_clk TIG;
+
+TIMESPEC TS_model_clk_to_usr_clk=FROM TG_model_clk TO TG_usr_clk TIG;
+TIMESPEC TS_usr_clk_to_model_clk=FROM TG_usr_clk TO TG_model_clk TIG;
