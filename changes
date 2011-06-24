@@ -2229,3 +2229,14 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 
 Upgraded nallatech acp targets to use the new ucf style and added an interface for ucf chunks to the intra physical device.
+
+----------
+kfleming    Date: Fri Jun 24 09:24:42 EDT 2011  CSN: CSN-leap-platforms-acp-97
+                  Fri Jun 24 13:24:42 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device-debugger.cpp Locally Modified           96 
+
+
+Added a helpful warning to remind myself to set environment variables when programming both FPGAs on ACP.

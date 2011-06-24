@@ -78,6 +78,12 @@ NALLATECH_EDGE_DEVICE_CLASS::NALLATECH_EDGE_DEVICE_CLASS(
         CallbackExit(1);
     }
 
+    if (bitfile1 == NULL)
+    {
+        printf("\nERROR:  FPGA_BIT_FILE1 environment variable must be defined!\n");
+        CallbackExit(1);
+    }
+
 	ret = ACP_ConfigureFPGA(hsocket, bitfile, DEVICE_ID(1,0,0));
 
 	if (ret != 0)
