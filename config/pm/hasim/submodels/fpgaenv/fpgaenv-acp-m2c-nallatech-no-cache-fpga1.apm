@@ -200,10 +200,6 @@ nallatech_edge_device=Nallatech Edge Physical Device Null (FPGA1)
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0/acp-m2c.awb
 Packagehint=leap-platforms-acp
 
-[Synthesis Boundary Wrapper generation tool]
-File=modules/leap/build-support/stages/wrapper_gen/multi-fpga-wrapper-gen.awb
-Packagehint=multifpga
-
 [Xilinx BITGEN]
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-bitgen.awb
 Packagehint=leap
@@ -214,7 +210,7 @@ Packagehint=leap
 
 [Interface builder]
 File=modules/leap/build-support/build-pipelines/stages/iface/iface.awb
-Packagehint=leap
+Packagehint=multifpga
 
 [Xilinx NGD]
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-ngd.awb
@@ -222,10 +218,6 @@ Packagehint=leap
 
 [FPGA Programming Tool]
 File=modules/leap/build-support/build-pipelines/stages/fpgaprog/fpgaprog.awb
-Packagehint=leap
-
-[Software build tool]
-File=modules/leap/build-support/build-pipelines/stages/software/software.awb
 Packagehint=leap
 
 [Xilinx Post-synthesis Toolchain]
@@ -239,10 +231,10 @@ Packagehint=multifpga
 [FPGA Platform Build Pipeline/Requires]
 fpga_program_tool=FPGA Programming Tool
 post_synthesis_tool=Xilinx Post-synthesis Toolchain
-software_tool=Software build tool
+software_tool=Null software build tool
 mcd_tool=MCD Tool for Xilinx
 iface_tool=Interface builder
-wrapper_gen_tool=Synthesis Boundary Wrapper generation tool
+wrapper_gen_tool=MultiFPGA Synthesis Boundary Wrapper generation tool
 synthesis_tool=XST Synthesis Tool
 bsv_tool=BSV Build Tool MultiFPGA
 
@@ -266,19 +258,27 @@ File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-map.awb
 Packagehint=leap
 
 [BSV Build Tool MultiFPGA]
-File=modules/leap/build-support/stages/bluespec/bsv-multi.awb
+File=modules/leap/build-support/build-pipelines/stages/bluespec/bsv-multi.awb
 Packagehint=multifpga
 
 [XST Synthesis Tool]
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-xst.awb
 Packagehint=leap
 
-[Synthesis Boundary Wrapper generation tool/Requires]
-fpgamap_parser=FPGAMap
-
 [FPGAMap]
-File=modules/leap/build-support/stages/wrapper_gen/fpgamap_parser.awb
+File=modules/leap/build-support/build-pipelines/stages/wrapper_gen/fpgamap_parser.awb
 Packagehint=multifpga
 
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
+
+[Null software build tool]
+File=modules/leap/build-support/build-pipelines/stages/null_software/null_software.awb
+Packagehint=multifpga
+
+[MultiFPGA Synthesis Boundary Wrapper generation tool]
+File=modules/leap/build-support/build-pipelines/stages/wrapper_gen/multi-fpga-wrapper-gen.awb
+Packagehint=multifpga
+
+[MultiFPGA Synthesis Boundary Wrapper generation tool/Requires]
+fpgamap_parser=FPGAMap

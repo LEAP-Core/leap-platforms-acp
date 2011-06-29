@@ -49,7 +49,6 @@ Packagehint=leap
 
 [Basic Virtual Channel Multiplexer/Requires]
 physical_channel=Nallatech Edge Physical Channel
-channelio_common=Common Files for Virtual Channel Multiplexer
 
 [Low Level Platform Interface Hybrid]
 File=modules/leap/virtual-platform/low-level-platform-interface/hybrid-llpi.awb
@@ -206,6 +205,3 @@ Packagehint=leap
 [FPGA Build Pipeline Xilinx/Params]
 XST_INSERT_IOBUF=0
 
-[Common Files for Virtual Channel Multiplexer]
-File=modules/leap/virtual-platform/channelio/common/channelio-common.awb
-Packagehint=leap

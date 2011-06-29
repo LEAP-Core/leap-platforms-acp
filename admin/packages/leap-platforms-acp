@@ -6,4 +6,4 @@ Lock=asim-platforms
 Description=Platform specific modules for ACP device
 Name=leap-platforms-acp
 Tag=HEAD
-CSN=CSN-leap-platforms-acp-97
+CSN=CSN-leap-platforms-acp-98
