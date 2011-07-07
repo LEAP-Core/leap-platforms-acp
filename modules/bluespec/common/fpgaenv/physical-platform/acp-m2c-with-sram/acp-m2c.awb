@@ -13,7 +13,6 @@
 %sources -t UT  -v PRIVATE xilinx.ut
 %sources -t XST -v PRIVATE xilinx.xst
 %sources -t SDF -v PRIVATE acp-m2c.sdf
-%sources -t SDC -v PRIVATE acp-m2c.sdc
 
 %library /nfs/site/disks/hasim1/local/nallatechAAL/latest/lib/libacp.so
 %library /nfs/site/disks/hasim1/local/nallatechAAL/latest/lib/libACP_API.so

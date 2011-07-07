@@ -2252,3 +2252,14 @@ Directory config/pm/hasim/submodels/fpgaenv
  fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified           97 
 
 Unbroke some apm.
+
+----------
+mcadler     Date: Thu Jul  7 16:46:39 EDT 2011  CSN: CSN-leap-platforms-acp-99
+                  Thu Jul  7 20:46:39 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.awb               Locally Modified           98 
+
+Don't use the ACP-specific Synplify script.  Clock frequency is specified
+as part of the build pipeline.
