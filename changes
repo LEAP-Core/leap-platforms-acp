@@ -2263,3 +2263,16 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
 
 Don't use the ACP-specific Synplify script.  Clock frequency is specified
 as part of the build pipeline.
+
+----------
+keflemin    Date: Mon Jul 11 10:32:16 EDT 2011  CSN: CSN-leap-platforms-acp-100
+                  Mon Jul 11 14:32:16 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device-intra-debugger.awb Locally Modified           99 
+ nallatech-edge-device-debugger.cpp Locally Modified           99 
+
+
+Patched the Dual-FPGA stack programmer to handle the new-style FPGA allocator tols in leap-fpga-ctrl.  I can now run dual FPGA implementations of HAsim at Intel. 
+
