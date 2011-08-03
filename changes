@@ -2276,3 +2276,29 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 Patched the Dual-FPGA stack programmer to handle the new-style FPGA allocator tols in leap-fpga-ctrl.  I can now run dual FPGA implementations of HAsim at Intel. 
 
+
+----------
+kfleming    Date: Wed Aug  3 12:25:13 EDT 2011  CSN: CSN-leap-platforms-acp-101
+                  Wed Aug  3 16:25:13 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform
+ acp-m2c-nallatech-fpga0-with-sram/ Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0-with-sram
+ xilinx.ut                 Locally Added               0 
+ acp-m2c.cpp               Locally Added               0 
+ acp-m2c.h                 Locally Added               0 
+ xilinx.xst                Locally Added               0 
+ acp-m2c.sdc               Locally Added               0 
+ acp-m2c.awb               Locally Added               0 
+ acp-m2c.bsv               Locally Added               0 
+ acp-m2c.sdf               Locally Added               0 
+ acp-m2c.bsh               Locally Added               0 
+ acp-m2c.ucf               Locally Added               0 
+
+
+Added in the SRAM to the multifpga ACP0.  

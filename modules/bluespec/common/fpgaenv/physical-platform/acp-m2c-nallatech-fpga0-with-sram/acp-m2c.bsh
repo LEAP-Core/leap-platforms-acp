@@ -1,0 +1,3 @@
+`include "nallatech_edge_device.bsh"
+`include "nallatech_intra_device.bsh"
+
