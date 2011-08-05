@@ -2302,3 +2302,14 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fp
 
 
 Added in the SRAM to the multifpga ACP0.  
+
+----------
+kfleming    Date: Fri Aug  5 16:28:28 EDT 2011  CSN: CSN-leap-platforms-acp-102
+                  Fri Aug  5 20:28:28 UTC 2011
+
+
+Directory config/pm/platforms/debuggers/acp
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Modified          101 
+
+
+Actually added the SRAM to the apm.... Oops. 
