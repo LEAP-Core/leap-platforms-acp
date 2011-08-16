@@ -1,10 +1,10 @@
 
 [Global]
 SaveParameters=0
-Description=ACP Nallatech Intra Channel Debugger FPGA 1
-File=intra_channel_debugger_nallatech_acp_fpga1
+Description=ACP Nallatech Intra Channel Debugger FPGA 0
+File=fpga0_passthrough
 Version=2.2
-Name=ACP Nallatech Intra Channel Debugger FPGA 1
+Name=ACP Nallatech Intra Channel Debugger FPGA 0
 DefaultBenchmark=config/bm/bluespec/demos.cfx/benchmarks/null.cfg
 Type=HAsim
 Class=Asim::Model
@@ -25,7 +25,7 @@ File=modules/leap/build-support/project/application-env/hybrid/base/application-
 Packagehint=leap
 
 [Base Hybrid Application Environment/Requires]
-hybrid_application=Intra FPGA Debugger Application (FPGA 1)
+hybrid_application=Intra FPGA Passthrough Debugger Application (FPGA 0)
 
 [Hardware FPGA Components for Virtex 5]
 File=modules/bluespec/common/fpgaenv/fpga-components/hardware-fpga-components-virtex5.awb
@@ -36,20 +36,16 @@ File=modules/leap/virtual-platform/low-level-platform-interface/hybrid-llpi.awb
 Packagehint=leap
 
 [Low Level Platform Interface Hybrid/Requires]
-physical_platform=ACP M2 Compute Module JTAG
+physical_platform=ACP FPGA with Intra Channel and SRAM (Nallatech)
 remote_memory=Null Remote Memory
-channelio=Basic Virtual Channel Multiplexer
-rrr=RRR Clients and Servers
+channelio=Null Channel IO Module
+rrr=Null RRR Module
 physical_platform_debugger=Null Physical Platform Debugger
 local_mem=NULL Local Memory Interface
 
 [Null Clocks Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/clocks/null/null-clocks-device.awb
 Packagehint=leap-platforms
-
-[RRR Clients and Servers]
-File=modules/leap/virtual-platform/rrr/basic/basic-rrr.awb
-Packagehint=leap
 
 [Null Physical Platform Debugger]
 File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/null/null-debugger.awb
@@ -59,10 +55,6 @@ Packagehint=leap-platforms
 umf=Little-Endian Unified Message Format
 low_level_platform_interface=Low Level Platform Interface Hybrid
 virtual_devices=NULL Virtual Devices
-
-[Basic Virtual Channel Multiplexer]
-File=modules/leap/virtual-platform/channelio/basic/basic-channelio.awb
-Packagehint=leap
 
 [Standard Virtual Platform]
 File=modules/leap/virtual-platform/std-virtual-platform.awb
@@ -82,9 +74,6 @@ Packagehint=leap
 
 [NULL Virtual Devices/Requires]
 starter_device=Null Starter Virtual Device
-
-[Basic Virtual Channel Multiplexer/Requires]
-physical_channel=JTAG Physical Channel
 
 [Little-Endian Unified Message Format]
 File=modules/bluespec/common/fpgaenv/virtual-platform/umf/little-endian/umf-little-endian.awb
@@ -107,54 +96,24 @@ UMF_CHUNK_BYTES=8
 File=modules/leap/virtual-platform/rrr/rrr-common/rrr-common.awb
 Packagehint=leap
 
-[RRR Clients and Servers/Requires]
-rrr_common=RRR Common Module
-
 [NULL Local Memory Interface]
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-null.awb
 Packagehint=leap
+
+[Null Clocks Device/Params]
+CRYSTAL_CLOCK_FREQ=200
+
+[Nallatech Intra Physical Device FPGA0 (Master) v2]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-intra-device-fpga0.awb
+Packagehint=leap-platforms-acp
 
 [Intra FPGA Debugger Application Common]
 File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga/common/platform-debugger-common.awb
 Packagehint=leap-platforms-acp
 
-[Nallatech Edge Physical Device Null (FPGA1)]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device-null.awb
+[Nallatech Edge Physical Device (Intra-FPGA Debugger) v2]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device-intra-debugger.awb
 Packagehint=leap-platforms-acp
-
-[JTAG Physical Channel]
-File=modules/leap/virtual-platform/physical-channel/jtag/generic/jtag-physical-channel.awb
-Packagehint=leap
-
-[Nallatech Intra Physical Device FPGA1 (Slave) v2]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-intra-device-fpga1.awb
-Packagehint=leap-platforms-acp
-
-[ACP M2 Compute Module JTAG]
-File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-jtag/acp-m2c.awb
-Packagehint=leap-platforms-acp
-
-[Xilinx JTAG Physical Device]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/jtag/xilinx/jtag-device-physical.awb
-Packagehint=leap-platforms
-
-[ACP M2 Compute Module JTAG/Requires]
-clocks_device=Null Clocks Device
-nallatech_intra_device=Nallatech Intra Physical Device FPGA1 (Slave) v2
-physical_platform_utils=Common Physical Platform Utilities
-jtag_device=Xilinx JTAG Physical Device
-nallatech_edge_device=Nallatech Edge Physical Device Null (FPGA1)
-led_device=General LED Device
-
-[Intra FPGA Debugger Application (FPGA 1)]
-File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga/fpga1/platform-debugger.awb
-Packagehint=leap-platforms-acp
-
-[Intra FPGA Debugger Application (FPGA 1)/Requires]
-intra_debugger_common=Intra FPGA Debugger Application Common
-
-[Null Clocks Device/Params]
-CRYSTAL_CLOCK_FREQ=200
 
 [General LED Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
@@ -172,7 +131,6 @@ Packagehint=leap
 File=config/pm/hasim/submodels/common/project-common-default.apm
 Packagehint=leap
 
-
 [HW/SW Hybrid Pipeline Build]
 File=modules/leap/build-support/project/project-pipeline.awb
 Packagehint=leap
@@ -181,3 +139,47 @@ Packagehint=leap
 project_common=Default Hybrid Project Common Utilities
 fpgaenv=FPGA Environment
 application_env=Base Hybrid Application Environment
+
+[ACP FPGA with Intra Channel and SRAM (Nallatech)/Requires]
+clocks_device=Null Clocks Device
+nallatech_intra_device=Nallatech Intra Physical Device FPGA0 (Master) v2
+ddr2_device=ACP DDR2 SRAM Device
+led_device=General LED Device
+physical_platform_utils=Common Physical Platform Utilities
+nallatech_edge_device=Nallatech Edge Physical Device (Intra-FPGA Debugger) v2
+
+[ACP FPGA with Intra Channel and SRAM (Nallatech)]
+File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0-with-sram/acp-m2c.awb
+Packagehint=leap-platforms-acp
+
+[Intra FPGA Passthrough Debugger Application (FPGA 0)/Requires]
+intra_debugger_common=Intra FPGA Debugger Application Common
+physical_channel=Nallatech Edge Physical Channel
+debugger_app=SRAM Debugger Application
+
+[Intra FPGA Passthrough Debugger Application (FPGA 0)]
+File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga/fpga0/patchthrough/patch-debugger.awb
+Packagehint=leap-platforms-acp
+
+[Null RRR Module/Requires]
+rrr_common=RRR Common Module
+
+[Null RRR Module]
+File=modules/leap/virtual-platform/rrr/null/null-rrr.awb
+Packagehint=leap
+
+[Null Channel IO Module]
+File=modules/leap/virtual-platform/channelio/null/null-channelio.awb
+Packagehint=leap
+
+[Nallatech Edge Physical Channel]
+File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge/nallatech-edge-channel.awb
+Packagehint=leap-platforms-acp
+
+[SRAM Debugger Application]
+File=modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga/fpga0/patchthrough/debugger_cpp/sram-debugger.awb
+Packagehint=leap-platforms-acp
+
+[ACP DDR2 SRAM Device]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram/ddr-sram-device.awb
+Packagehint=leap-platforms-acp

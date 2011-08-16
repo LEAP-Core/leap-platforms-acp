@@ -1,0 +1,21 @@
+********************************************************************
+* Awb module specification
+********************************************************************
+
+%AWB_START
+
+%name Intra FPGA Passthrough Debugger Application (FPGA 0)
+%desc Intra FPGA Passthrough Debugger Application (FPGA 0)
+
+%attributes platform-debugger unconnected hybrid
+
+%provides hybrid_application
+
+%requires intra_debugger_common
+%requires physical_channel
+
+
+%sources -t BSV  -v PUBLIC  patch-debugger.bsv
+%sources -t H    -v PUBLIC  patch-debugger.h
+
+%AWB_END

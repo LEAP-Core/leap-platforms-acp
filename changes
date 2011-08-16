@@ -2313,3 +2313,40 @@ Directory config/pm/platforms/debuggers/acp
 
 
 Actually added the SRAM to the apm.... Oops. 
+
+----------
+keflemin    Date: Mon Aug 15 20:34:49 EDT 2011  CSN: CSN-leap-platforms-acp-103
+                  Tue Aug 16 00:34:49 UTC 2011
+
+
+Directory config/pm/platforms/debuggers/acp
+ fpga0_passthrough.apm     Locally Added               0 
+ intra_channel_debugger_nallatech_acp_fpga1.apm Locally Modified          102 
+ fpga1_scratchpad.apm      Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel
+ nallatech-intra/          Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-intra
+ nallatech-intra-channel.h Locally Added               0 
+ nallatech-intra-channel.awb Locally Added               0 
+ nallatech-intra-channel.bsv Locally Added               0 
+ npc-demarshaller.bsv      Locally Added               0 
+ nallatech-intra-channel.cpp Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-intra-channel.awb Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga/fpga0
+ patchthrough/             Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/debuggers/intra-fpga/fpga0/patchthrough
+ patch-debugger.awb        Locally Added               0 
+ patch-debugger.bsv        Locally Added               0 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device-null.cpp Locally Modified          102 
+ nallatech-edge-device-null.awb Locally Modified          102 
+
+
+Added a passthrough platform from the ACP0 to ACP1.  Now we can build and run any application on the ACP1.  I also verified that the SRAM controller is operational on ACP1.  

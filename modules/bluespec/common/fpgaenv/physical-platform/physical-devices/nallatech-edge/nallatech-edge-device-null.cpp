@@ -23,11 +23,14 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <stdio.h>
 
 #include "stdlib.h"
 #include "ctype.h"
 #include "math.h"
 
+#include "asim/syntax.h"
+#include "asim/provides/physical_platform_utils.h"
 #include "asim/provides/nallatech_edge_device.h"
 
 using namespace std;
@@ -41,75 +44,6 @@ NALLATECH_EDGE_DEVICE_CLASS::NALLATECH_EDGE_DEVICE_CLASS(
     PLATFORMS_MODULE_CLASS(p)
 {
     workspace = NULL;
-	int ret;
-	int i;
-
-	// Open card
-	printf("Opening card...                           ");
-	hsocket = ACP_OpenSocket(ACP_FSB_SOCKET);
-    if (hsocket == NULL)
-    {
-        printf("failed to open socket %d\n", ACP_FSB_SOCKET);
-        CallbackExit(1);
-    }
-	printf("\tOK\n");
-
-	printf("Reseting module...                        ");
-	ret = ACP_RESET(hsocket);
-	if (ret != 0)
-    {
-		ACP_ERROR error = ACP_GetLastError();
-        printf("\tfailed ACP_RESET (%lx)\n", (long)error);
-    }
-    else
-    {
-        printf("\tOK\n");
-    }
-
-	// Configure
-	printf("Configuring compute FPGA...               ");
-
-    char *bitfile = getenv("FPGA_BIT_FILE");
-    if (bitfile == NULL)
-    {
-        printf("\nERROR:  FPGA_BIT_FILE environment variable must be defined!\n");
-        CallbackExit(1);
-    }
-
-	ret = ACP_ConfigureFPGA(hsocket, bitfile, DEVICE_ID(1,ACP_FPGA,0));
-
-	if (ret != 0)
-	{
-		ACP_ERROR error = ACP_GetLastError();
-		printf("Last error ID = %lx\n",(long)error);
-		switch (error)
-		{
-			case ACP_INVALID_BITFILE :
-				printf("Invalid bitfile %s\n", bitfile);
-				break;
-			default : printf("Unknown error\n");
-				break;
-		}
-		printf("Configuration Failed\n");
-        CallbackExit(1);
-	}
-	printf("\tOK\n");
-
-	printf("Setting up AFU and Workspace...           ");
-
-	// Open AFU handle
-	hafu = ACP_OpenAFU(hsocket, 0);
-
-	// Allocate workspace
-	workspace = (NALLATECH_WORD*) ACP_Allocate(hafu, WorkspaceBytes(), &workspacePA);
-    if (workspace == NULL)
-    {
-        printf("Failed!\n");
-        CallbackExit(1);
-    }
-
-	printf("\tOK\n");
-
 }
 
 
@@ -148,8 +82,202 @@ NALLATECH_EDGE_DEVICE_CLASS::GetReadWindow(int windowID) const
 void
 NALLATECH_EDGE_DEVICE_CLASS::Init()
 {
-  // Nothing to do here
+	int ret;
+	int i;
+
+    // Which card is allocated?  The run script will pass the FPGA device
+    // allocated in FPGA_DEV_PATH.  The socket number is the last digit of
+    // the path.
+    int acp_socket = ACP_FSB_SOCKET;  // In case no FPGA_DEV_PATH
+    if (! FPGA_DEV_PATH.empty())
+    {
+        const char n = FPGA_DEV_PATH[FPGA_DEV_PATH.length() - 1];
+        if ((n >= '0') && (n <= '9'))
+        {
+            acp_socket = n - '0';
+        }
+    }
+
+	// Open card
+	printf("Opening card...                           ");
+	hsocket = ACP_OpenSocket(acp_socket);
+    if (hsocket == NULL)
+    {
+        printf("failed to open socket %d\n", acp_socket);
+        CallbackExit(1);
+    }
+	printf("\tOK\n");
+
+	printf("Reseting module...                        ");
+	ret = ACP_RESET(hsocket);
+	if (ret != 0)
+    {
+		ACP_ERROR error = ACP_GetLastError();
+        printf("\tfailed ACP_RESET (%lx)\n", (long)error);
+    }
+    else
+    {
+        printf("\tOK\n");
+    }
+
+	// Configure
+	printf("Configuring compute FPGA...               ");
+
+    char *bitfile = getenv("FPGA_BIT_FILE");
+    if (bitfile == NULL)
+    {
+        printf("\nERROR:  FPGA_BIT_FILE environment variable must be defined!\n");
+        CallbackExit(1);
+    }
+
+    char *bitfile0 = getenv("FPGA_BIT_FILE0");
+    if (bitfile0 == NULL)
+    {
+        printf("\nERROR:  FPGA_BIT_FILE0 environment variable must be defined!\n");
+        CallbackExit(1);
+    }
+
+	ret = ACP_ConfigureFPGA(hsocket, bitfile0, DEVICE_ID(1,ACP_FPGA0,0));
+
+	if (ret != 0)
+	{
+		ACP_ERROR error = ACP_GetLastError();
+		printf("Last error ID = %lx\n",(long)error);
+		switch (error)
+		{
+			case ACP_INVALID_BITFILE :
+				printf("Invalid bitfile ACP0 %s\n", bitfile);
+				break;
+			default : printf("Unknown error\n");
+				break;
+		}
+		printf("Configuration Failed\n");
+        CallbackExit(1);
+	}
+
+	ret = ACP_ConfigureFPGA(hsocket, bitfile, DEVICE_ID(1,ACP_FPGA1,0));
+
+	if (ret != 0)
+	{
+		ACP_ERROR error = ACP_GetLastError();
+		printf("Last error ID = %lx\n",(long)error);
+		switch (error)
+		{
+			case ACP_INVALID_BITFILE :
+				printf("Invalid bitfile ACP1 %s\n", bitfile);
+				break;
+			default : printf("Unknown error\n");
+				break;
+		}
+		printf("Configuration Failed\n");
+        CallbackExit(1);
+	}
+
+
+
+
+	printf("\tOK\n");
+
+	printf("Initializing Base to FPGA 0 LVDS link...  ");
+
+	ret = ACP_Initialize_LVDS_Link(hsocket,
+                                   DEVICE_ID(0,0,0),
+                                   DEVICE_ID(0,0,0),
+                                   DEVICE_ID(1,0,0),
+                                   DEVICE_ID(1,0,0));
+
+	if (ret != 0)
+	{
+		ACP_ERROR error = ACP_GetLastError();
+		printf("Last error ID = %lx\n",(long)error);
+
+		printf("LVDS Initialization Failed Press <Enter> To Exit\n");
+        getchar();
+        CallbackExit(1);
+	}
+	printf("\tOK\n");
+
+
+	printf("Initializing Base to FPGA 0 - FPGA 1 LVDS link...  ");
+
+        ret = ACP_Initialize_LVDS_Link(hsocket,
+                                       DEVICE_ID(1,0,0),
+				       DEVICE_ID(1,0,0),
+                                       DEVICE_ID(1,1,0),
+                                       DEVICE_ID(1,1,0));
+	
+	if (ret != 0)
+	{
+		ACP_ERROR error = ACP_GetLastError();
+		printf("Last error ID = %lx\n",(long)error);
+
+		printf("LVDS Initialization Failed Press <Enter> To Exit\n");
+        getchar();
+        CallbackExit(1);
+	}
+	printf("\tOK\n");
+
+	printf("Setting up AFU and Workspace...           ");
+
+	// Open AFU handle
+	hafu = ACP_OpenAFU(hsocket, 0);
+
+	// Allocate workspace
+	workspace = (NALLATECH_WORD*) ACP_Allocate(hafu, WorkspaceBytes(), &workspacePA);
+    if (workspace == NULL)
+    {
+        printf("Failed!\n");
+        CallbackExit(1);
+    }
+
+	printf("\tOK\n");
+
+    printf("Setting up LEDS...           \n");
+    ACP_REG reg;
+    ACP_ReadAFURegister(hafu,
+                        0x26000 + (0x5),
+                        DEVICE_ID(1,0,0),
+                        &reg);
+
+    printf("FPGA 0 LEDS: 0x%x\n", reg);
+
+    ACP_ReadAFURegister(hafu,
+                        0x26000 + (0x5),
+                        DEVICE_ID(1,1,0),
+                        &reg);
+
+    printf("FPGA 1 LEDS: 0x%x\n", reg);
+
+    ACP_WriteAFURegister(hafu,
+                         0x26000 + (0x5),
+                         ~0,
+                         DEVICE_ID(1,0,0));
+
+    ACP_WriteAFURegister(hafu,
+                         0x26000 + (0x5),
+                         ~0,
+                         DEVICE_ID(1,1,0));
+
+    ACP_ReadAFURegister(hafu,
+                        0x26000 + (0x5),
+                        DEVICE_ID(1,0,0),
+                        &reg);
+
+    printf("FPGA 0 LEDS: 0x%x\n", reg);
+
+    ACP_ReadAFURegister(hafu,
+                        0x26000 + (0x5),
+                        DEVICE_ID(1,1,0),
+                        &reg);
+
+    printf("FPGA 1 LEDS: 0x%x\n", reg);
+
+
+
+	printf("\tOK\n");
+
 }
+
 
 // override default chain-uninit method because
 // we need to do something special

@@ -26,7 +26,8 @@
 ##                Parameters               ##
 #############################################
 
-%param ACP_FPGA 1 "ACP_FPGA"
+%param ACP_FPGA0 0 "ACP_FPGA0"
+%param ACP_FPGA1 1 "ACP_FPGA1"
 %param ACP_FSB_SOCKET 2 "Motherboard Socket ID the ACP stack is plugged into"
 
 %param NALLATECH_MAX_MSG_BYTES 4096 "Maximum bytes in a message"

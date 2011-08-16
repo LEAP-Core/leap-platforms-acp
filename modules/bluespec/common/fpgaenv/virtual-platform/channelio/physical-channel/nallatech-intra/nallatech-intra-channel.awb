@@ -1,0 +1,20 @@
+
+%name Nallatech Intra Physical Channel
+%desc Nallatech Intra Physical Channel
+
+%provides physical_channel
+
+%sources -t BSV     -v PUBLIC   nallatech-intra-channel.bsv
+%sources -t H       -v PUBLIC   nallatech-intra-channel.h
+%sources -t CPP     -v PRIVATE  nallatech-intra-channel.cpp
+
+
+%param CHANNEL_H2F_FIX_ERRORS 1 "Fix errors in host to FPGA messages"
+
+%param CHANNEL_REQUEST_H2F   0  "Request ID for H2F transfer"
+%param CHANNEL_REQUEST_F2H   1  "Request ID for F2H transfer"
+
+%param CHANNEL_RESPONSE_NODATA 0  "No F2H Read Data available -- MUST BE 0!"
+%param CHANNEL_RESPONSE_ACK    1  "H2F Write Acknowledgement"
+
+%param --global NALLATECH_HW_TO_SW_SPIN_CYCLES  100 "Wait cycles on the hardware for a message before giving up"
