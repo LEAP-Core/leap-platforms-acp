@@ -2350,3 +2350,14 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 
 Added a passthrough platform from the ACP0 to ACP1.  Now we can build and run any application on the ACP1.  I also verified that the SRAM controller is operational on ACP1.  
+
+----------
+kfleming    Date: Fri Aug 19 14:47:31 EDT 2011  CSN: CSN-leap-platforms-acp-104
+                  Fri Aug 19 18:47:31 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-intra-device.bsv Locally Modified          103 
+
+
+Extended the intra communication channel of the nallatech to be 128 bits.  The multiFPGA compiler can use this information to automatically synthesize a communications protocol. 

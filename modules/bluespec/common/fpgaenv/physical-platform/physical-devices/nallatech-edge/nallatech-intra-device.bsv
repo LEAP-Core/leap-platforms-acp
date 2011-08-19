@@ -38,8 +38,8 @@ endinterface
 
 interface NALLATECH_UMF_INTRA_DRIVER;
 
-    method Action              write(UMF_CHUNK data);
-    method ActionValue#(UMF_CHUNK) read();
+    method Action              write(Bit#(128) data);
+    method ActionValue#(Bit#(128)) read();
         
 endinterface
 
@@ -127,12 +127,12 @@ module mkNallatechIntraDeviceParametric#(Clock clk100,
 
     interface NALLATECH_UMF_INTRA_DRIVER umf_intra_driver;
         
-        method ActionValue#(UMF_CHUNK) read;
+        method ActionValue#(Bit#(128)) read;
           sync_read_q.deq();
           return truncate(sync_read_q.first());
         endmethod
             
-        method Action write(UMF_CHUNK data);
+        method Action write(Bit#(128) data);
           sync_write_q.enq(zeroExtend(data));
         endmethod
                 
