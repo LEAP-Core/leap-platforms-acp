@@ -127,15 +127,15 @@ File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/gen
 Packagehint=leap-platforms
 
 [FPGA Build Pipeline Xilinx]
-File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
+File=config/pm/leap/submodels/pipelines/build-pipeline-xilinx.apm
 Packagehint=leap
 
 [Standard Virtual Devices Submodel]
-File=config/pm/hasim/submodels/fpgaenv/std-virtual-devices.apm
+File=config/pm/leap/submodels/virtual-devices/std-virtual-devices.apm
 Packagehint=leap
 
 [RL Bluespec Library Submodel]
-File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
+File=config/pm/leap/submodels/common/librl-bsv.apm
 Packagehint=leap
 
 [FPGA Build Pipeline Xilinx/Params]

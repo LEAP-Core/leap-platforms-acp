@@ -2361,3 +2361,49 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 
 Extended the intra communication channel of the nallatech to be 128 bits.  The multiFPGA compiler can use this information to automatically synthesize a communications protocol. 
+
+----------
+mpellaue    Date: Thu Aug 25 18:14:42 EDT 2011  CSN: CSN-leap-platforms-acp-105
+                  Thu Aug 25 22:14:42 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Removed           104 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Removed           104 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Removed           104 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Removed           104 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Removed           104 
+ fpgaenv-acp-m2c-nallatech.apm Locally Removed           104 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Removed           104 
+
+Directory config/pm
+ leap/                     Locally Added               0 
+
+Directory config/pm/leap
+ submodels/                Locally Added               0 
+
+Directory config/pm/leap/submodels
+ fpgaenv/                  Locally Added               0 
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Added               - 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Added               - 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Added               - 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Added               - 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Added               - 
+ fpgaenv-acp-m2c-nallatech.apm Locally Added               - 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Added               - 
+
+Directory config/pm/platforms/debuggers/acp
+ fpga0_passthrough.apm     Locally Modified          104 
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Modified          104 
+ intra_channel_debugger_nallatech_acp_fpga1.apm Locally Modified          104 
+ fpga1_scratchpad.apm      Locally Modified          104 
+ intra_channel_debugger_nallatech_acp_jtag.apm Locally Modified          104 
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-intra-channel.awb Locally Modified          104 
+
+
+* Updating fpgaenv submodel locations to match leap.
+* Updated stale .apm files.

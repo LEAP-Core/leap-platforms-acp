@@ -108,15 +108,15 @@ File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/gen
 Packagehint=leap-platforms
 
 [FPGA Build Pipeline Xilinx]
-File=config/pm/hasim/submodels/pipelines/build-pipeline-xilinx.apm
+File=config/pm/leap/submodels/pipelines/build-pipeline-xilinx.apm
 Packagehint=leap
 
 [RL Bluespec Library Submodel]
-File=config/pm/hasim/submodels/fpgaenv/librl-bsv.apm
+File=config/pm/leap/submodels/common/librl-bsv.apm
 Packagehint=leap
 
 [Default Hybrid Project Common Utilities]
-File=config/pm/hasim/submodels/common/project-common-default.apm
+File=config/pm/leap/submodels/common/project-common-default.apm
 Packagehint=leap
 
 [HW/SW Hybrid Pipeline Build]
@@ -153,7 +153,7 @@ SRAM_DEBUG=1
 SRAM_MAX_OUTSTANDING_READS=16
 
 [Standard Platform Services]
-File=config/pm/hasim/submodels/platform-services/standard-platform-services.apm
+File=config/pm/leap/submodels/platform-services/standard-platform-services.apm
 Packagehint=leap
 
 [Scratchpad Memory Test System]
@@ -161,18 +161,18 @@ File=modules/apps/tests/mem_test/mem-test.awb
 Packagehint=leap-debug
 
 [Default Software Connected Application]
-File=modules/leap/build-support/project/application-env/hybrid/soft-services/default-sw/connected-application-default-sw.awb
+File=modules/leap/build-support/project/application-env/soft-services/default-sw/connected-application-default-sw.awb
 Packagehint=leap
 
 [Default Software Connected Application/Requires]
 hardware_system=Scratchpad Memory Test System
 
 [Soft Services Submodel]
-File=config/pm/hasim/submodels/common/soft-services.apm
+File=config/pm/leap/submodels/common/soft-services.apm
 Packagehint=leap
 
 [Soft Services Hybrid Application Environment]
-File=modules/leap/build-support/project/application-env/hybrid/soft-services/application-env-hybrid-soft-service.awb
+File=modules/leap/build-support/project/application-env/soft-services/application-env-hybrid-soft-service.awb
 Packagehint=leap
 
 [Soft Services Hybrid Application Environment/Requires]
@@ -181,7 +181,7 @@ soft_services=Soft Services Submodel
 connected_application=Default Software Connected Application
 
 [Standard Virtual Devices Submodel]
-File=config/pm/hasim/submodels/fpgaenv/std-virtual-devices.apm
+File=config/pm/leap/submodels/virtual-devices/std-virtual-devices.apm
 Packagehint=leap
 
 [Local Memory Interface using BRAM/Params]

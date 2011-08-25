@@ -1,6 +1,6 @@
 
-%name Nallatech Edge Physical Channel
-%desc Nallatech Edge Physical Channel
+%name Nallatech Intra Physical Channel w/NPC
+%desc Nallatech Intra Physical Channel w/NPC
 
 %provides physical_channel
 
