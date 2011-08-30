@@ -2407,3 +2407,50 @@ Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-ch
 
 * Updating fpgaenv submodel locations to match leap.
 * Updated stale .apm files.
+
+----------
+kfleming    Date: Mon Aug 29 23:02:21 EDT 2011  CSN: CSN-leap-platforms-acp-106
+                  Tue Aug 30 03:02:21 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Added               0 
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Added               0 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Added               0 
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          105 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          105 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          105 
+
+Added new apms to support use of SRAM on both FPGA.
+
+----------
+kfleming    Date: Mon Aug 29 23:12:04 EDT 2011  CSN: CSN-leap-platforms-acp-106
+                  Tue Aug 30 03:12:04 UTC 2011
+
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Added               0 
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Added               0 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Added               0 
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          105 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          105 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          105 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Added               0 
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Added               0 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Added               0 
+
+Directory admin
+ mytags                    Locally Modified          105 
+
+Directory admin/packages
+ leap-platforms-acp        Locally Modified          105 
+
+Directory .
+ changes                   Locally Modified          105 
+
+
+Added some new apm that use the sram on the second fpga.

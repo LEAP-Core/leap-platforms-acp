@@ -1,11 +1,11 @@
 
 [Global]
 SaveParameters=0
-Description=Hybrid ACP Dual Compute Environment FPGA0 (Nallatech)
-File=fpgaenv-acp-m2c-nallatech-sram-fpga0
+Description=Hybrid ACP Dual Compute Environment FPGA1 (Nallatech)
+File=fpgaenv-acp-m2c-nallatech-sram-fpga1
 Version=2.2
 Type=HAsim
-Name=Hybrid ACP Dual Compute Environment with SRAM Central Cache FPGA0 (Nallatech)
+Name=Hybrid ACP Dual Compute Environment with SRAM Central Cache FPGA1 (Nallatech)
 Class=Asim::Model
 DefaultBenchmark=
 DefaultRunOpts=
@@ -236,16 +236,8 @@ Packagehint=leap
 File=modules/leap/build-support/build-pipelines/stages/wrapper_gen/fpgamap_parser.awb
 Packagehint=multifpga
 
-[Nallatech Intra Physical Device FPGA0 (Master) v2]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-intra-device-fpga0.awb
-Packagehint=leap-platforms-acp
-
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
-
-[Nallatech Edge Physical Device (Intra-FPGA Debugger) v2]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device-intra-debugger.awb
-Packagehint=leap-platforms-acp
 
 [MultiFPGA Synthesis Boundary Wrapper generation tool]
 File=modules/leap/build-support/build-pipelines/stages/wrapper_gen/multi-fpga-wrapper-gen.awb
@@ -265,11 +257,11 @@ Packagehint=leap
 
 [ACP FPGA with Intra Channel and SRAM (Nallatech)/Requires]
 clocks_device=Null Clocks Device
-nallatech_intra_device=Nallatech Intra Physical Device FPGA0 (Master) v2
+nallatech_intra_device=Nallatech Intra Physical Device FPGA1 (Slave) v2
 ddr2_device=ACP DDR2 SRAM Device
 led_device=General LED Device
 physical_platform_utils=Common Physical Platform Utilities
-nallatech_edge_device=Nallatech Edge Physical Device (Intra-FPGA Debugger) v2
+nallatech_edge_device=Nallatech Edge Physical Device Null (FPGA1)
 
 [ACP DDR2 SRAM Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram/ddr-sram-device.awb
@@ -277,6 +269,14 @@ Packagehint=leap-platforms-acp
 
 [ACP FPGA with Intra Channel and SRAM (Nallatech)]
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0-with-sram/acp-m2c.awb
+Packagehint=leap-platforms-acp
+
+[Nallatech Intra Physical Device FPGA1 (Slave) v2]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-intra-device-fpga1.awb
+Packagehint=leap-platforms-acp
+
+[Nallatech Edge Physical Device Null (FPGA1)]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device-null.awb
 Packagehint=leap-platforms-acp
 
 [FPGA Environment Datatype]

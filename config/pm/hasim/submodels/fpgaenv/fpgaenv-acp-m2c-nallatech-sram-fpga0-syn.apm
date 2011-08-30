@@ -2,10 +2,10 @@
 [Global]
 SaveParameters=0
 Description=Hybrid ACP Dual Compute Environment FPGA0 (Nallatech)
-File=fpgaenv-acp-m2c-nallatech-sram-fpga0
+File=fpgaenv-acp-m2c-nallatech-sram-fpga0-syn
 Version=2.2
 Type=HAsim
-Name=Hybrid ACP Dual Compute Environment with SRAM Central Cache FPGA0 (Nallatech)
+Name=Hybrid ACP Dual Compute Environment (synplify) with SRAM Central Cache FPGA0 (Nallatech)
 Class=Asim::Model
 DefaultBenchmark=
 DefaultRunOpts=
@@ -202,7 +202,7 @@ software_tool=Software build tool
 mcd_tool=MCD Tool for Xilinx
 iface_tool=Interface builder
 wrapper_gen_tool=MultiFPGA Synthesis Boundary Wrapper generation tool
-synthesis_tool=XST Synthesis Tool
+synthesis_tool=Synplify/XST Synthesis Tool
 bsv_tool=BSV Build Tool MultiFPGA
 
 [Xilinx PAR]
@@ -227,10 +227,6 @@ Packagehint=leap
 [BSV Build Tool MultiFPGA]
 File=modules/leap/build-support/build-pipelines/stages/bluespec/bsv-multi.awb
 Packagehint=multifpga
-
-[XST Synthesis Tool]
-File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-xst.awb
-Packagehint=leap
 
 [FPGAMap]
 File=modules/leap/build-support/build-pipelines/stages/wrapper_gen/fpgamap_parser.awb
@@ -288,4 +284,8 @@ scratchpad_memory_common=Scratchpad Memory Common Definitions
 
 [Hybrid Scratchpad Memory Device (MultiFPGA)]
 File=modules/leap/virtual-platform/virtual-devices/devices/scratchpad-memory/hybrid/hybrid-mem-scratch-multi.awb
+Packagehint=leap
+
+[Synplify/XST Synthesis Tool]
+File=modules/leap/build-support/build-pipelines/stages/synplify/synplify-sub.awb
 Packagehint=leap
