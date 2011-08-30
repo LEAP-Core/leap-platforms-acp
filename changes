@@ -2454,3 +2454,21 @@ Directory .
 
 
 Added some new apm that use the sram on the second fpga.
+
+----------
+kfleming    Date: Mon Aug 29 23:13:13 EDT 2011  CSN: CSN-leap-platforms-acp-107
+                  Tue Aug 30 03:13:13 UTC 2011
+
+
+Directory config/pm/hasim/submodels
+ fpgaenv/                  Locally Removed           106 
+
+Directory config/pm/hasim/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Removed           106 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Removed           106 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Removed           106 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Removed           106 
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Removed           106 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Removed           106 
+
+Deleted old apm.  They came back during the last checkin somehow.  What a strange behavior.
