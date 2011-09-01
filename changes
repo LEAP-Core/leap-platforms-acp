@@ -2486,3 +2486,14 @@ Directory config/pm/leap/submodels/fpgaenv
 
 
 Updated some apm
+
+----------
+mcadler     Date: Thu Sep  1 15:27:01 EDT 2011  CSN: CSN-leap-platforms-acp-109
+                  Thu Sep  1 19:27:01 UTC 2011
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Modified          108 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          108 
+
+Update a couple more apms.
