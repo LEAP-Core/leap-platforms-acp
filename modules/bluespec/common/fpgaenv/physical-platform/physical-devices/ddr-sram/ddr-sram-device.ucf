@@ -339,6 +339,8 @@ INST "*_sram_device_*_syncReadDataQ/sSyncReg1*"     TNM=TG_ram_clk;
 TIMESPEC TS_model_clk_to_ram_clk=FROM TG_model_clk TO TG_ram_clk TIG;
 TIMESPEC TS_ram_clk_to_model_clk=FROM TG_ram_clk TO TG_model_clk TIG;
 
+INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_infrastructure/rst0_sync_r*"   TIG;
+INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_infrastructure/rst270_sync_r*" TIG;
 
 # areagroup constraints targeting sram serdes
 INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_top_0/U_DDRII_PHY_TOP/U_DDRII_PHY_IO/U_DDRII_PHY_DQ_IO/MEMORY_WIDTH_36.CQ_INST[0].Q_PER_CQ_INST[14].U_ISERDES_NODELAY_CQ" LOC = ILOGIC_X0Y64;

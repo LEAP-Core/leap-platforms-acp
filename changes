@@ -2497,3 +2497,14 @@ Directory config/pm/leap/submodels/fpgaenv
  fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          108 
 
 Update a couple more apms.
+
+----------
+mcadler     Date: Sun Sep  4 09:59:10 EDT 2011  CSN: CSN-leap-platforms-acp-110
+                  Sun Sep  4 13:59:10 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified          109 
+
+Add TIGs to SRAM reset signals.  This appears to have a huge impact on the ability
+to meet timing.
