@@ -2508,3 +2508,13 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
 
 Add TIGs to SRAM reset signals.  This appears to have a huge impact on the ability
 to meet timing.
+
+----------
+mcadler     Date: Sat Sep 10 21:14:53 EDT 2011  CSN: CSN-leap-platforms-acp-111
+                  Sun Sep 11 01:14:53 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device-fpga1.ucf Locally Modified          110 
+
+The wonderful thing about TIGs is TIGs are wonderful things.
