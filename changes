@@ -2518,3 +2518,21 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
  nallatech-edge-device-fpga1.ucf Locally Modified          110 
 
 The wonderful thing about TIGs is TIGs are wonderful things.
+
+----------
+mcadler     Date: Mon Sep 12 11:21:43 EDT 2011  CSN: CSN-leap-platforms-acp-112
+                  Mon Sep 12 15:21:43 UTC 2011
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          111 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          111 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          111 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          111 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified          111 
+
+- Add "-cm balanced" to mapper options.  It seems to make a small difference
+  when resources are tight.
+
+- Change multi-FPGA with SRAM default frequency to 50MHz in order to make
+  the first pass likely to meet timing.

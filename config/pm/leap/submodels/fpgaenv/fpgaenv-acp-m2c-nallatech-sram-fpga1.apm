@@ -238,6 +238,7 @@ Packagehint=multifpga
 
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
+MODEL_CLOCK_FREQ=50
 
 [MultiFPGA Synthesis Boundary Wrapper generation tool]
 File=modules/leap/build-support/build-pipelines/stages/wrapper_gen/multi-fpga-wrapper-gen.awb
@@ -289,3 +290,6 @@ scratchpad_memory_common=Scratchpad Memory Common Definitions
 [Hybrid Scratchpad Memory Device (MultiFPGA)]
 File=modules/leap/virtual-platform/virtual-devices/devices/scratchpad-memory/hybrid/hybrid-mem-scratch-multi.awb
 Packagehint=leap
+
+[Xilinx MAP/Params]
+MAPPER_OPTIONS="-cm balanced -global_opt on"

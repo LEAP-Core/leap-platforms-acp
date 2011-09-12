@@ -287,3 +287,6 @@ fpga_environment_parser=FPGA Environment Datatype
 [FPGA Environment Datatype]
 File=modules/leap/build-support/build-pipelines/stages/multifpga/fpgaenvironment.awb
 Packagehint=leap
+
+[Xilinx MAP/Params]
+MAPPER_OPTIONS="-cm balanced -global_opt on"

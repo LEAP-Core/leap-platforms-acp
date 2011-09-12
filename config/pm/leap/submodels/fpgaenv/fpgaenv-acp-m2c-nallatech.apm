@@ -140,3 +140,4 @@ Packagehint=leap
 
 [FPGA Build Pipeline Xilinx/Params]
 XST_INSERT_IOBUF=0
+MAPPER_OPTIONS="-cm balanced -global_opt on"
