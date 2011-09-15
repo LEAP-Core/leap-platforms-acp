@@ -19,6 +19,7 @@
 #ifndef __PHYSICAL_PLATFORM__
 #define __PHYSICAL_PLATFORM__
 
+#include "asim/syntax.h"
 #include "asim/provides/nallatech_edge_device.h"
 
 // ====================================================

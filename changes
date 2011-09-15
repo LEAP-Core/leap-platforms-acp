@@ -2536,3 +2536,24 @@ Directory config/pm/leap/submodels/fpgaenv
 
 - Change multi-FPGA with SRAM default frequency to 50MHz in order to make
   the first pass likely to meet timing.
+
+----------
+mcadler     Date: Thu Sep 15 16:37:53 EDT 2011  CSN: CSN-leap-platforms-acp-113
+                  Thu Sep 15 20:37:53 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.h                 Locally Modified          112 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.bsv Locally Modified          112 
+ nallatech-edge-device-intra-debugger.awb Locally Modified          112 
+ nallatech-edge-device.awb Locally Modified          112 
+ nallatech-edge-device-null.awb Locally Modified          112 
+
+- Add the ability to specify the frequency of DDR memory.
+
+- Reduce default memory clock from 200 to 175MHz.  The change has a small effect
+  on HAsim models when the model clock is unchanged, but typically allows us
+  to raise the model clock frequency.  The RAM clock was often the source of
+  timing errors at 200MHz.

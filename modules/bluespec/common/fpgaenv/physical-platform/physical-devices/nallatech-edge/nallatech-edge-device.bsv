@@ -118,8 +118,28 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
                                             `MODEL_CLOCK_FREQ,
                                             clocked_by rawClock,
                                             reset_by   rawReset);
-    
+
     Clock modelClock = userClockPackage.clk;
+
+    //
+    // DDR RAM runs at 200MHz by default (if NALLATECH_RAM_CLOCK_FREQ is 0).
+    // The configuration may specify an alternate frequency.  The RAM requires
+    // a main clock and a 270 degree phase shifted copy.
+    //
+    Clock ramClock0 = prim_device.ramClk0;
+    Clock ramClock270 = prim_device.ramClk270;
+    Bit#(1) ramClockLocked = prim_device.ramClkLocked();
+    if (`NALLATECH_RAM_CLOCK_FREQ != 0)
+    begin
+        let ramClock <- mkUserClock_2PhasedPLL(200,
+                                               `NALLATECH_RAM_CLOCK_FREQ,
+                                               270,
+                                               clocked_by prim_device.ramClk200,
+                                               reset_by   rawReset);
+        ramClock0 = ramClock.clks[0];
+        ramClock270 = ramClock.clks[1];
+        ramClockLocked = pack(ramClock.locked());
+    end
 
     // Combine edge and raw resets
     Reset localEdgeReset <- mkAsyncReset(2, edgeReset, modelClock);
@@ -290,10 +310,10 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
     
     interface SRAM_CLOCKS_DRIVER sram_clocks_driver;
 
-        interface Clock ramClk0 = prim_device.ramClk0;
+        interface Clock ramClk0 = ramClock0;
         interface Clock ramClk200 = prim_device.ramClk200;
-        interface Clock ramClk270 = prim_device.ramClk270;
-        method Bit#(1)  ramClkLocked() = prim_device.ramClkLocked();
+        interface Clock ramClk270 = ramClock270;
+        method Bit#(1)  ramClkLocked() = ramClockLocked;
             
     endinterface
     
