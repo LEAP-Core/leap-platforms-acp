@@ -56,41 +56,44 @@ INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dGDeqPtr*"     TNM
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sGEnqPtr*"     TNM=TG_edge_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dSyncReg1*"    TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sSyncReg1*"    TNM=TG_edge_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sNotFullReg*"  TNM=TG_edge_clk;
 
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/Mram_fifoMem*" TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dGDeqPtr*"     TNM=TG_edge_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sGEnqPtr*"     TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dSyncReg1*"    TNM=TG_edge_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sSyncReg1*"    TNM=TG_model_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sNotfullReg*"  TNM=TG_model_clk;
 
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/Mram_fifoMem*" TNM=TG_usr_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dDoutReg*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dDoutReg*"     TIG;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dGDeqPtr*"     TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sGEnqPtr*"     TNM=TG_usr_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dSyncReg1*"    TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sSyncReg1*"    TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sNotFullReg*"  TNM=TG_usr_clk;
 
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/Mram_fifoMem*" TNM=TG_usr_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dDoutReg*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dDoutReg*"     TIG;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dGDeqPtr*"     TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sGEnqPtr*"     TNM=TG_usr_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dSyncReg1*"    TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sSyncReg1*"    TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sNotFullReg*"  TNM=TG_usr_clk;
 
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dGDeqPtr*"     TNM=TG_usr_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sGEnqPtr*"     TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dSyncReg1*"    TNM=TG_usr_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sSyncReg1*"    TNM=TG_model_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sNotFullReg*"  TNM=TG_model_clk;
 
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/Mram_fifoMem*" TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dDoutReg*"     TNM=TG_usr_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dDoutReg*"     TIG;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dGDeqPtr*"     TNM=TG_usr_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sGEnqPtr*"     TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dSyncReg1*"    TNM=TG_usr_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sSyncReg1*"    TNM=TG_model_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sNotFullReg*"  TNM=TG_model_clk;
 
 TIMESPEC TS_model_clk_to_edge_clk=FROM TG_model_clk TO TG_edge_clk TIG;
 TIMESPEC TS_edge_clk_to_model_clk=FROM TG_edge_clk TO TG_model_clk TIG;

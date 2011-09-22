@@ -75,6 +75,7 @@ interface SRAM_CLOCKS_DRIVER;
     interface Clock ramClk0;
     interface Clock ramClk200;
     interface Clock ramClk270;
+    interface Reset ramReset;
     method Bit#(1) ramClkLocked();
         
 endinterface
@@ -121,6 +122,14 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
 
     Clock modelClock = userClockPackage.clk;
 
+    // Combine edge and raw resets
+    Reset localEdgeReset <- mkAsyncReset(2, edgeReset, modelClock);
+    Reset baseReset <- mkResetEither(localEdgeReset, userClockPackage.rst, clocked_by modelClock);
+
+    // Hold reset for 20 cycles.  The TIG in the UCF file must match this number.
+    // (TIG the high bit: cycles minus 1.)
+    Reset modelReset <- mkAsyncReset(20, baseReset, modelClock);
+
     //
     // DDR RAM runs at 200MHz by default (if NALLATECH_RAM_CLOCK_FREQ is 0).
     // The configuration may specify an alternate frequency.  The RAM requires
@@ -128,6 +137,7 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
     //
     Clock ramClock0 = prim_device.ramClk0;
     Clock ramClock270 = prim_device.ramClk270;
+    Reset ramReset = modelReset;
     Bit#(1) ramClockLocked = prim_device.ramClkLocked();
     if (`NALLATECH_RAM_CLOCK_FREQ != 0)
     begin
@@ -138,16 +148,11 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
                                                reset_by   rawReset);
         ramClock0 = ramClock.clks[0];
         ramClock270 = ramClock.clks[1];
+        let prim_ram_rst <- mkAsyncReset(10, ramClock.rst, modelClock);
+        ramReset <- mkResetEither(modelReset, prim_ram_rst, clocked_by modelClock);
         ramClockLocked = pack(ramClock.locked());
     end
 
-    // Combine edge and raw resets
-    Reset localEdgeReset <- mkAsyncReset(2, edgeReset, modelClock);
-    Reset baseReset <- mkResetEither(localEdgeReset, userClockPackage.rst, clocked_by modelClock);
-
-    // Hold reset for 10 cycles
-    Reset modelReset <- mkAsyncReset(10, baseReset, modelClock);
-      
     // Synchronizers
     
     SyncFIFOIfc#(NALLATECH_FIFO_DATA) sync_read_q
@@ -313,6 +318,7 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
         interface Clock ramClk0 = ramClock0;
         interface Clock ramClk200 = prim_device.ramClk200;
         interface Clock ramClk270 = ramClock270;
+        interface Reset ramReset = ramReset;
         method Bit#(1)  ramClkLocked() = ramClockLocked;
             
     endinterface

@@ -2570,3 +2570,30 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
  nallatech-edge-device.ucf Locally Modified          113 
 
 Add another register to SyncFIFO TIGs.
+
+----------
+mcadler     Date: Thu Sep 22 07:01:23 EDT 2011  CSN: CSN-leap-platforms-acp-115
+                  Thu Sep 22 11:01:23 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.bsv               Locally Modified          114 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified          114 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.bsv Locally Modified          114 
+ nallatech-edge-device-fpga1.ucf Locally Modified          114 
+ nallatech-edge-device.ucf Locally Modified          114 
+ nallatech-intra-device-fpga0.ucf Locally Modified          114 
+ nallatech-intra-device-fpga1.ucf Locally Modified          114 
+
+- Improve reset:
+  - DDR RAM reset now held until its clock stabilizes.
+  - Make model reset longer.
+
+- Sync FIFOs:
+  - Stop claiming dDoutReg has a global TIG!
+  - We really should be claiming a time on cross-clock domain paths instead of
+    just TIG.

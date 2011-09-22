@@ -107,7 +107,7 @@ module mkPhysicalPlatform
                                                 nallatech_edge_device.sram_clocks_driver.ramClk200,
                                                 nallatech_edge_device.sram_clocks_driver.ramClk270,
                                                 nallatech_edge_device.sram_clocks_driver.ramClkLocked,
-                                                rst,
+                                                nallatech_edge_device.sram_clocks_driver.ramReset,
                                                 clocked_by clk, 
                                                 reset_by rst);
         ddr2_driver[b] = ddr2_sram_device[b].driver;
