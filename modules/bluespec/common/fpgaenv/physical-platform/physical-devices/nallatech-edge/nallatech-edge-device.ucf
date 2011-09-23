@@ -320,11 +320,10 @@ NET "*/fsb_slave_module_lvds_link_inst/transmit_logic_generate.lvds_tx_inst/bloc
 NET "*/system_leds_inst/rx_act_led" TIG;
 NET "*/system_leds_inst/tx_act_led" TIG;
 
-# High bit of the reset register controls reset.  It is held long enough some
-# timing shouldn't matter.
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_modelReset/reset_hold_19" TIG;
-
 ## SyncFIFOs
+
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_modelReset/reset_hold*"    TNM=TG_model_rst;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_userRegReset/reset_hold*"  TNM=TG_usr_rst;
 
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/Mram_fifoMem*" TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dDoutReg*"     TNM=TG_edge_clk;
@@ -362,6 +361,7 @@ INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dGDeqPtr*
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sGEnqPtr*"     TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dSyncReg1*"    TNM=TG_usr_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sSyncReg1*"    TNM=TG_model_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sNotFullReg*"  TNM=TG_model_clk;
 
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/Mram_fifoMem*" TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dDoutReg*"     TNM=TG_usr_clk;
@@ -371,8 +371,21 @@ INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dSyncReg1*
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sSyncReg1*"    TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sNotFullReg*"  TNM=TG_model_clk;
 
-TIMESPEC TS_model_clk_to_edge_clk=FROM TG_model_clk TO TG_edge_clk TIG;
-TIMESPEC TS_edge_clk_to_model_clk=FROM TG_edge_clk TO TG_model_clk TIG;
+##
+## Ideally, we would tag the transition with the actual frequency of the target
+## clock domain.  We currently lack the infrastructure to do this, though it
+## would be relatively easy to add to the build pipeline.  For now, require
+## timing for what we expect to be the worst cases:  the 200MHz edge clock.
+##
+TIMESPEC TS_model_clk_to_edge_clk=FROM TG_model_clk TO TG_edge_clk 5ns;
+TIMESPEC TS_model_rst_to_edge_clk=FROM TG_model_rst TO TG_edge_clk TIG;
 
-TIMESPEC TS_model_clk_to_usr_clk=FROM TG_model_clk TO TG_usr_clk TIG;
-TIMESPEC TS_usr_clk_to_model_clk=FROM TG_usr_clk TO TG_model_clk TIG;
+TIMESPEC TS_edge_clk_to_model_clk=FROM TG_edge_clk TO TG_model_clk 5ns;
+TIMESPEC TS_edge_rst_to_model_clk=FROM TG_edge_rst TO TG_model_clk TIG;
+
+
+TIMESPEC TS_model_clk_to_usr_clk=FROM TG_model_clk TO TG_usr_clk 5ns;
+TIMESPEC TS_model_rst_to_usr_clk=FROM TG_model_rst TO TG_usr_clk TIG;
+
+TIMESPEC TS_usr_clk_to_model_clk=FROM TG_usr_clk TO TG_model_clk 5ns;
+TIMESPEC TS_usr_rst_to_model_clk=FROM TG_usr_rst TO TG_model_clk TIG;

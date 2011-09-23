@@ -2597,3 +2597,27 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
   - Stop claiming dDoutReg has a global TIG!
   - We really should be claiming a time on cross-clock domain paths instead of
     just TIG.
+
+----------
+mcadler     Date: Fri Sep 23 08:30:20 EDT 2011  CSN: CSN-leap-platforms-acp-116
+                  Fri Sep 23 12:30:20 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified          115 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device-fpga1.ucf Locally Modified          115 
+ nallatech-edge-device.ucf Locally Modified          115 
+ nallatech-intra-device-fpga0.ucf Locally Modified          115 
+ nallatech-intra-device-fpga1.ucf Locally Modified          115 
+
+- Sync FIFO clock crossings are no longer tagged TIG.  They have a real time
+  constraint (currently 5ns, to match the 200MHz edge clock).  If a model clock
+  faster than 200MHz is ever used we will have to revisit this code, changing
+  the build pipeline to update UCF files by converting frequencies to time.
+
+- Reset paths that appear to cross sync FIFO clock domains are now tagged TIG.
+  I believe these are false paths.
+
+- Update a few missing entries in FPGA1 constraints.

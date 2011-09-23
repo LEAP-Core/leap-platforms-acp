@@ -1,6 +1,8 @@
 
 # We should pick up the clock declarations from the main file. 
 
+INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_primitiveReset/reset_hold*" TNM=TG_edge_rst;
+
 INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/Mram_fifoMem*" TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dDoutReg*"     TNM=TG_edge_clk;
 INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dGDeqPtr*"     TNM=TG_edge_clk;
