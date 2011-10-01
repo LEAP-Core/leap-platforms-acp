@@ -31,4 +31,4 @@
 
 %param NALLATECH_MAX_MSG_BYTES           4096  "Maximum bytes in a message"
 %param NALLATECH_MIN_MSG_BYTES             64  "Minimum bytes in a message"
-%param --global NALLATECH_RAM_CLOCK_FREQ  175  "DDR2 clock frequency (0 - use default edge clock)"
+%param --global NALLATECH_RAM_CLOCK_FREQ  200  "DDR2 clock frequency"

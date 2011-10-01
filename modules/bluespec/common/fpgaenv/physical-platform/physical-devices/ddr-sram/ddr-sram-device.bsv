@@ -149,8 +149,6 @@ module mkDDR2SRAMDevice
     //
     // Synchronizers from Model to Controller
     //
-    // Model requests a reset
-    SyncFIFOIfc#(Bool) syncResetQ <- mkSyncFIFO(2, modelClock, modelReset, controllerClock);
 
     // Request queue
     SyncFIFOIfc#(FPGA_DDR_REQUEST) syncRequestQ <- mkSyncFIFO(8, modelClock, modelReset, controllerClock);
@@ -203,8 +201,8 @@ module mkDDR2SRAMDevice
     // Rules for synchronizing from Model to Controller
     //
 
-    rule processReadRequest (! syncResetQ.notEmpty() &&&
-                             prim_device.ram.enqueue_address_RDY() &&&
+    rule processReadRequest (prim_device.ram.enqueue_address_RDY() &&&
+                             prim_device.ram.ddr_device_RDY() &&&
                              syncRequestQ.first() matches tagged DRAM_READ .address);
         syncRequestQ.deq();
         prim_device.ram.enqueue_address(address, READ);
@@ -229,8 +227,7 @@ module mkDDR2SRAMDevice
     //     Copy incoming write data from the sync FIFO to local registers.
     //
     rule copyWriteData (writeBurstIdx != fromInteger(valueOf(FPGA_DDR_BURST_LENGTH)) &&
-                        ! writePending &&
-                        ! syncResetQ.notEmpty());
+                        ! writePending);
         match {.data, .mask} = syncWriteDataQ.first();
         syncWriteDataQ.deq();        
 
@@ -246,8 +243,7 @@ module mkDDR2SRAMDevice
     //     Stage 0 of write request.  Send control message and first chunk of data
     //     to the memory controller.
     //
-    rule processWriteRequest0 (! syncResetQ.notEmpty() &&&
-                               prim_device.ram.enqueue_address_RDY() &&&
+    rule processWriteRequest0 (prim_device.ram.enqueue_address_RDY() &&&
                                ! writePending &&&
                                (writeBurstIdx == fromInteger(valueOf(FPGA_DDR_BURST_LENGTH))) &&&
                                syncRequestQ.first() matches tagged DRAM_WRITE .address);
@@ -284,7 +280,7 @@ module mkDDR2SRAMDevice
     //   This rule *MUST* fire in the cycle immediately after the previous rule.
     //
     (* fire_when_enabled *)
-    rule processWriteRequest1 (writePending && ! syncResetQ.notEmpty());
+    rule processWriteRequest1 (writePending);
         // Data + mask
         Tuple2#(FPGA_DDR_WORD, FPGA_DDR_WORD) tup = unpack(writeValue[writeBurstIdx]);
         Tuple2#(FPGA_DDR_WORD_MASK, FPGA_DDR_WORD_MASK) tup2 = unpack(writeValueMask[writeBurstIdx]);
@@ -307,73 +303,33 @@ module mkDDR2SRAMDevice
     endrule    
 
 
-    //
-    // processModelReset --
-    //     Model reset needs to clear out partial writes.
-    //
-    rule processModelReset (prim_device.ram.ddr_device_RDY());
-        syncResetQ.deq();
-
-        writeBurstIdx <= 0;
-
-        if (syncRequestQ.notEmpty())
-            syncRequestQ.deq();
-
-        if (syncWriteDataQ.notEmpty())
-            syncWriteDataQ.deq();
-    endrule
-
-
     // ====================================================================
     //
     // Initialization
     //
     // ====================================================================
 
-    Reg#(Bit#(2)) initPhase <- mkReg(0);
-    Reg#(Bit#(10)) init0Loop <- mkReg(0);
+    Reg#(Bit#(1)) initPhase <- mkReg(0);
 
     //
     // initPhase0 --
-    //     A delay loop to make sure reset settles.  Also, the DDR2 low level
-    //     driver is not reset by a soft reset.  There may be some reads left
-    //     over from the last run.  Sync them.
-    //
-    rule initPhase0 ((state == STATE_INIT) && (initPhase == 0));
-        if (syncReadDataQ.notEmpty())
-        begin
-            syncReadDataQ.deq();
-        end
-
-        // Reset partial store state in the DDR clock domain.  Send a few times
-        // so the incoming request queue is guaranteed empty.
-        if (init0Loop < 8)
-            syncResetQ.enq(?);
-
-        if (init0Loop == maxBound)
-            initPhase <= 1;
-        
-        init0Loop <= init0Loop + 1;
-    endrule
-
-
-    //
-    // initPhase1 --
     //     Keep read sync FIFO from being eliminated by issuing a loopback
     //     read to write.
     //
-    Reg#(Bit#(2)) init1Stage <- mkReg(0);
+    Reg#(Bit#(2)) init0Stage <- mkReg(0);
     Reg#(FPGA_DDR_BURST_IDX) initBurstIdx <- mkReg(0);
     
-    rule initPhase1 ((state == STATE_INIT) && (initPhase == 1));
-        case (init1Stage)
+    rule initPhase0 ((state == STATE_INIT) &&
+                     (initPhase == 0) &&
+                     (ramClkLocked == 1));
+        case (init0Stage)
         0:  begin
                 syncRequestQ.enq(tagged DRAM_READ 0);
-                init1Stage <= 1;
+                init0Stage <= 1;
             end
         1:  begin
                 syncRequestQ.enq(tagged DRAM_WRITE 0);
-                init1Stage <= 2;
+                init0Stage <= 2;
             end
         2:  begin
                 let d = syncReadDataQ.first();
@@ -384,7 +340,7 @@ module mkDDR2SRAMDevice
                 if (initBurstIdx == fromInteger(valueOf(FPGA_DDR_LAST_BURST_IDX)))
                 begin
                     initBurstIdx <= 0;
-                    initPhase <= 2;
+                    initPhase <= 1;
                 end
                 else
                 begin
@@ -396,12 +352,12 @@ module mkDDR2SRAMDevice
 
 
     //
-    // initPhase2 --
+    // initPhase1 --
     //     Write a constant pattern to initialize memory.
     //
     Reg#(FPGA_DDR_ADDRESS) initAddr <- mkReg(0);
     
-    rule initPhase2 ((state == STATE_INIT) && (initPhase == 2));
+    rule initPhase1 ((state == STATE_INIT) && (initPhase == 1));
         // Data to write
         Vector#(TDiv#(FPGA_DDR_DUALEDGE_DATA_SZ, 8), Bit#(8)) init_data = replicate('haa);
 
@@ -476,7 +432,7 @@ module mkDDR2SRAMDevice
         status[1]  = pack(prim_device.ram.enqueue_data_RDY());
         status[2]  = pack(prim_device.ram.dequeue_data_RDY());
         status[7]  = pack(syncReadDataQ.notFull());
-        status[8]  = pack(syncResetQ.notEmpty());
+        status[8]  = 0;
         status[10] = pack(syncRequestQ.notEmpty());
         status[12] = pack(syncWriteDataQ.notEmpty());
         status[14] = 0;
@@ -498,7 +454,7 @@ module mkDDR2SRAMDevice
             status[4]  = pack(mergeReqQ.ports[0].notFull());
             status[5]  = pack(mergeReqQ.ports[1].notFull());
             status[6]  = pack(syncReadDataQ.notEmpty());
-            status[9]  = pack(syncResetQ.notFull());
+            status[9]  = 0;
             status[11] = pack(syncRequestQ.notFull());
             status[13] = pack(syncWriteDataQ.notFull());
             status[16] = pack(nInflightReads.value() == 0);

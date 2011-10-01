@@ -2621,3 +2621,30 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
   I believe these are false paths.
 
 - Update a few missing entries in FPGA1 constraints.
+
+----------
+mcadler     Date: Sat Oct  1 14:30:19 EDT 2011  CSN: CSN-leap-platforms-acp-117
+                  Sat Oct  1 18:30:19 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified          116 
+ ddr2_sram.vhd             Locally Modified          116 
+ ddr-sram-device.bsv       Locally Modified          116 
+ ddr-sram-vhdl-import.bsv  Locally Modified          116 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.bsv Locally Modified          116 
+ nallatech-edge-device-intra-debugger.awb Locally Modified          116 
+ nallatech-edge-device.awb Locally Modified          116 
+ nallatech-edge-device-null.awb Locally Modified          116 
+
+Sigh.  Some ACP stacks work fine with RAM speeds below 200MHz.  Some do not.
+Revert to a 200MHz default.
+
+In the process of experimenting, cleaned up the code:
+ - Removed complex start up sequence, replacing it with a RAM controller reset
+   that is triggered either by the edge controller or the model reset.
+ - Switch to Xilinx-default IODELAY instantiation, instead of the Nallatech
+   version.  We were hard wiring one of the two ram controller's IODELAY
+   location, but not the other.

@@ -131,27 +131,36 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
     Reset modelReset <- mkAsyncReset(20, baseReset, modelClock);
 
     //
-    // DDR RAM runs at 200MHz by default (if NALLATECH_RAM_CLOCK_FREQ is 0).
-    // The configuration may specify an alternate frequency.  The RAM requires
-    // a main clock and a 270 degree phase shifted copy.
+    // DDR RAM runs at 200MHz by default. The configuration may specify an
+    // alternate frequency.  The RAM requires a main clock and a 270 degree
+    // phase shifted copy.  We route even the 200 MHz RAM clock through a
+    // PLL so the UCF file always sees the same topology.
     //
-    Clock ramClock0 = prim_device.ramClk0;
-    Clock ramClock270 = prim_device.ramClk270;
-    Reset ramReset = modelReset;
-    Bit#(1) ramClockLocked = prim_device.ramClkLocked();
-    if (`NALLATECH_RAM_CLOCK_FREQ != 0)
-    begin
-        let ramClock <- mkUserClock_2PhasedPLL(200,
-                                               `NALLATECH_RAM_CLOCK_FREQ,
-                                               270,
-                                               clocked_by prim_device.ramClk200,
-                                               reset_by   rawReset);
-        ramClock0 = ramClock.clks[0];
-        ramClock270 = ramClock.clks[1];
-        let prim_ram_rst <- mkAsyncReset(10, ramClock.rst, modelClock);
-        ramReset <- mkResetEither(modelReset, prim_ram_rst, clocked_by modelClock);
-        ramClockLocked = pack(ramClock.locked());
-    end
+    //
+    // WARNING                WARNING                WARNING
+    //
+    //   Some ACP stacks work perfectly with memory speeds other than the
+    //   default 200MHz.  Others seem to fail to calibrate the read timing
+    //   correctly and return incorrect values.  If you pick a clock other
+    //   than the default, you are advised to use sram_debugger_nallatech_acp
+    //   in leap/debuggers.
+    //
+    //   From some experimenting, 150MHz appears to work, though the
+    //   calibration returns inconsistent timing.  225MHz appears to work
+    //   correctly, though should be tested more.
+    //
+    // WARNING                WARNING                WARNING
+    //
+    let ramClock <- mkUserClock_2PhasedPLL(`CRYSTAL_CLOCK_FREQ,
+                                           `NALLATECH_RAM_CLOCK_FREQ,
+                                           270,
+                                           clocked_by rawClock,
+                                           reset_by   rawReset);
+    Clock ramClock0 = ramClock.clks[0];
+    Clock ramClock270 = ramClock.clks[1];
+    let prim_ram_rst <- mkAsyncReset(10, ramClock.rst, modelClock);
+    let ramReset <- mkResetEither(modelReset, prim_ram_rst, clocked_by modelClock);
+    Bit#(1) ramClockLocked = pack(ramClock.locked());
 
     // Synchronizers
     

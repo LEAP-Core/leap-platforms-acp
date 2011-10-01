@@ -301,11 +301,6 @@ INST "*_sram_device_1_prim_device/u_idelayctrl" LOC = IDELAYCTRL_X0Y11; # no und
 ##                                TIGs
 ############################################################################
 
-INST "*_sram_device_*_syncResetQ/dGDeqPtr*"         TNM=TG_ram_clk;
-INST "*_sram_device_*_syncResetQ/sGEnqPtr*"         TNM=TG_model_clk;
-INST "*_sram_device_*_syncResetQ/dSyncReg1*"        TNM=TG_ram_clk;
-INST "*_sram_device_*_syncResetQ/sSyncReg1*"        TNM=TG_model_clk;
-
 INST "*_sram_device_*_syncRequestQ/Mram_fifoMem*"   TNM=TG_model_clk;
 INST "*_sram_device_*_syncRequestQ/dDoutReg*"       TNM=TG_ram_clk;
 INST "*_sram_device_*_syncRequestQ/dGDeqPtr*"       TNM=TG_ram_clk;
@@ -341,10 +336,3 @@ TIMESPEC TS_ram_clk_to_model_clk=FROM TG_ram_clk TO TG_model_clk 5ns;
 
 INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_infrastructure/rst0_sync_r*"   TIG;
 INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_infrastructure/rst270_sync_r*" TIG;
-
-# areagroup constraints targeting sram serdes
-INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_top_0/U_DDRII_PHY_TOP/U_DDRII_PHY_IO/U_DDRII_PHY_DQ_IO/MEMORY_WIDTH_36.CQ_INST[0].Q_PER_CQ_INST[14].U_ISERDES_NODELAY_CQ" LOC = ILOGIC_X0Y64;
-#INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_top_0/U_DDRII_PHY_TOP/U_DDRII_PHY_IO/U_DDRII_PHY_DQ_IO/MEMORY_WIDTH_36.CQ_INST[0].Q_PER_CQ_INST[14].U_IODELAY_CQ" LOC = IODELAY_X0Y64;
-#INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_top_0/U_DDRII_PHY_TOP/U_DDRII_PHY_IO/U_DDRII_PHY_DQ_IO/DATA_WIDTH_INST[14].ODDR_DDRII_D" LOC = OLOGIC_X0Y64;
-
-#AREA_GROUP "serdes" RANGE=CLOCKREGION_X0Y1;

@@ -181,20 +181,19 @@ architecture arc_mem_interface_top of ddr2_sram is
   --***************************************************************************
 
   constant IODELAY_GRP : string := "IODELAY_MIG";
-  
-  -- Angshuman -- not required (see below)
-  --component ddrii_idelay_ctrl
-  --  generic (
-  --    IODELAY_GRP       : string
-  --    );
-  --  port (
-  --    reset_clk_200        : in    std_logic;
-  --    idelay_ctrl_ready    : out   std_logic;
-  --    clk_200              : in    std_logic
-  --    );
-  --end component;
 
-  -- Angshuman end
+
+  component ddrii_idelay_ctrl
+    generic (
+      IODELAY_GRP       : string
+      );
+    port (
+      reset_clk_200        : in    std_logic;
+      idelay_ctrl_ready    : out   std_logic;
+      clk_200              : in    std_logic
+      );
+  end component;
+
   
 component ddrii_infrastructure
     generic (
@@ -377,9 +376,6 @@ component ddrii_top
   -- attribute keep     of masterbank_sel_pin_out : signal is "true";  
   attribute syn_keep of masterbank_sel_pin_out : signal is true;
 
-  attribute IODELAY_GROUP : string;
-  attribute IODELAY_GROUP of U_IDELAYCTRL : label is "IODELAY_MIG";
-
   -- Angshuman end
   
 begin
@@ -445,28 +441,16 @@ begin
   -- Angshuman end
 
 
-  -- Angshuman : nallatech's code uses a primitive IDELAYCTRL instantiation instead
-  -- of the MIG-generated DDRII_IDELAY_CTRL. The instance is then explicitly placed
-  -- in the UCF file.
+  u_ddrii_idelay_ctrl : ddrii_idelay_ctrl
+    generic map (
+      IODELAY_GRP        => IODELAY_GRP
+   )
+    port map (
+      reset_clk_200         => reset_clk_200,
+      idelay_ctrl_ready     => idelay_ctrl_ready,
+      clk_200               => clk_200
+   );
 
-  --u_ddrii_idelay_ctrl : ddrii_idelay_ctrl
-  --  generic map (
-  --    IODELAY_GRP        => IODELAY_GRP
-  -- )
-  --  port map (
-  --    reset_clk_200         => reset_clk_200,
-  --    idelay_ctrl_ready     => idelay_ctrl_ready,
-  --    clk_200               => clk_200
-  -- );
-
-   u_idelayctrl : IDELAYCTRL
-   port map (
-     RDY    => idelay_ctrl_ready,
-     REFCLK => clk_200,
-     RST    => reset_clk_200
-     );
-
-  -- Angshuman end
 
   u_ddrii_infrastructure : ddrii_infrastructure
     generic map (

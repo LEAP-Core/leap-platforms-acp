@@ -21,6 +21,7 @@
 // multiple banks it must be instantiated more than once.
 //
 
+`include "awb/provides/nallatech_edge_device_params.bsh"
 
 // ddr-sram-vhdl-import
 
@@ -31,7 +32,7 @@
 `define SRAM_ADDR_WIDTH 21
 `define SRAM_BURST_LENGTH 2
 `define SRAM_BW_WIDTH 4
-`define SRAM_CLK_FREQ 200
+`define SRAM_CLK_FREQ `NALLATECH_RAM_CLOCK_FREQ
 `define SRAM_CLK_WIDTH 1
 `define SRAM_CQ_WIDTH 1
 `define SRAM_DATA_WIDTH 36
