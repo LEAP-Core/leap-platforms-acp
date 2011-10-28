@@ -2648,3 +2648,15 @@ In the process of experimenting, cleaned up the code:
  - Switch to Xilinx-default IODELAY instantiation, instead of the Nallatech
    version.  We were hard wiring one of the two ram controller's IODELAY
    location, but not the other.
+
+----------
+kfleming    Date: Fri Oct 28 08:08:21 EDT 2011  CSN: CSN-leap-platforms-acp-118
+                  Fri Oct 28 12:08:21 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-intra-device.bsv Locally Modified          117 
+
+
+Widened the physical inter-fpga interface to the full 256 bits.
+
