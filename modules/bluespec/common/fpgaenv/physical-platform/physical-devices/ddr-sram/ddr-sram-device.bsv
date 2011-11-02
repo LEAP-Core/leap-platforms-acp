@@ -163,6 +163,18 @@ module mkDDR2SRAMDevice
 
 
     //
+    // Extra buffering using the simplest FIFO to mitigate timing errors for
+    // the DDR (high speed) code communicating with compilated sync FIFOs.
+    // The buffering presents a simple register to the client.
+    //
+    FIFO#(FPGA_DDR_DUALEDGE_DATA)
+        readBuffer <- mkLFIFO(clocked_by controllerClock, reset_by controllerReset);
+
+    FIFO#(Tuple2#(FPGA_DDR_DUALEDGE_DATA, FPGA_DDR_DUALEDGE_DATA_MASK))
+        writeBuffer <- mkLFIFO(clocked_by controllerClock, reset_by controllerReset);
+
+
+    //
     // On ACP it appears that ECC bits are interleaved among the data
     // bits.  The problem is mask bits cover 9 bits each, not 8!  We aren't
     // using ECC, but must be careful to spread the data bits out so
@@ -187,13 +199,23 @@ module mkDDR2SRAMDevice
     
     // Rules for synchronizing from Controller to Model
     
-    // Push incoming read data from the controller into the sync FIFO to cross
-    // the clock boundary.
+    //
+    // The timing path from the controller to the sync FIFO is often tight.
+    // Sacrifice a cycle to simplify placement.  We should probably solve this
+    // by hard wiring the position of the sync FIFO and controller, but we haven't.
+    //
     (* fire_when_enabled *)
     rule readRAMDataToBuffer (prim_device.ram.dequeue_data_RDY());
         let d1 = removeSpaceForECC(prim_device.ram.dequeue_data_rise());
         let d2 = removeSpaceForECC(prim_device.ram.dequeue_data_fall());
-        syncReadDataQ.enq({d1, d2});
+        readBuffer.enq({d1, d2});
+    endrule
+    
+    rule readRAMBufferToModel (True);
+        let d = readBuffer.first();
+        readBuffer.deq();
+
+        syncReadDataQ.enq(d);
     endrule
     
 
@@ -223,13 +245,24 @@ module mkDDR2SRAMDevice
     Reg#(FPGA_DDR_BURST_IDX) writeBurstIdx <- mkReg(0, clocked_by controllerClock, reset_by controllerReset);
 
     //
+    // writeDataToBuffer --
+    //     Extra buffering to simplify timing.
+    //
+    rule writeDataToBuffer (True);
+        let wd = syncWriteDataQ.first();
+        syncWriteDataQ.deq();        
+
+        writeBuffer.enq(wd);
+    endrule
+
+    //
     // copyWriteData --
     //     Copy incoming write data from the sync FIFO to local registers.
     //
     rule copyWriteData (writeBurstIdx != fromInteger(valueOf(FPGA_DDR_BURST_LENGTH)) &&
                         ! writePending);
-        match {.data, .mask} = syncWriteDataQ.first();
-        syncWriteDataQ.deq();        
+        match {.data, .mask} = writeBuffer.first();
+        writeBuffer.deq();
 
         writeValue[writeBurstIdx] <= data;
         writeValueMask[writeBurstIdx] <= mask;

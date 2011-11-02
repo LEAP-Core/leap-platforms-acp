@@ -39,10 +39,6 @@ NET "sys_led_out[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = A
 NET "sys_led_out[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK17;
 NET "sys_led_out[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AL17;
 
-# -- moved to SRAM device -- NET "ram_pwr_on" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AL14;
-# -- moved to SRAM device -- NET "ram_leds[0]" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AN29;
-# -- moved to SRAM device -- NET "ram_leds[1]" IOSTANDARD = "LVCMOS25" | DRIVE=8 | SLEW=SLOW | LOC=AP28;
-
 NET "ram_pg" IOSTANDARD = "LVCMOS25" | LOC=AM29;
 NET "mgt_pg" IOSTANDARD = "LVCMOS25" | LOC=AM13;
 
@@ -316,14 +312,13 @@ NET "*/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/l
 
 NET "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/slave_init_sm_gen.lvds_slave_init_sm_inst/tx_training_done" TIG;
 NET "*/fsb_slave_module_lvds_link_inst/transmit_logic_generate.lvds_tx_inst/block_ram_fifo_module.half_lane_gen.Label1/BU2/U0/grf.rf/gcx.clkx/rd_pntr_gc[*]" TIG;
-
 NET "*/system_leds_inst/rx_act_led" TIG;
 NET "*/system_leds_inst/tx_act_led" TIG;
 
 ## SyncFIFOs
 
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_modelReset/reset_hold*"    TNM=TG_model_rst;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_userRegReset/reset_hold*"  TNM=TG_usr_rst;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_userRegReset/reset_hold*"  TNM=TG_reg_rst;
 
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/Mram_fifoMem*" TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dDoutReg*"     TNM=TG_edge_clk;
@@ -341,33 +336,33 @@ INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dSyncReg1*"    TNM
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sSyncReg1*"    TNM=TG_edge_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sNotFullReg*"  TNM=TG_edge_clk;
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/Mram_fifoMem*" TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/Mram_fifoMem*" TNM=TG_reg_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dDoutReg*"     TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dGDeqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sGEnqPtr*"     TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sGEnqPtr*"     TNM=TG_reg_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dSyncReg1*"    TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sSyncReg1*"    TNM=TG_usr_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sNotFullReg*"  TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sSyncReg1*"    TNM=TG_reg_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sNotFullReg*"  TNM=TG_reg_clk;
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/Mram_fifoMem*" TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/Mram_fifoMem*" TNM=TG_reg_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dDoutReg*"     TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dGDeqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sGEnqPtr*"     TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sGEnqPtr*"     TNM=TG_reg_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dSyncReg1*"    TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sSyncReg1*"    TNM=TG_usr_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sNotFullReg*"  TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sSyncReg1*"    TNM=TG_reg_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sNotFullReg*"  TNM=TG_reg_clk;
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dGDeqPtr*"     TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dGDeqPtr*"     TNM=TG_reg_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sGEnqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dSyncReg1*"    TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dSyncReg1*"    TNM=TG_reg_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sSyncReg1*"    TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sNotFullReg*"  TNM=TG_model_clk;
 
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/Mram_fifoMem*" TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dDoutReg*"     TNM=TG_usr_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dGDeqPtr*"     TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dDoutReg*"     TNM=TG_reg_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dGDeqPtr*"     TNM=TG_reg_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sGEnqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dSyncReg1*"    TNM=TG_usr_clk;
+INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dSyncReg1*"    TNM=TG_reg_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sSyncReg1*"    TNM=TG_model_clk;
 INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sNotFullReg*"  TNM=TG_model_clk;
 
@@ -377,15 +372,15 @@ INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sNotFullRe
 ## would be relatively easy to add to the build pipeline.  For now, require
 ## timing for what we expect to be the worst cases:  the 200MHz edge clock.
 ##
-TIMESPEC TS_model_clk_to_edge_clk=FROM TG_model_clk TO TG_edge_clk 5ns;
+TIMESPEC TS_model_clk_to_edge_clk=FROM TG_model_clk TO TG_edge_clk 5ns DATAPATHONLY;
 TIMESPEC TS_model_rst_to_edge_clk=FROM TG_model_rst TO TG_edge_clk TIG;
 
-TIMESPEC TS_edge_clk_to_model_clk=FROM TG_edge_clk TO TG_model_clk 5ns;
+TIMESPEC TS_edge_clk_to_model_clk=FROM TG_edge_clk TO TG_model_clk 5ns DATAPATHONLY;
 TIMESPEC TS_edge_rst_to_model_clk=FROM TG_edge_rst TO TG_model_clk TIG;
 
 
-TIMESPEC TS_model_clk_to_usr_clk=FROM TG_model_clk TO TG_usr_clk 5ns;
-TIMESPEC TS_model_rst_to_usr_clk=FROM TG_model_rst TO TG_usr_clk TIG;
+TIMESPEC TS_model_clk_to_usr_clk=FROM TG_model_clk TO TG_reg_clk 10ns DATAPATHONLY;
+TIMESPEC TS_model_rst_to_usr_clk=FROM TG_model_rst TO TG_reg_clk TIG;
 
-TIMESPEC TS_usr_clk_to_model_clk=FROM TG_usr_clk TO TG_model_clk 5ns;
-TIMESPEC TS_usr_rst_to_model_clk=FROM TG_usr_rst TO TG_model_clk TIG;
+TIMESPEC TS_usr_clk_to_model_clk=FROM TG_reg_clk TO TG_model_clk 10ns DATAPATHONLY;
+TIMESPEC TS_usr_rst_to_model_clk=FROM TG_reg_rst TO TG_model_clk TIG;

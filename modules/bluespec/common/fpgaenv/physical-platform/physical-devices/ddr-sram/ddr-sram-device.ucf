@@ -301,6 +301,10 @@ INST "*_sram_device_1_prim_device/u_idelayctrl" LOC = IDELAYCTRL_X0Y11; # no und
 ##                                TIGs
 ############################################################################
 
+# Calibration done signal is held permanently high once ready.  It seems safe
+# to ignore timing as the model won't start until cal_done is asserted.
+NET  "*_sram_device_*_prim_device/*/calib_done_6r"  TIG;
+
 INST "*_sram_device_*_syncRequestQ/Mram_fifoMem*"   TNM=TG_model_clk;
 INST "*_sram_device_*_syncRequestQ/dDoutReg*"       TNM=TG_ram_clk;
 INST "*_sram_device_*_syncRequestQ/dGDeqPtr*"       TNM=TG_ram_clk;
@@ -331,8 +335,8 @@ INST "*_sram_device_*_syncReadDataQ/sNotFullReg*"   TNM=TG_ram_clk;
 #INST "*_sram_device_*_syncStatus/sync/sToggleReg*"  TNM=TG_ram_clk;
 #INST "*_sram_device_*_syncStatus/sync/dSyncReg1*"   TNM=TG_model_clk;
 
-TIMESPEC TS_model_clk_to_ram_clk=FROM TG_model_clk TO TG_ram_clk 5ns;
-TIMESPEC TS_ram_clk_to_model_clk=FROM TG_ram_clk TO TG_model_clk 5ns;
+TIMESPEC TS_model_clk_to_ram_clk=FROM TG_model_clk TO TG_ram_clk 5ns DATAPATHONLY;
+TIMESPEC TS_ram_clk_to_model_clk=FROM TG_ram_clk TO TG_model_clk 5ns DATAPATHONLY;
 
 INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_infrastructure/rst0_sync_r*"   TIG;
 INST "m_vp_llpi_phys_plat_ddr2_sram_device_0_prim_device/u_ddrii_infrastructure/rst270_sync_r*" TIG;
