@@ -22,4 +22,4 @@
 ##                Parameters               ##
 #############################################
 
-
+%param NALLATECH_MODULE_FPGA_ID   1    "FPGA ID within a Nallatech module"

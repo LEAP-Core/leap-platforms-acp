@@ -2682,3 +2682,22 @@ More timing improvements:
 - Add buffering in memory controller between syncFIFOs and logic.  The
   buffering barely adds latency in the model, since the memory clock is
   200MHz.
+
+----------
+mcadler     Date: Mon Nov  7 15:25:55 EST 2011  CSN: CSN-leap-platforms-acp-120
+                  Mon Nov  7 20:25:55 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-intra-device.bsv Locally Modified          119 
+ nallatech-edge-device-debugger.cpp Locally Modified          119 
+ nallatech-intra-device-fpga0.awb Locally Modified          119 
+ nallatech-intra-device-fpga1.awb Locally Modified          119 
+
+During initialization of a pair of FPGAs within a module, FPGA0 is allowed to
+write to FPGA1 in spite of it not being ready.  Added a simple initialization
+protocol, where FPGA0 waits to hear from FPGA1 before sending any messages.
+I can't find any Nallatech documentation on a better method.  This simple
+protocol probably depends on the order in which each FPGA is initialized,
+though I didn't test that.  Also added comments to the C++ initialization
+code, noting the fragility of the startup sequence.

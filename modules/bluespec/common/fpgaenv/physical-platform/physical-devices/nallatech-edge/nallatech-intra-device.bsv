@@ -16,6 +16,15 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
+
+//
+// LVDS links between FPGAs within a single Nallatech FPGA module stack.
+//
+// Nallatech calls the inter-FPGA links within a single module
+// inter-intra-module LVDS links.  We shorten this to NALLATECH_INTRA.
+//
+
+
 import Clocks::*;
 import FIFO::*;
 import FIFOF::*;
@@ -26,7 +35,6 @@ import RWire::*;
 `include "awb/provides/fpga_components.bsh"
 `include "awb/provides/clocks_device.bsh"
 `include "awb/provides/umf.bsh"
-
 
 interface NALLATECH_INTRA_DRIVER;
 
@@ -101,19 +109,49 @@ module mkNallatechIntraDeviceParametric#(Clock clk100,
     SyncFIFOIfc#(NALLATECH_FIFO_DATA) sync_write_q
         <- mkSyncFIFOFromCC(6, clk200);
 
-    rule sendToPrim;
+    //
+    // Modules don't wait for all other modules to be initialized before
+    // sending data.  From our reading of the Nallatech documentation, there
+    // doesn't seem to be an exposed signal to detect the end of system
+    // configuration.  We could use a user register set by the software.
+    // For now we use the knowledge that FPGA0 is programmed first and
+    // must wait for FPGA1 to send a message.
+    //
+
+    Reg#(Bool) initialized <- mkReg(False, clocked_by clk200, reset_by primitiveReset);
+
+    rule doInit (! initialized);
+        if (`NALLATECH_MODULE_FPGA_ID == 0)
+        begin
+            //
+            // FPGA0 is set up first.  Wait for a message from FPGA1.
+            //
+            prim_device.deq();
+        end
+        else
+        begin
+            //
+            // FPGA1 is set up last.  Tell FPGA0 the module is ready.
+            //
+            prim_device.enq(?);
+        end
+
+        initialized <= True;
+    endrule
+
+    rule sendToPrim (initialized);
         sync_write_q.deq();
         prim_device.enq(sync_write_q.first());
     endrule
 
-    rule getFromPrim;
+    rule getFromPrim (initialized);
         prim_device.deq();
         intraReadQ.enq(prim_device.first());
     endrule
 
-    rule getFromReadQ;
-      intraReadQ.deq();      
-      sync_read_q.enq(intraReadQ.first());
+    rule getFromReadQ (True);
+        intraReadQ.deq();      
+        sync_read_q.enq(intraReadQ.first());
     endrule
 
     interface NALLATECH_INTRA_DRIVER intra_driver;

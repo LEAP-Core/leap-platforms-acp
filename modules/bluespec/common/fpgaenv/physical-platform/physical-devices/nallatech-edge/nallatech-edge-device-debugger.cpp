@@ -137,6 +137,12 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
         CallbackExit(1);
     }
 
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //
+    // FPGA0 must be configured before FPGA1 or inter-FPGA LVDS messages
+    // may be lost.
+    //
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	ret = ACP_ConfigureFPGA(hsocket, bitfile, DEVICE_ID(1,ACP_FPGA0,0));
 
 	if (ret != 0)
@@ -155,6 +161,12 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
         CallbackExit(1);
 	}
 
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //
+    // FPGA1 must be configured after FPGA0 or inter-FPGA LVDS messages
+    // may be lost.
+    //
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	ret = ACP_ConfigureFPGA(hsocket, bitfile1, DEVICE_ID(1,ACP_FPGA1,0));
 
 	if (ret != 0)
@@ -198,11 +210,11 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
 	printf("\tOK\n");
 
 
-	printf("Initializing Base to FPGA 0 - FPGA 1 LVDS link...  ");
+	printf("Initializing FPGA 0 - FPGA 1 LVDS link...  ");
 
         ret = ACP_Initialize_LVDS_Link(hsocket,
                                        DEVICE_ID(1,0,0),
-				       DEVICE_ID(1,0,0),
+                                       DEVICE_ID(1,0,0),
                                        DEVICE_ID(1,1,0),
                                        DEVICE_ID(1,1,0));
 	
