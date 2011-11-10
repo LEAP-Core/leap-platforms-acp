@@ -46,10 +46,11 @@ endinterface
 
 interface NALLATECH_UMF_INTRA_DRIVER;
 
-    method Action              write(Bit#(256) data);
+    method Action              write(NALLATECH_FIFO_DATA data);
     method Bool                write_ready();
-    method ActionValue#(Bit#(256)) read();
-        
+    method NALLATECH_FIFO_DATA first();
+    method Action              deq();
+
 endinterface
 
 // NALLATECH_INTRA_WIRES
@@ -166,12 +167,10 @@ module mkNallatechIntraDeviceParametric#(Clock clk100,
 
     interface NALLATECH_UMF_INTRA_DRIVER umf_intra_driver;
         
-        method ActionValue#(Bit#(256)) read;
-          sync_read_q.deq();
-          return truncate(sync_read_q.first());
-        endmethod
+        method first = sync_read_q.first();
+        method deq = sync_read_q.deq();
             
-        method Action write(Bit#(256) data);
+        method Action write(NALLATECH_FIFO_DATA data);
           sync_write_q.enq(zeroExtend(data));
         endmethod
 

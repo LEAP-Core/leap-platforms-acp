@@ -2701,3 +2701,15 @@ I can't find any Nallatech documentation on a better method.  This simple
 protocol probably depends on the order in which each FPGA is initialized,
 though I didn't test that.  Also added comments to the C++ initialization
 code, noting the fragility of the startup sequence.
+
+----------
+kfleming    Date: Thu Nov 10 15:01:20 EST 2011  CSN: CSN-leap-platforms-acp-121
+                  Thu Nov 10 20:01:20 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-intra-device.bsv Locally Modified          120 
+
+
+Modified the nallactech intra device interface to conform to the
+interface now expected by the router generation code.
