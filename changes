@@ -2713,3 +2713,18 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 Modified the nallactech intra device interface to conform to the
 interface now expected by the router generation code.
+
+----------
+kfleming    Date: Tue Nov 15 12:09:08 EST 2011  CSN: CSN-leap-platforms-acp-122
+                  Tue Nov 15 17:09:08 UTC 2011
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          121 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          121 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          121 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          121 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          121 
+
+
+Updated modules after moving multifpga log generation to the multifpga package. 
