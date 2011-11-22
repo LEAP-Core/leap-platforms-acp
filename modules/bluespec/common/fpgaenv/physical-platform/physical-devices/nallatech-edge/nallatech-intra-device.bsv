@@ -119,7 +119,7 @@ module mkNallatechIntraDeviceParametric#(Clock clk100,
     // must wait for FPGA1 to send a message.
     //
 
-    Reg#(Bool) initialized <- mkReg(False, clocked_by clk200, reset_by primitiveReset);
+    Reg#(Bool) initialized <- mkReg(False);
 
     rule doInit (! initialized);
         if (`NALLATECH_MODULE_FPGA_ID == 0)
@@ -127,25 +127,25 @@ module mkNallatechIntraDeviceParametric#(Clock clk100,
             //
             // FPGA0 is set up first.  Wait for a message from FPGA1.
             //
-            prim_device.deq();
+            sync_read_q.deq();
         end
         else
         begin
             //
             // FPGA1 is set up last.  Tell FPGA0 the module is ready.
             //
-            prim_device.enq(?);
+            sync_write_q.enq(?);
         end
 
         initialized <= True;
     endrule
 
-    rule sendToPrim (initialized);
+    rule sendToPrim (True);
         sync_write_q.deq();
         prim_device.enq(sync_write_q.first());
     endrule
 
-    rule getFromPrim (initialized);
+    rule getFromPrim (True);
         prim_device.deq();
         intraReadQ.enq(prim_device.first());
     endrule
@@ -157,26 +157,36 @@ module mkNallatechIntraDeviceParametric#(Clock clk100,
 
     interface NALLATECH_INTRA_DRIVER intra_driver;
         
-        method enq = sync_write_q.enq;
+        method Action enq(NALLATECH_FIFO_DATA data) if (initialized);
+            sync_write_q.enq(data);
+        endmethod
             
-        method first = sync_read_q.first;
+        method NALLATECH_FIFO_DATA first() if (initialized);
+            return sync_read_q.first();
+        endmethod
 
-        method deq = sync_read_q.deq;
+        method Action deq() if (initialized);
+            sync_read_q.deq();
+        endmethod
                 
     endinterface
 
     interface NALLATECH_UMF_INTRA_DRIVER umf_intra_driver;
         
-        method first = sync_read_q.first();
-        method deq = sync_read_q.deq();
-            
-        method Action write(NALLATECH_FIFO_DATA data);
-          sync_write_q.enq(zeroExtend(data));
+        method Action write(NALLATECH_FIFO_DATA data) if (initialized);
+            sync_write_q.enq(zeroExtend(data));
         endmethod
 
-       method Bool write_ready = sync_write_q.notFull;
-      
+        method Bool write_ready = sync_write_q.notFull && initialized;
                 
+        method NALLATECH_FIFO_DATA first() if (initialized);
+            return sync_read_q.first();
+        endmethod
+
+        method Action deq() if (initialized);
+            sync_read_q.deq();
+        endmethod
+            
     endinterface
 
     // Pass through communication control
