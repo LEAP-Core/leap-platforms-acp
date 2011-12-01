@@ -2739,3 +2739,30 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 Move initialization out of the high frequency clock domain to reduce timing
 pressume.
+
+----------
+mcadler     Date: Thu Dec  1 14:33:41 EST 2011  CSN: CSN-leap-platforms-acp-124
+                  Thu Dec  1 19:33:41 UTC 2011
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          123 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          123 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified          123 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          123 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          123 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified          123 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified          123 
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Modified          123 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified          123 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          123 
+
+Directory config/pm/platforms/debuggers/acp
+ fpga0_passthrough.apm     Locally Modified          123 
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Modified          123 
+ intra_channel_debugger_nallatech_acp_fpga1.apm Locally Modified          123 
+ fpga1_scratchpad.apm      Locally Modified          123 
+ intra_channel_debugger_nallatech_acp_jtag.apm Locally Modified          123 
+
+Update platforms for LEAP changes:  moved platform and soft services to FPGA
+environment.

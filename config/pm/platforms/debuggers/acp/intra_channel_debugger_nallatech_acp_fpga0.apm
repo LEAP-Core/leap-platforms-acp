@@ -59,6 +59,7 @@ Packagehint=leap-platforms
 umf=Little-Endian Unified Message Format
 low_level_platform_interface=Low Level Platform Interface Hybrid
 virtual_devices=NULL Virtual Devices
+platform_services=NULL Platform Services
 
 [Nallatech Edge Physical Channel]
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge/nallatech-edge-channel.awb
@@ -103,6 +104,7 @@ virtual_platform=Standard Virtual Platform
 fpga_components=Hardware FPGA Components for Virtex 5
 librl_bsv=RL Bluespec Library Submodel
 build_pipeline=FPGA Build Pipeline Xilinx
+soft_services=Soft Services Submodel
 
 [Little-Endian Unified Message Format/Params]
 UMF_CHUNK_BYTES=8
@@ -180,3 +182,18 @@ Packagehint=leap-platforms-acp
 [ACP FPGA with Intra Channel and SRAM (Nallatech)]
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0-with-sram/acp-m2c.awb
 Packagehint=leap-platforms-acp
+
+[Soft Services Submodel]
+File=config/pm/leap/submodels/common/soft-services.apm
+Packagehint=leap
+
+[NULL Platform Services]
+File=modules/leap/libraries/platform-services/platform-services-null.awb
+Packagehint=leap
+
+[NULL Platform Services/Requires]
+starter_service=Starter Service
+
+[Starter Service]
+File=modules/leap/libraries/platform-services/starter-service/starter-service.awb
+Packagehint=leap

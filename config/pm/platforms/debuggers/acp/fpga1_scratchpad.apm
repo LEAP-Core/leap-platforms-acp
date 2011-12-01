@@ -52,6 +52,7 @@ Packagehint=leap-platforms
 umf=Little-Endian Unified Message Format
 low_level_platform_interface=Low Level Platform Interface Hybrid
 virtual_devices=Standard Virtual Devices Submodel
+platform_services=Standard Platform Services
 
 [Basic Virtual Channel Multiplexer]
 File=modules/leap/virtual-platform/channelio/basic/basic-channelio.awb
@@ -81,6 +82,7 @@ virtual_platform=Standard Virtual Platform
 fpga_components=Hardware FPGA Components for Virtex 5
 librl_bsv=RL Bluespec Library Submodel
 build_pipeline=FPGA Build Pipeline Xilinx
+soft_services=Soft Services Submodel
 
 [Little-Endian Unified Message Format/Params]
 UMF_CHUNK_BYTES=8
@@ -152,10 +154,6 @@ Packagehint=leap-platforms-acp
 SRAM_DEBUG=1
 SRAM_MAX_OUTSTANDING_READS=16
 
-[Standard Platform Services]
-File=config/pm/leap/submodels/platform-services/standard-platform-services.apm
-Packagehint=leap
-
 [Scratchpad Memory Test System]
 File=modules/apps/tests/mem_test/mem-test.awb
 Packagehint=leap-debug
@@ -176,8 +174,6 @@ File=modules/leap/build-support/project/application-env/soft-services/applicatio
 Packagehint=leap
 
 [Soft Services Hybrid Application Environment/Requires]
-platform_services=Standard Platform Services
-soft_services=Soft Services Submodel
 connected_application=Default Software Connected Application
 
 [Standard Virtual Devices Submodel]
@@ -189,4 +185,8 @@ LOCAL_MEM_ADDR_BITS=16
 
 [Local Memory Interface using BRAM]
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-bram.awb
+Packagehint=leap
+
+[Standard Platform Services]
+File=config/pm/leap/submodels/platform-services/standard-platform-services.apm
 Packagehint=leap

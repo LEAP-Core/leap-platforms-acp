@@ -21,6 +21,7 @@ virtual_platform=Standard Virtual Platform
 fpga_components=Hardware FPGA Components for Virtex 5
 librl_bsv=RL Bluespec Library Submodel
 build_pipeline=FPGA Platform Build Pipeline
+soft_services=Soft Services for MultiFPGA Submodel
 
 [Standard Virtual Platform]
 File=modules/leap/virtual-platform/std-virtual-platform.awb
@@ -30,6 +31,7 @@ Packagehint=leap
 virtual_devices=Standard Virtual Devices
 low_level_platform_interface=Low Level Platform Interface Hybrid
 umf=Little-Endian Unified Message Format
+platform_services=MultiFPGA Standard Platform Services
 
 [FPGA Environment]
 File=modules/leap/virtual-platform/fpga-environment.awb
@@ -138,7 +140,7 @@ Packagehint=leap
 [Standard Virtual Devices/Requires]
 starter_device=Starter Virtual Device
 central_cache=NULL Central Cache
-scratchpad_memory=Hybrid Scratchpad Memory Device
+scratchpad_memory=Hybrid Scratchpad Memory Device (MultiFPGA)
 shared_memory=Null Shared Memory
 common_utility_devices=Base Common Devices
 front_panel=Hybrid Front Panel
@@ -154,13 +156,6 @@ Packagehint=leap
 [Hybrid Front Panel]
 File=modules/leap/virtual-platform/virtual-devices/devices/front-panel/hybrid/hybrid-fp.awb
 Packagehint=leap
-
-[Hybrid Scratchpad Memory Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/scratchpad-memory/hybrid/hybrid-mem-scratch.awb
-Packagehint=leap
-
-[Hybrid Scratchpad Memory Device/Requires]
-scratchpad_memory_common=Scratchpad Memory Common Definitions
 
 [Scratchpad Memory Common Definitions]
 File=modules/leap/virtual-platform/virtual-devices/devices/scratchpad-memory/common/mem-scratch-common.awb
@@ -290,3 +285,22 @@ Packagehint=multifpga
 
 [Xilinx MAP/Params]
 MAPPER_OPTIONS="-cm balanced -global_opt on"
+
+
+[MultiFPGA Standard Platform Services]
+File=config/pm/leap/submodels/platform-services/multifpga-platform-services-standard.apm
+Packagehint=multifpga
+
+[Hybrid Scratchpad Memory Device (MultiFPGA)/Requires]
+scratchpad_memory_common=Scratchpad Memory Common Definitions
+
+[Hybrid Scratchpad Memory Device (MultiFPGA)]
+File=modules/leap/virtual-platform/virtual-devices/devices/scratchpad-memory/hybrid/hybrid-mem-scratch-multi.awb
+Packagehint=leap
+
+[Soft Services for MultiFPGA Submodel]
+File=config/pm/leap/submodels/common/multifpga-soft-services.apm
+Packagehint=multifpga
+
+[MultiFPGA Standard Platform Services/Params]
+SCRATCHPAD_STD_PVT_CACHE_ENTRIES=4096
