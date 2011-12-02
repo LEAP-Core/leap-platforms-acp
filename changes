@@ -2766,3 +2766,19 @@ Directory config/pm/platforms/debuggers/acp
 
 Update platforms for LEAP changes:  moved platform and soft services to FPGA
 environment.
+
+----------
+mcadler     Date: Thu Dec  1 22:47:27 EST 2011  CSN: CSN-leap-platforms-acp-125
+                  Fri Dec  2 03:47:27 UTC 2011
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.ucf       Locally Modified          124 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device-fpga1.ucf Locally Modified          124 
+ nallatech-edge-device.ucf Locally Modified          124 
+ nallatech-intra-device-fpga0.ucf Locally Modified          124 
+ nallatech-intra-device-fpga1.ucf Locally Modified          124 
+
+LLPI no longer under virtual platform.

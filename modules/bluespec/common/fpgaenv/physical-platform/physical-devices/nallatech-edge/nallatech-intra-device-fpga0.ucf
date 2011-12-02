@@ -1,20 +1,20 @@
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_primitiveReset/reset_hold*" TNM=TG_edge_rst;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_primitiveReset/reset_hold*" TNM=TG_edge_rst;
 
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/Mram_fifoMem*" TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dDoutReg*"     TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dGDeqPtr*"     TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sGEnqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dSyncReg1*"    TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sSyncReg1*"    TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sNotFullReg*"  TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/Mram_fifoMem*" TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dDoutReg*"     TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dGDeqPtr*"     TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sGEnqPtr*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/dSyncReg1*"    TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sSyncReg1*"    TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_write_q/sNotFullReg*"  TNM=TG_model_clk;
 
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/Mram_fifoMem*" TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dDoutReg*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dGDeqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sGEnqPtr*"     TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dSyncReg1*"    TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sSyncReg1*"    TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sNotFullReg*"  TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/Mram_fifoMem*" TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dDoutReg*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dGDeqPtr*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sGEnqPtr*"     TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/dSyncReg1*"    TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sSyncReg1*"    TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_sync_read_q/sNotFullReg*"  TNM=TG_edge_clk;
 
 #########################################################
 ##LVDS CONNECTIVITY TO FPGA1
@@ -28,8 +28,8 @@ NET "*/fsb_slave_module_lvds_link_inst/lvds_link_initialisation_inst/master_init
 
 # LVDS IO LANE 22 FPGA 0 IO bank 20 recieve lane 0	 
 
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_mst_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X2Y8" ;
-NET  "m_vp_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_mst_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_mst_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X2Y8" ;
+NET  "m_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_mst_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
 
 
 NET "side_lvds_rx_lane_p[0]" IOSTANDARD = "LVDS_25" | LOC = N9 | DIFF_TERM="TRUE";
@@ -92,8 +92,8 @@ NET "side_lvds_rx_lane_n[16]" IOSTANDARD = "LVDS_25" | LOC = M8 | DIFF_TERM="TRU
 
 # LVDS IO LANE 23 FPGA 0 IO bank 24 recieve lane 1	  
 
-INST "m_vp_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_mst_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X2Y9" ;
-NET  "m_vp_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_mst_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+INST "m_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_mst_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X2Y9" ;
+NET  "m_llpi_phys_plat_nallatech_intra_device_m_prim_device/fsb_compute_intra_inst/inter_intra_mod_mst_edge_2rx2tx_gen.edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
 
 
 NET "side_lvds_rx_lane_p[17]" IOSTANDARD = "LVDS_25" | LOC = J12 | DIFF_TERM="TRUE";

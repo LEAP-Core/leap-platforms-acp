@@ -2,14 +2,14 @@
 ###############################################################################
 # EXPANSION INTERFACE AND SYSTEM CONTROL
 
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AJ26;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK27;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[2]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AM14;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN14;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK29;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK28;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[6]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP13;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[7]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN13;
+NET "m_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[0]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AJ26;
+NET "m_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[1]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK27;
+NET "m_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[2]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AM14;
+NET "m_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[3]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN14;
+NET "m_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[4]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK29;
+NET "m_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[5]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AK28;
+NET "m_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[6]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP13;
+NET "m_llpi_phys_plat_nallatech_edge_device_m_prim_device_CONFIG_DATA[7]" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AN13;
 
 # Synplify LOC's
 
@@ -44,7 +44,7 @@ NET "mgt_pg" IOSTANDARD = "LVCMOS25" | LOC=AM13;
 
 
 NET "eeprom_scl" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP16;
-NET "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device_EEPROM_SDA" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP15;
+NET "m_llpi_phys_plat_nallatech_edge_device_m_prim_device_EEPROM_SDA" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP15;
 
 #Synplify LOC's 
 NET "EEPROM_SDA" IOSTANDARD = "LVCMOS25" | DRIVE = 8 | SLEW = SLOW | LOC = AP15;
@@ -60,8 +60,8 @@ NET "CLK100N" IOSTANDARD = "LVDS_25" | LOC = AL26 | DIFF_TERM = "TRUE";
 
  # LVDS IO LANE 01 FPGA 0 IO bank 13
  
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y5" ;
-NET  "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y5" ;
+NET  "m_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[1].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
 
 
 NET "lvds_rx_lane_p[17]" IOSTANDARD = "LVDS_25" | LOC = AH40 | DIFF_TERM="TRUE";
@@ -234,8 +234,8 @@ NET "lvds_tx_lane_n[33]" IOSTANDARD = "LVDS_25" | LOC = L31;
 
 # LVDS IO LANE 04 FPGA 0 IO bank 21
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y3" ;
-NET  "m_vp_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/lvds_phy_rx_inst/RX_IDELAYCTRL" LOC = "IDELAYCTRL_X0Y3" ;
+NET  "m_llpi_phys_plat_nallatech_edge_device_m_prim_device/fsb_compute_edge_inst/comp_0_base_edge_2rx2tx_gen.base_edge_inst/fsb_slave_module_lvds_link_inst/fsb_module_reciever_gen.fsb_module_reciever_inst/single_lane_reciever_gen[0].single_lane_reciever_inst/clkdiv" period=10ns high 50%;
 
 
 NET "lvds_rx_lane_p[0]" IOSTANDARD = "LVDS_25" | LOC = AC33 | DIFF_TERM="TRUE";
@@ -317,54 +317,54 @@ NET "*/system_leds_inst/tx_act_led" TIG;
 
 ## SyncFIFOs
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_modelReset/reset_hold*"    TNM=TG_model_rst;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_userRegReset/reset_hold*"  TNM=TG_reg_rst;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_modelReset/reset_hold*"    TNM=TG_model_rst;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_userRegReset/reset_hold*"  TNM=TG_reg_rst;
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/Mram_fifoMem*" TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dDoutReg*"     TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dGDeqPtr*"     TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sGEnqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dSyncReg1*"    TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sSyncReg1*"    TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sNotFullReg*"  TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/Mram_fifoMem*" TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dDoutReg*"     TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dGDeqPtr*"     TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sGEnqPtr*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/dSyncReg1*"    TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sSyncReg1*"    TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_write_q/sNotFullReg*"  TNM=TG_model_clk;
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/Mram_fifoMem*" TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dDoutReg*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dGDeqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sGEnqPtr*"     TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dSyncReg1*"    TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sSyncReg1*"    TNM=TG_edge_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sNotFullReg*"  TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/Mram_fifoMem*" TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dDoutReg*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dGDeqPtr*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sGEnqPtr*"     TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/dSyncReg1*"    TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sSyncReg1*"    TNM=TG_edge_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_read_q/sNotFullReg*"  TNM=TG_edge_clk;
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/Mram_fifoMem*" TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dDoutReg*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dGDeqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sGEnqPtr*"     TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dSyncReg1*"    TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sSyncReg1*"    TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sNotFullReg*"  TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/Mram_fifoMem*" TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dDoutReg*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dGDeqPtr*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sGEnqPtr*"     TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/dSyncReg1*"    TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sSyncReg1*"    TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_q/sNotFullReg*"  TNM=TG_reg_clk;
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/Mram_fifoMem*" TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dDoutReg*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dGDeqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sGEnqPtr*"     TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dSyncReg1*"    TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sSyncReg1*"    TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sNotFullReg*"  TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/Mram_fifoMem*" TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dDoutReg*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dGDeqPtr*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sGEnqPtr*"     TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/dSyncReg1*"    TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sSyncReg1*"    TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_req_q/sNotFullReg*"  TNM=TG_reg_clk;
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dGDeqPtr*"     TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sGEnqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dSyncReg1*"    TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sSyncReg1*"    TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sNotFullReg*"  TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dGDeqPtr*"     TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sGEnqPtr*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/dSyncReg1*"    TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sSyncReg1*"    TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_write_ack_q/sNotFullReg*"  TNM=TG_model_clk;
 
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/Mram_fifoMem*" TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dDoutReg*"     TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dGDeqPtr*"     TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sGEnqPtr*"     TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dSyncReg1*"    TNM=TG_reg_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sSyncReg1*"    TNM=TG_model_clk;
-INST "m_vp_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sNotFullReg*"  TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/Mram_fifoMem*" TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dDoutReg*"     TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dGDeqPtr*"     TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sGEnqPtr*"     TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/dSyncReg1*"    TNM=TG_reg_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sSyncReg1*"    TNM=TG_model_clk;
+INST "m_llpi_phys_plat_nallatech_edge_device_m_sync_reg_read_rsp_q/sNotFullReg*"  TNM=TG_model_clk;
 
 ##
 ## Ideally, we would tag the transition with the actual frequency of the target
