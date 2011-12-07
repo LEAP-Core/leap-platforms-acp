@@ -140,6 +140,7 @@ scratchpad_memory=Hybrid Scratchpad Memory Device
 shared_memory=Null Shared Memory
 common_utility_devices=Base Common Devices
 front_panel=Hybrid Front Panel
+local_memory_device=NULL Local Memory Device
 
 [Stats Device]
 File=modules/leap/virtual-platform/virtual-devices/devices/common/stats-device/stats-device.awb
@@ -223,4 +224,8 @@ Packagehint=leap
 
 [Standard Platform Services]
 File=config/pm/leap/submodels/platform-services/standard-platform-services.apm
+Packagehint=leap
+
+[NULL Local Memory Device]
+File=modules/leap/virtual-platform/virtual-devices/devices/local-memory/null/local-memory-device-null.awb
 Packagehint=leap

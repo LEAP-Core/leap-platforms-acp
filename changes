@@ -2782,3 +2782,20 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
  nallatech-intra-device-fpga1.ucf Locally Modified          124 
 
 LLPI no longer under virtual platform.
+
+----------
+mcadler     Date: Wed Dec  7 11:55:30 EST 2011  CSN: CSN-leap-platforms-acp-126
+                  Wed Dec  7 16:55:30 UTC 2011
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          125 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          125 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified          125 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          125 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          125 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified          125 
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Modified          125 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          125 
+
+Virtual devices now requires a local memory device.
