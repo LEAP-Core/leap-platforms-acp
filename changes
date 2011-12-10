@@ -2799,3 +2799,13 @@ Directory config/pm/leap/submodels/fpgaenv
  fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          125 
 
 Virtual devices now requires a local memory device.
+
+----------
+mcadler     Date: Sat Dec 10 16:48:29 EST 2011  CSN: CSN-leap-platforms-acp-127
+                  Sat Dec 10 21:48:29 UTC 2011
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified          126 
+
+Update configuration.
