@@ -2838,3 +2838,17 @@ Directory config/pm/leap/submodels/fpgaenv
 
 Use a single virtual devices configuration, taking advantage of automatic
 master/slave configuration in virtual devices.
+
+----------
+mcadler     Date: Mon Dec 19 12:23:01 EST 2011  CSN: CSN-leap-platforms-acp-130
+                  Mon Dec 19 17:23:01 UTC 2011
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          129 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified          129 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified          129 
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Modified          129 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified          129 
+
+Clean up after moving modules.

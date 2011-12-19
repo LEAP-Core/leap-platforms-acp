@@ -31,7 +31,7 @@ Packagehint=leap
 virtual_devices=Standard Virtual Devices (Local Memory Scratchpad) Submodel
 low_level_platform_interface=Low Level Platform Interface Hybrid
 umf=Little-Endian Unified Message Format
-platform_services=Standard Platform Services (Local Memory Scratchpad)
+platform_services=Standard Platform Services (Local Memory Scratchpad) Submodel
 
 [FPGA Environment]
 File=modules/leap/virtual-platform/fpga-environment.awb
@@ -147,10 +147,10 @@ File=config/pm/leap/submodels/common/soft-services.apm
 Packagehint=leap
 
 
-[Standard Platform Services (Local Memory Scratchpad)]
-File=config/pm/leap/submodels/platform-services/standard-platform-local-mem.apm
-Packagehint=leap
-
 [Standard Virtual Devices (Local Memory Scratchpad) Submodel]
 File=config/pm/leap/submodels/virtual-devices/std-virtual-devices-local-scratchpad.apm
+Packagehint=leap
+
+[Standard Platform Services (Local Memory Scratchpad) Submodel]
+File=config/pm/leap/submodels/platform-services/standard-platform-local-mem.apm
 Packagehint=leap
