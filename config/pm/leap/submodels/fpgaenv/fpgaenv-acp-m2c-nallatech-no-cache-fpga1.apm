@@ -28,18 +28,15 @@ File=modules/leap/virtual-platform/std-virtual-platform.awb
 Packagehint=leap
 
 [Standard Virtual Platform/Requires]
-virtual_devices=Standard Virtual Devices
+virtual_devices=Standard Virtual Devices Submodel
 low_level_platform_interface=Low Level Platform Interface Hybrid
 umf=Little-Endian Unified Message Format
-platform_services=MultiFPGA Subordinate Platform Services
+platform_services=MultiFPGA Slave Platform Services
 
 [FPGA Environment]
 File=modules/leap/virtual-platform/fpga-environment.awb
 Packagehint=leap
 
-[Standard Virtual Devices]
-File=modules/leap/virtual-platform/virtual-devices/virtual-device-sets/std/std-virtual-devices.awb
-Packagehint=leap
 
 [RRR Clients and Servers]
 File=modules/leap/virtual-platform/rrr/basic/basic-rrr.awb
@@ -61,7 +58,7 @@ physical_platform=ACP FPGA with Intra Channel (Nallatech)
 channelio=Basic Virtual Channel Multiplexer
 rrr=RRR Clients and Servers
 physical_platform_debugger=Null Physical Platform Debugger
-local_mem=Local Memory Interface using BRAM
+local_mem=NULL Local Memory Interface
 remote_memory=Null Remote Memory
 
 [Null Physical Platform Debugger]
@@ -72,12 +69,7 @@ Packagehint=leap-platforms
 File=modules/bluespec/common/fpgaenv/physical-platform/utils/utils.awb
 Packagehint=leap-platforms
 
-[Local Memory Interface using BRAM/Params]
-LOCAL_MEM_ADDR_BITS=16
 
-[Local Memory Interface using BRAM]
-File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-bram.awb
-Packagehint=leap
 
 [Null Clocks Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/clocks/null/null-clocks-device.awb
@@ -103,51 +95,13 @@ Packagehint=leap-platforms
 UMF_CHUNK_BYTES=8
 
 
-[Hybrid Streams Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/common/streams-device/hybrid-streams.awb
-Packagehint=leap
-
-[Assertions Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/common/assertions-device/assertions-device.awb
-Packagehint=leap
-
-[Starter Virtual Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/starter/hybrid/starter-device.awb
-Packagehint=leap
-
-[Debug Scan Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/common/debug-scan-device/debug-scan-device.awb
-Packagehint=leap
-
-[Dynamic Parameters Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/common/dynamic-parameters-device/dynamic-parameters-device.awb
-Packagehint=leap
-
-[Base Common Devices/Requires]
-stats_device=Stats Device
-dynamic_parameters_device=Dynamic Parameters Device
-streams_device=Hybrid Streams Device
-assertions_device=Assertions Device
-debug_scan_device=Debug Scan Device
 
 
-[Standard Virtual Devices/Requires]
-starter_device=Starter Virtual Device
-common_utility_devices=Base Common Devices
-front_panel=Hybrid Front Panel
-local_memory_device=NULL Local Memory Device
 
-[Stats Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/common/stats-device/stats-device.awb
-Packagehint=leap
 
-[Base Common Devices]
-File=modules/leap/virtual-platform/virtual-devices/devices/common/common-utility-devices.awb
-Packagehint=leap
 
-[Hybrid Front Panel]
-File=modules/leap/virtual-platform/virtual-devices/devices/front-panel/hybrid/hybrid-fp.awb
-Packagehint=leap
+
+
 
 
 [RRR Common Module]
@@ -275,8 +229,6 @@ Packagehint=multifpga
 [Xilinx MAP/Params]
 MAPPER_OPTIONS="-cm balanced -global_opt on"
 
-
-
 [Soft Services for MultiFPGA Submodel]
 File=config/pm/leap/submodels/common/multifpga-soft-services.apm
 Packagehint=multifpga
@@ -284,13 +236,18 @@ Packagehint=multifpga
 [Soft Services for MultiFPGA Submodel/Params]
 CON_CWIDTH=128
 
-[MultiFPGA Subordinate Platform Services]
-File=config/pm/leap/submodels/platform-services/multifpga-platform-services-subordinate.apm
+
+[MultiFPGA Slave Platform Services]
+File=config/pm/leap/submodels/platform-services/multifpga-platform-services-slave.apm
 Packagehint=multifpga
 
-[MultiFPGA Subordinate Platform Services/Params]
+[MultiFPGA Slave Platform Services/Params]
 SCRATCHPAD_STD_PVT_CACHE_ENTRIES=4096
 
-[NULL Local Memory Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/local-memory/null/local-memory-device-null.awb
+[Standard Virtual Devices Submodel]
+File=config/pm/leap/submodels/virtual-devices/std-virtual-devices.apm
+Packagehint=leap
+
+[NULL Local Memory Interface]
+File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-null.awb
 Packagehint=leap
