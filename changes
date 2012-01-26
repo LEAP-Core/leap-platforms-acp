@@ -2852,3 +2852,13 @@ Directory config/pm/leap/submodels/fpgaenv
  fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified          129 
 
 Clean up after moving modules.
+
+----------
+emer        Date: Thu Jan 26 13:55:22 EST 2012  CSN: CSN-leap-platforms-acp-131
+                  Thu Jan 26 18:55:22 UTC 2012
+
+
+Directory admin/packages
+ leap-platforms-acp        Locally Modified          130 
+
+Mark package as a 'prerelease'.
