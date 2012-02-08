@@ -2862,3 +2862,16 @@ Directory admin/packages
  leap-platforms-acp        Locally Modified          130 
 
 Mark package as a 'prerelease'.
+
+----------
+mcadler     Date: Wed Feb  8 01:05:37 EST 2012  CSN: CSN-leap-platforms-acp-132
+                  Wed Feb  8 06:05:37 UTC 2012
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified          131 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified          131 
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Modified          131 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          131 
+
+Updates for removal of debug scan device.

@@ -98,7 +98,6 @@ Packagehint=leap-platforms
 [Little-Endian Unified Message Format/Params]
 UMF_CHUNK_BYTES=8
 
-
 [Hybrid Streams Device]
 File=modules/leap/virtual-platform/virtual-devices/devices/common/streams-device/hybrid-streams.awb
 Packagehint=leap
@@ -111,9 +110,6 @@ Packagehint=leap
 File=modules/leap/virtual-platform/virtual-devices/devices/starter/hybrid/starter-device.awb
 Packagehint=leap
 
-[Debug Scan Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/common/debug-scan-device/debug-scan-device.awb
-Packagehint=leap
 
 [Dynamic Parameters Device]
 File=modules/leap/virtual-platform/virtual-devices/devices/common/dynamic-parameters-device/dynamic-parameters-device.awb
@@ -124,8 +120,6 @@ stats_device=Stats Device
 dynamic_parameters_device=Dynamic Parameters Device
 streams_device=Hybrid Streams Device
 assertions_device=Assertions Device
-debug_scan_device=Debug Scan Device
-
 
 [Standard Virtual Devices/Requires]
 starter_device=Starter Virtual Device
@@ -144,9 +138,6 @@ Packagehint=leap
 [Hybrid Front Panel]
 File=modules/leap/virtual-platform/virtual-devices/devices/front-panel/hybrid/hybrid-fp.awb
 Packagehint=leap
-
-
-
 
 [RRR Common Module]
 File=modules/leap/virtual-platform/rrr/rrr-common/rrr-common.awb
@@ -204,7 +195,6 @@ XST_INSERT_IOBUF=0
 [Soft Services Submodel]
 File=config/pm/leap/submodels/common/soft-services.apm
 Packagehint=leap
-
 
 [NULL Local Memory Device]
 File=modules/leap/virtual-platform/virtual-devices/devices/local-memory/null/local-memory-device-null.awb
