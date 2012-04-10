@@ -108,7 +108,7 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
     }
 	printf("\tOK\n");
 
-	printf("Reseting module...                        ");
+	printf("Resetting module...                       ");
 	ret = ACP_RESET(hsocket);
 	if (ret != 0)
     {
