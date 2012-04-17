@@ -2885,3 +2885,18 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
  nallatech-edge-device-debugger.cpp Locally Modified          132 
 
 Correct spelling.
+
+----------
+kfleming    Date: Tue Apr 17 14:10:44 EDT 2012  CSN: CSN-leap-platforms-acp-134
+                  Tue Apr 17 18:10:44 UTC 2012
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified          133 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-intra-device-fpga0.awb Locally Modified          133 
+ nallatech-intra-device-fpga1.awb Locally Modified          133 
+
+
+Removed duplicate vhd includes.
