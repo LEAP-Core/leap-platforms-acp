@@ -2900,3 +2900,18 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 
 Removed duplicate vhd includes.
+
+----------
+mcadler     Date: Sun Apr 29 19:34:13 EDT 2012  CSN: CSN-leap-platforms-acp-135
+                  Sun Apr 29 23:34:13 UTC 2012
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          134 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          134 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          134 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          134 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          134 
+
+multi-FPGA Bluespec builds and wrapper generation now handled by leap instead
+of leap-multifpga.

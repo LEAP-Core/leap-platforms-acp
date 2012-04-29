@@ -37,7 +37,6 @@ platform_services=MultiFPGA Master Platform Services
 File=modules/leap/virtual-platform/fpga-environment.awb
 Packagehint=leap
 
-
 [RRR Clients and Servers]
 File=modules/leap/virtual-platform/rrr/basic/basic-rrr.awb
 Packagehint=leap
@@ -92,16 +91,6 @@ Packagehint=leap-platforms
 [Little-Endian Unified Message Format/Params]
 UMF_CHUNK_BYTES=8
 
-
-
-
-
-
-
-
-
-
-
 [RRR Common Module]
 File=modules/leap/virtual-platform/rrr/rrr-common/rrr-common.awb
 Packagehint=leap
@@ -155,9 +144,11 @@ post_synthesis_tool=Xilinx Post-synthesis Toolchain
 software_tool=Software build tool
 mcd_tool=MCD Tool for Xilinx
 iface_tool=Interface builder
-wrapper_gen_tool=MultiFPGA Synthesis Boundary Wrapper generation tool
+wrapper_gen_tool=Synthesis Boundary Wrapper generation tool
 synthesis_tool=XST Synthesis Tool
-bsv_tool=BSV Build Tool MultiFPGA
+bsv_tool=BSV Build Tool (First Phase)
+fpgamap_parser=FPGAMap
+fpga_environment_parser=FPGA Environment Datatype
 
 [Xilinx PAR]
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-par.awb
@@ -178,17 +169,9 @@ Packagehint=leap
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-map.awb
 Packagehint=leap
 
-[BSV Build Tool MultiFPGA]
-File=modules/leap/build-support/build-pipelines/stages/bluespec/bsv-multi.awb
-Packagehint=multifpga
-
 [XST Synthesis Tool]
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-xst.awb
 Packagehint=leap
-
-[FPGAMap]
-File=modules/leap/build-support/build-pipelines/stages/wrapper_gen/fpgamap_parser.awb
-Packagehint=multifpga
 
 [Nallatech Intra Physical Device FPGA0 (Master) v2]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-intra-device-fpga0.awb
@@ -201,14 +184,6 @@ MODEL_CLOCK_FREQ=50
 [Nallatech Edge Physical Device (Intra-FPGA Debugger) v2]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device-intra-debugger.awb
 Packagehint=leap-platforms-acp
-
-[MultiFPGA Synthesis Boundary Wrapper generation tool]
-File=modules/leap/build-support/build-pipelines/stages/wrapper_gen/multi-fpga-wrapper-gen.awb
-Packagehint=multifpga
-
-[MultiFPGA Synthesis Boundary Wrapper generation tool/Requires]
-fpgamap_parser=FPGAMap
-fpga_environment_parser=FPGA Environment Datatype
 
 [Local Memory Interface using DDR2 Memory]
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-ddr2.awb
@@ -230,23 +205,12 @@ Packagehint=leap-platforms-acp
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0-with-sram/acp-m2c.awb
 Packagehint=leap-platforms-acp
 
-[FPGA Environment Datatype]
-File=modules/leap/build-support/build-pipelines/stages/multifpga_generate_logfile/fpgaenvironment.awb
-Packagehint=multifpga
-
 [Xilinx MAP/Params]
 MAPPER_OPTIONS="-cm balanced -global_opt on"
 
 [Soft Services for MultiFPGA Submodel]
 File=config/pm/leap/submodels/common/multifpga-soft-services.apm
 Packagehint=multifpga
-
-[Soft Services for MultiFPGA Submodel/Params]
-CON_CWIDTH=128
-
-
-[MultiFPGA Master Platform Services/Params]
-SCRATCHPAD_STD_PVT_CACHE_ENTRIES=4096
 
 [MultiFPGA Master Platform Services]
 File=config/pm/leap/submodels/platform-services/multifpga-platform-services-master.apm
@@ -255,3 +219,22 @@ Packagehint=multifpga
 [Standard Virtual Devices Submodel]
 File=config/pm/leap/submodels/virtual-devices/std-virtual-devices.apm
 Packagehint=leap
+
+[BSV Build Tool (First Phase)/Params]
+BSC_FLAGS="-steps 10000000 +RTS -K1000M -RTS -keep-fires -aggressive-conditions -wait-for-license -no-show-method-conf -no-opt-bool -licenseWarning 7 -elab -show-schedule -verilog -show-range-conflict -remove-dollar"
+
+[BSV Build Tool (First Phase)]
+File=modules/leap/build-support/build-pipelines/stages/bluespec/bsv.awb
+Packagehint=leap
+
+[Synthesis Boundary Wrapper generation tool]
+File=modules/leap/build-support/build-pipelines/stages/wrapper_gen/synthesis_boundary_wrapper_gen.awb
+Packagehint=leap
+
+[FPGAMap]
+File=modules/leap/build-support/build-pipelines/stages/wrapper_gen/fpgamap_parser.awb
+Packagehint=multifpga
+
+[FPGA Environment Datatype]
+File=modules/leap/build-support/build-pipelines/stages/multifpga_generate_logfile/fpgaenvironment.awb
+Packagehint=multifpga
