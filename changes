@@ -2915,3 +2915,14 @@ Directory config/pm/leap/submodels/fpgaenv
 
 multi-FPGA Bluespec builds and wrapper generation now handled by leap instead
 of leap-multifpga.
+
+----------
+mcadler     Date: Fri Jun 29 16:05:44 EDT 2012  CSN: CSN-leap-platforms-acp-136
+                  Fri Jun 29 20:05:44 UTC 2012
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
+ xilinx.download           Locally Removed           135 
+ acp-m2c.awb               Locally Modified          135 
+
+Remove unnecessary bitfile download script.

@@ -14,7 +14,6 @@
 %sources -t XST -v PRIVATE xilinx.xst
 %sources -t SDF -v PRIVATE acp-m2c.sdf
 %sources -t SDC -v PRIVATE acp-m2c.sdc
-%sources -t DOWNLOAD -v PRIVATE xilinx.download
 
 %library libacp.a
 
