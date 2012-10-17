@@ -2926,3 +2926,14 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c
  acp-m2c.awb               Locally Modified          135 
 
 Remove unnecessary bitfile download script.
+
+----------
+mcadler     Date: Wed Oct 17 07:39:56 EDT 2012  CSN: CSN-leap-platforms-acp-137
+                  Wed Oct 17 11:39:56 UTC 2012
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.bsv Locally Modified          136 
+ nallatech-intra-device.bsv Locally Modified          136 
+
+Add a buffer next to clock crossing FIFOs to relax timing.

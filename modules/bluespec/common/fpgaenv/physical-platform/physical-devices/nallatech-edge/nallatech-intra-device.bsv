@@ -30,6 +30,9 @@ import FIFO::*;
 import FIFOF::*;
 import Vector::*;
 import RWire::*;
+import GetPut::*;
+import Connectable::*;
+
 
 `include "awb/provides/librl_bsv_base.bsh"
 `include "awb/provides/fpga_components.bsh"
@@ -92,6 +95,11 @@ module mkNallatechIntraDeviceParametric#(Clock clk100,
 
     Reset primitiveReset <- mkAsyncReset(2, reset, clk200);
 
+    //
+    // FIFOs on the edge of the device interface in the fast clock domain
+    // relax timing constraints and add only one cycle of fast clock latency.
+    //
+    FIFO#(NALLATECH_FIFO_DATA) intraWriteQ <- mkFIFO(clocked_by clk200, reset_by primitiveReset);
     FIFO#(NALLATECH_FIFO_DATA) intraReadQ <- mkFIFO(clocked_by clk200, reset_by primitiveReset);
 
     PRIMITIVE_NALLATECH_INTRA_DEVICE prim_device <- 
@@ -140,27 +148,29 @@ module mkNallatechIntraDeviceParametric#(Clock clk100,
         initialized <= True;
     endrule
 
+    // Connections from sync FIFOs to the device
+    mkConnection(toGet(sync_write_q), toPut(intraWriteQ));
+
     rule sendToPrim (True);
-        sync_write_q.deq();
-        prim_device.enq(sync_write_q.first());
+        prim_device.enq(intraWriteQ.first());
+        intraWriteQ.deq();
     endrule
+
 
     rule getFromPrim (True);
-        prim_device.deq();
         intraReadQ.enq(prim_device.first());
+        prim_device.deq();
     endrule
 
-    rule getFromReadQ (True);
-        intraReadQ.deq();      
-        sync_read_q.enq(intraReadQ.first());
-    endrule
+    mkConnection(toGet(intraReadQ), toPut(sync_read_q));
+
 
     interface NALLATECH_INTRA_DRIVER intra_driver;
         
         method Action enq(NALLATECH_FIFO_DATA data) if (initialized);
             sync_write_q.enq(data);
         endmethod
-            
+
         method NALLATECH_FIFO_DATA first() if (initialized);
             return sync_read_q.first();
         endmethod

@@ -21,6 +21,8 @@ import FIFO::*;
 import FIFOF::*;
 import Vector::*;
 import RWire::*;
+import GetPut::*;
+import Connectable::*;
 
 `include "asim/provides/librl_bsv_base.bsh"
 `include "asim/provides/fpga_components.bsh"
@@ -187,23 +189,25 @@ module mkNallatechEdgeDeviceParametric#(LOCAL_ID localID,
 
     FIFO#(NALLATECH_FIFO_DATA) edgeReadQ <- mkFIFO(clocked_by edgeClock, reset_by edgeReset);
 
-    rule edge_read (True);
+    rule getFromPrim (True);
         edgeReadQ.enq(prim_device.first());
         prim_device.deq();
     endrule
 
-    rule sync_read (True);
-        sync_read_q.enq(edgeReadQ.first());
-        edgeReadQ.deq();
-    endrule
+    mkConnection(toGet(edgeReadQ), toPut(sync_read_q));
+
 
     //
     // Rules for synchronizing from Model to Edge domain
     //
     
-    rule sync_write (True);
-        prim_device.enq(sync_write_q.first());
-        sync_write_q.deq();
+    FIFO#(NALLATECH_FIFO_DATA) edgeWriteQ <- mkFIFO(clocked_by edgeClock, reset_by edgeReset);
+
+    mkConnection(toGet(sync_write_q), toPut(edgeWriteQ));
+
+    rule sendToPrim (True);
+        prim_device.enq(edgeWriteQ.first());
+        edgeWriteQ.deq();
     endrule
         
 
