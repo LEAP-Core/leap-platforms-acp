@@ -1,9 +1,9 @@
 %name ACP Fake DDR2 SRAM Device
 %desc Fake controller mimicing the VHDL with a RegFile
 
-%provides ddr2_device
+%provides ddr_sdram_device
 
 %sources -t BSV -v PUBLIC  ddr-sram-fake.bsv
 %sources -t BSV -v PUBLIC  ddr-sram-device.bsv
 
-%param SRAM_MAX_OUTSTANDING_READS  8 "Maximum in-flight read requests"
+%param DRAM_MAX_OUTSTANDING_READS  8 "Maximum in-flight read requests"

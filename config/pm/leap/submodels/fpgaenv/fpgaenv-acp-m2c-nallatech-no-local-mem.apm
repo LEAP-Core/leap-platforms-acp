@@ -1,11 +1,11 @@
 
 [Global]
 SaveParameters=0
-Description=Hybrid ACP M2 Compute Environment - JTAG - No Central Cache (Nallatech)
-File=fpgaenv-acp-m2c-nallatech-jtag-no-cache
+Description=Hybrid ACP M2 Compute Environment - No local memory (Nallatech)
+File=fpgaenv-acp-m2c-nallatech-no-local-mem
 Version=2.2
-Type=HAsim
-Name=Hybrid ACP M2 Compute Environment - JTAG - No Central Cache (Nallatech)
+Type=Leap
+Name=Hybrid ACP M2 Compute Environment - No local memory (Nallatech)
 Class=Asim::Model
 DefaultBenchmark=
 DefaultRunOpts=
@@ -28,17 +28,13 @@ File=modules/leap/virtual-platform/std-virtual-platform.awb
 Packagehint=leap
 
 [Standard Virtual Platform/Requires]
-virtual_devices=Standard Virtual Devices
+virtual_devices=Standard Virtual Devices Submodel
 low_level_platform_interface=Low Level Platform Interface Hybrid
 umf=Little-Endian Unified Message Format
 platform_services=Standard Platform Services Submodel
 
 [FPGA Environment]
 File=modules/leap/virtual-platform/fpga-environment.awb
-Packagehint=leap
-
-[Standard Virtual Devices]
-File=modules/leap/virtual-platform/virtual-devices/virtual-device-sets/std/std-virtual-devices.awb
 Packagehint=leap
 
 [RRR Clients and Servers]
@@ -50,18 +46,18 @@ File=modules/leap/virtual-platform/channelio/basic/basic-channelio.awb
 Packagehint=leap
 
 [Basic Virtual Channel Multiplexer/Requires]
-physical_channel=JTAG Physical Channel
+physical_channel=Nallatech Edge Physical Channel
 
 [Low Level Platform Interface Hybrid]
 File=modules/leap/virtual-platform/low-level-platform-interface/hybrid-llpi.awb
 Packagehint=leap
 
 [Low Level Platform Interface Hybrid/Requires]
-physical_platform=ACP M2 Compute Module JTAG
+physical_platform=ACP M2 Compute Module With SRAM (Nallatech)
 channelio=Basic Virtual Channel Multiplexer
 rrr=RRR Clients and Servers
 physical_platform_debugger=Null Physical Platform Debugger
-local_mem=Local Memory Interface using BRAM
+local_mem=NULL Local Memory Interface
 remote_memory=Null Remote Memory
 
 [Null Physical Platform Debugger]
@@ -71,13 +67,6 @@ Packagehint=leap-platforms
 [Common Physical Platform Utilities]
 File=modules/bluespec/common/fpgaenv/physical-platform/utils/utils.awb
 Packagehint=leap-platforms
-
-[Local Memory Interface using BRAM/Params]
-LOCAL_MEM_ADDR_BITS=16
-
-[Local Memory Interface using BRAM]
-File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-bram.awb
-Packagehint=leap
 
 [Null Clocks Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/clocks/null/null-clocks-device.awb
@@ -91,6 +80,10 @@ Packagehint=leap-platforms
 File=modules/leap/virtual-platform/low-level-platform-interface/remote-memory/null/null-remote-memory.awb
 Packagehint=leap
 
+[Nallatech Edge Physical Channel]
+File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge/nallatech-edge-channel.awb
+Packagehint=leap-platforms-acp
+
 [Little-Endian Unified Message Format]
 File=modules/bluespec/common/fpgaenv/virtual-platform/umf/little-endian/umf-little-endian.awb
 Packagehint=leap-platforms
@@ -98,28 +91,21 @@ Packagehint=leap-platforms
 [Little-Endian Unified Message Format/Params]
 UMF_CHUNK_BYTES=8
 
+[ACP DDR2 SRAM Device]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram/ddr-sram-device.awb
+Packagehint=leap-platforms-acp
 
 
-[Starter Virtual Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/starter/hybrid/starter-device.awb
-Packagehint=leap
+[ACP M2 Compute Module With SRAM (Nallatech)]
+File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram/acp-m2c.awb
+Packagehint=leap-platforms-acp
 
-
-
-[Standard Virtual Devices/Requires]
-starter_device=Starter Virtual Device
-common_utility_devices=Base Common Devices
-front_panel=Hybrid Front Panel
-local_memory_device=NULL Local Memory Device
-
-
-[Base Common Devices]
-File=modules/leap/virtual-platform/virtual-devices/devices/common/common-utility-devices.awb
-Packagehint=leap
-
-[Hybrid Front Panel]
-File=modules/leap/virtual-platform/virtual-devices/devices/front-panel/hybrid/hybrid-fp.awb
-Packagehint=leap
+[ACP M2 Compute Module With SRAM (Nallatech)/Requires]
+clocks_device=Null Clocks Device
+physical_platform_utils=Common Physical Platform Utilities
+nallatech_edge_device=Nallatech Edge Physical Device v2
+led_device=General LED Device
+ddr_sdram_device=ACP DDR2 SRAM Device
 
 [RRR Common Module]
 File=modules/leap/virtual-platform/rrr/rrr-common/rrr-common.awb
@@ -128,43 +114,23 @@ Packagehint=leap
 [RRR Clients and Servers/Requires]
 rrr_common=RRR Common Module
 
-[ACP M2 Compute Module JTAG]
-File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-jtag/acp-m2c.awb
-Packagehint=leap-platforms-acp
-
-[Xilinx JTAG Physical Device]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/jtag/xilinx/jtag-device-physical.awb
-Packagehint=leap-platforms
-
-[ACP M2 Compute Module JTAG/Requires]
-clocks_device=Null Clocks Device
-physical_platform_utils=Common Physical Platform Utilities
-jtag_device=Xilinx JTAG Physical Device
-nallatech_edge_device=Nallatech Edge Physical Device Null (FPGA1)
-led_device=General LED Device
-nallatech_intra_device=Nallatech Intra Physical Device FPGA0 (Master) v2
-
-[JTAG Physical Channel]
-File=modules/leap/virtual-platform/physical-channel/jtag/generic/jtag-physical-channel.awb
-Packagehint=leap
-
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
 
-[Nallatech Edge Physical Device Null (FPGA1)]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device-null.awb
+[Nallatech Edge Physical Device v2]
+File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device.awb
 Packagehint=leap-platforms-acp
 
 [General LED Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/leds/general-led-device.awb
 Packagehint=leap-platforms
 
-[Nallatech Intra Physical Device FPGA0 (Master) v2]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-intra-device-fpga0.awb
-Packagehint=leap-platforms-acp
-
 [FPGA Build Pipeline Xilinx]
 File=config/pm/leap/submodels/pipelines/build-pipeline-xilinx.apm
+Packagehint=leap
+
+[Standard Virtual Devices Submodel]
+File=config/pm/leap/submodels/virtual-devices/std-virtual-devices.apm
 Packagehint=leap
 
 [RL Bluespec Library Submodel]
@@ -173,15 +139,16 @@ Packagehint=leap
 
 [FPGA Build Pipeline Xilinx/Params]
 XST_INSERT_IOBUF=0
+MAPPER_OPTIONS="-cm balanced -global_opt on"
 
 [Soft Services Submodel]
 File=config/pm/leap/submodels/common/soft-services.apm
 Packagehint=leap
 
-[NULL Local Memory Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/local-memory/null/local-memory-device-null.awb
-Packagehint=leap
-
 [Standard Platform Services Submodel]
 File=config/pm/leap/submodels/platform-services/standard-platform-services.apm
+Packagehint=leap
+
+[NULL Local Memory Interface]
+File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-null.awb
 Packagehint=leap

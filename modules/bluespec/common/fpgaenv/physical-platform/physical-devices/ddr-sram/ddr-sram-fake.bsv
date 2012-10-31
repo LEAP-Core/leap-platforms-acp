@@ -70,11 +70,11 @@ typedef enum {
 
 
 
-// DDR2_WIRES
+// DDR_WIRES
 
 // Wires to be sent to the top level
 
-interface DDR2_WIRES;
+interface DDR_WIRES;
 
     // global
     (* result = "ram_pwr_on" *) method Bit#(1) w_ram_pwr_on();
@@ -153,7 +153,7 @@ interface PRIMITIVE_DDR_SRAM_DEVICE;
     // Wires to be sent to the top level
     //
 
-    (* prefix = "" *) interface DDR2_WIRES wires;
+    (* prefix = "" *) interface DDR_WIRES wires;
 
     // exported clock and reset
     interface Clock clk_out;
@@ -277,7 +277,7 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
     // Wires to be sent to the top level
     //
 
-    interface DDR2_WIRES wires;
+    interface DDR_WIRES wires;
         
         // global
         method ram_pwr_on w_ram_pwr_on();

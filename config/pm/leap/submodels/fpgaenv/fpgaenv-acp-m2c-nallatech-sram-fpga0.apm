@@ -192,10 +192,10 @@ Packagehint=leap
 [ACP FPGA with Intra Channel and SRAM (Nallatech)/Requires]
 clocks_device=Null Clocks Device
 nallatech_intra_device=Nallatech Intra Physical Device FPGA0 (Master) v2
-ddr2_device=ACP DDR2 SRAM Device
 led_device=General LED Device
 physical_platform_utils=Common Physical Platform Utilities
 nallatech_edge_device=Nallatech Edge Physical Device (Intra-FPGA Debugger) v2
+ddr_sdram_device=ACP DDR2 SRAM Device
 
 [ACP DDR2 SRAM Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram/ddr-sram-device.awb

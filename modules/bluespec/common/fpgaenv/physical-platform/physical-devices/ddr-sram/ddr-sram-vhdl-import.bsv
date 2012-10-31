@@ -29,7 +29,7 @@
 
 // Convenience constants. These can overload the corresponding parameters in the VHDL,
 // though it is unknown what effect changing these would have.
-`define SRAM_ADDR_WIDTH 21
+`define SRAM_ADDR_WIDTH `DRAM_ADDR_BITS
 `define SRAM_BURST_LENGTH 2
 `define SRAM_BW_WIDTH 4
 `define SRAM_CLK_FREQ `NALLATECH_RAM_CLOCK_FREQ
@@ -45,14 +45,14 @@
 // Number of memory banks.  The controller instantiates a controller for a
 // single bank.  It is the responsibility of higher level code to allocate
 // one controller for each available bank.
-typedef 2 FPGA_DDR_BANKS;
+typedef `DRAM_NUM_BANKS FPGA_DDR_BANKS;
 
 // The smallest addressable word:
 typedef 32 FPGA_DDR_WORD_SZ;
 
 // The DRAM controller reads and writes multiple dual-edge data values for
 // a single request.  The number of dual-edge data values per request is:
-typedef TDiv#(`SRAM_BURST_LENGTH, 2) FPGA_DDR_BURST_LENGTH;
+typedef `DRAM_MIN_BURST FPGA_DDR_BURST_LENGTH;
 
 // Capacity of the memory (addressing FPGA_DDR_WORDs):
 typedef `SRAM_ADDR_WIDTH FPGA_DDR_ADDRESS_SZ;
@@ -66,11 +66,11 @@ DDR2_COMMAND
 
 
 //
-// DDR2_WIRES
+// DDR_WIRES
 //
 // Wires to be sent to the top level
 //
-interface DDR2_WIRES;
+interface DDR_WIRES;
     // global
     (* result = "ram_pwr_on" *) method Bit#(1) w_ram_pwr_on();
     (* result = "ram_leds"   *) method Bit#(2) w_ram_leds();
@@ -125,7 +125,7 @@ interface PRIMITIVE_DDR_SRAM_DEVICE;
     //
     // Wires to be sent to the top level
     //
-    (* prefix = "" *) interface DDR2_WIRES wires;
+    (* prefix = "" *) interface DDR_WIRES wires;
 
     // exported clock and reset
     interface Clock clk_out;
@@ -179,7 +179,7 @@ import "BVI" ddr2_sram = module mkPrimitiveDDRSRAMDevice
     // Wires to be sent to the top level
     //
 
-    interface DDR2_WIRES wires;
+    interface DDR_WIRES wires;
         // global
         method ram_pwr_on w_ram_pwr_on();
         method ram_leds   w_ram_leds();

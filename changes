@@ -2937,3 +2937,42 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
  nallatech-intra-device.bsv Locally Modified          136 
 
 Add a buffer next to clock crossing FIFOs to relax timing.
+
+----------
+mcadler     Date: Tue Oct 30 20:44:57 EDT 2012  CSN: CSN-leap-platforms-acp-138
+                  Wed Oct 31 00:44:57 UTC 2012
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          137 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          137 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified          137 
+ fpgaenv-acp-m2c-nallatech-no-local-mem.apm Locally Added               0 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified          137 
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Modified          137 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified          137 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          137 
+
+Directory config/pm/platforms/debuggers/acp
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Modified          137 
+ fpga0_passthrough.apm     Locally Modified          137 
+ fpga1_scratchpad.apm      Locally Modified          137 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0-with-sram
+ acp-m2c.awb               Locally Modified          137 
+ acp-m2c.bsv               Locally Modified          137 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.awb               Locally Modified          137 
+ acp-m2c.bsv               Locally Modified          137 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device-fake.awb  Locally Modified          137 
+ ddr-sram-device.bsv       Locally Modified          137 
+ ddr-sram-vhdl-import.bsv  Locally Modified          137 
+ ddr-sram-fake.bsv         Locally Modified          137 
+ ddr-sram-device.awb       Locally Modified          137 
+
+Update ACP memory configuration to yesterday's SDRAM changes in platforms.
+The result is ACP SRAM is called SDRAM.  Sigh.  We're unlikely to encounter
+SRAM in future platforms, so the ACP will have to suffer in silence.

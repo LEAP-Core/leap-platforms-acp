@@ -52,7 +52,7 @@ Packagehint=leap-platforms
 umf=Little-Endian Unified Message Format
 low_level_platform_interface=Low Level Platform Interface Hybrid
 virtual_devices=Standard Virtual Devices Submodel
-platform_services=Standard Platform Services
+platform_services=Standard Platform Services Submodel
 
 [Basic Virtual Channel Multiplexer]
 File=modules/leap/virtual-platform/channelio/basic/basic-channelio.awb
@@ -133,10 +133,10 @@ application_env=Soft Services Hybrid Application Environment
 [ACP FPGA with Intra Channel and SRAM (Nallatech)/Requires]
 clocks_device=Null Clocks Device
 nallatech_intra_device=Nallatech Intra Physical Device FPGA1 (Slave) v2
-ddr2_device=ACP DDR2 SRAM Device
 led_device=General LED Device
 physical_platform_utils=Common Physical Platform Utilities
 nallatech_edge_device=Nallatech Edge Physical Device Null (FPGA1)
+ddr_sdram_device=ACP DDR2 SRAM Device
 
 [ACP DDR2 SRAM Device]
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram/ddr-sram-device.awb
@@ -150,9 +150,6 @@ Packagehint=leap-platforms-acp
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-intra/nallatech-intra-channel.awb
 Packagehint=leap-platforms-acp
 
-[ACP DDR2 SRAM Device/Params]
-SRAM_DEBUG=1
-SRAM_MAX_OUTSTANDING_READS=16
 
 [Scratchpad Memory Test System]
 File=modules/apps/tests/mem_test/mem-test.awb
@@ -187,6 +184,7 @@ LOCAL_MEM_ADDR_BITS=16
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-bram.awb
 Packagehint=leap
 
-[Standard Platform Services]
+
+[Standard Platform Services Submodel]
 File=config/pm/leap/submodels/platform-services/standard-platform-services.apm
 Packagehint=leap

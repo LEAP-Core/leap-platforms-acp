@@ -1,7 +1,7 @@
 %name ACP DDR2 SRAM Device
 %desc Import DDR2 SRAM VHDL into Bluespec
 
-%provides ddr2_device
+%provides ddr_sdram_device
 
 %sources -t BSV -v PUBLIC  ddr-sram-vhdl-import.bsv
 %sources -t BSV -v PUBLIC  ddr-sram-device.bsv
@@ -27,5 +27,16 @@
 
 %sources -t UCF -v PRIVATE ddr-sram-device.ucf
 
-%param SRAM_MAX_OUTSTANDING_READS  8 "Maximum in-flight read requests"
-%param SRAM_DEBUG                  0 "Non-zero enables debugging methods"
+
+##
+## These parameters are expected by the memory tester.  Yes, the ACP has
+## SRAM instead of DRAM.  Deal with it.
+##
+%param --global DRAM_DEBUG         0 "Non-zero enables debugging methods"
+%param DRAM_MAX_OUTSTANDING_READS  8 "Maximum in-flight read requests"
+
+%param DRAM_MIN_BURST     1   "Minimum Burst Size"
+%param DRAM_DIMM_WIDTH    32  "Addressable object size"
+%param DRAM_WORD_WIDTH    64  "Physical DRAM Width"
+%param DRAM_ADDR_BITS     21  "Address bits per bank"
+%param DRAM_NUM_BANKS     2   "DDR banks"

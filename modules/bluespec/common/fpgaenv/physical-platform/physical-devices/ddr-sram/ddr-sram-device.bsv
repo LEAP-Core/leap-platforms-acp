@@ -27,7 +27,7 @@ import Vector::*;
 // DDR properties, computed from device specific properties...
 //
 
-typedef `SRAM_MAX_OUTSTANDING_READS FPGA_DDR_MAX_OUTSTANDING_READS;
+typedef `DRAM_MAX_OUTSTANDING_READS FPGA_DDR_MAX_OUTSTANDING_READS;
 
 // The smallest addressable word:
 typedef Bit#(FPGA_DDR_WORD_SZ) FPGA_DDR_WORD;
@@ -35,7 +35,7 @@ typedef Bit#(FPGA_DDR_WORD_SZ) FPGA_DDR_WORD;
 // The DRAM controller uses both clock edges to pass data, which appears to
 // be 2 words per cycle.  Addresses are little endian, so the low address
 // goes in the low bits.  Most of the interfaces in this module pass:
-typedef TMul#(2, FPGA_DDR_WORD_SZ) FPGA_DDR_DUALEDGE_DATA_SZ;
+typedef TMul#(`SRAM_BURST_LENGTH, FPGA_DDR_WORD_SZ) FPGA_DDR_DUALEDGE_DATA_SZ;
 typedef Bit#(FPGA_DDR_DUALEDGE_DATA_SZ) FPGA_DDR_DUALEDGE_DATA;
 
 // Each byte in a write may be disabled for writes using a bit mask.
@@ -56,34 +56,34 @@ typedef TSub#(FPGA_DDR_BURST_LENGTH, 1) FPGA_DDR_LAST_BURST_IDX;
 
 
 //
-// DDR2_DRIVER
+// DDR_DRIVER
 //
 // Interface to SRAM
 //
-interface DDR2_DRIVER;
+interface DDR_DRIVER;
     method Action readReq(FPGA_DDR_ADDRESS addr);
     method ActionValue#(FPGA_DDR_DUALEDGE_DATA) readRsp();
     method Action writeReq(FPGA_DDR_ADDRESS addr);
     method Action writeData(FPGA_DDR_DUALEDGE_DATA data, FPGA_DDR_DUALEDGE_DATA_MASK mask);
 
-`ifndef SRAM_DEBUG_Z
+`ifndef DRAM_DEBUG_Z
     // Methods enabled only for debugging the controller:
 
     // Get status.  Should never block.
     method Bit#(64) statusCheck();
     // Set the maximum number of outstanding reads permitted.  Useful for
     // calibrating sync buffer sizes.
-    method Action setMaxReads(Bit#(TLog#(TAdd#(`SRAM_MAX_OUTSTANDING_READS, 1))) maxReads);
+    method Action setMaxReads(Bit#(TLog#(TAdd#(`DRAM_MAX_OUTSTANDING_READS, 1))) maxReads);
 `endif
 endinterface
 
 
 //
-// DDR2_DEVICE exports both the driver interface and the top level wires.
+// DDR_DEVICE exports both the driver interface and the top level wires.
 //
-interface DDR2_DEVICE;
-    interface DDR2_DRIVER driver;
-    interface DDR2_WIRES  wires;
+interface DDR_DEVICE;
+    interface DDR_DRIVER driver;
+    interface DDR_WIRES  wires;
 endinterface
 
 //
@@ -120,7 +120,7 @@ module mkDDR2SRAMDevice
       Bit#(1) ramClkLocked,
       Reset topLevelReset)
     // interface:
-    (DDR2_DEVICE);
+    (DDR_DEVICE);
 
     // Clock the glue logic with the output clock.
     Clock modelClock <- exposeCurrentClock();
@@ -143,7 +143,7 @@ module mkDDR2SRAMDevice
     // Read buffer (size this buffer to sustain as many DRAM bursts as needed)
     // We need 2 independent queues to read in the raw data from the 2 controllers
     SyncFIFOIfc#(FPGA_DDR_DUALEDGE_DATA) syncReadDataQ <-
-        mkSyncFIFO(`SRAM_MAX_OUTSTANDING_READS * valueOf(FPGA_DDR_BURST_LENGTH),
+        mkSyncFIFO(`DRAM_MAX_OUTSTANDING_READS * valueOf(FPGA_DDR_BURST_LENGTH),
                    controllerClock, controllerReset, modelClock);
 
     //
@@ -158,7 +158,7 @@ module mkDDR2SRAMDevice
         syncWriteDataQ <- mkSyncFIFO(8, modelClock, modelReset, controllerClock);
     
     // Keep track of the number of reads in flight
-    COUNTER#(TLog#(TAdd#(`SRAM_MAX_OUTSTANDING_READS, 1))) nInflightReads <- mkLCounter(0);
+    COUNTER#(TLog#(TAdd#(`DRAM_MAX_OUTSTANDING_READS, 1))) nInflightReads <- mkLCounter(0);
     Reg#(FPGA_DDR_BURST_IDX) readBurstCnt <- mkReg(fromInteger(valueOf(FPGA_DDR_LAST_BURST_IDX)));
 
 
@@ -446,14 +446,14 @@ module mkDDR2SRAMDevice
     endrule
 
 
-`ifndef SRAM_DEBUG_Z
+`ifndef DRAM_DEBUG_Z
     //
     // Debugging...
     //
 
-    // Useful for calibrating the optimal size of SRAM_MAX_OUTSTANDING_READS
-    Reg#(Bit#(TLog#(TAdd#(`SRAM_MAX_OUTSTANDING_READS, 1)))) calibrateMaxReads <-
-        mkReg(`SRAM_MAX_OUTSTANDING_READS);
+    // Useful for calibrating the optimal size of DRAM_MAX_OUTSTANDING_READS
+    Reg#(Bit#(TLog#(TAdd#(`DRAM_MAX_OUTSTANDING_READS, 1)))) calibrateMaxReads <-
+        mkReg(`DRAM_MAX_OUTSTANDING_READS);
 
     // Status from the RAM controller clock domain
     Reg#(Bit#(64)) syncStatus <- mkSyncReg(0, controllerClock, controllerReset, modelClock);
@@ -478,9 +478,9 @@ module mkDDR2SRAMDevice
 
 
     // Drivers visible to upper layers
-    interface DDR2_DRIVER driver;
+    interface DDR_DRIVER driver;
     
-`ifndef SRAM_DEBUG_Z
+`ifndef DRAM_DEBUG_Z
         method Bit#(64) statusCheck();
             Bit#(64) status = 0;
             status[3]  = pack(mergeReqQ.notEmpty());
@@ -503,16 +503,16 @@ module mkDDR2SRAMDevice
         //     the available buffer size.  Useful for building one time and
         //     finding the optimal buffer size.
         //
-        method Action setMaxReads(Bit#(TLog#(TAdd#(`SRAM_MAX_OUTSTANDING_READS, 1))) maxReads);
+        method Action setMaxReads(Bit#(TLog#(TAdd#(`DRAM_MAX_OUTSTANDING_READS, 1))) maxReads);
             calibrateMaxReads <= maxReads;
         endmethod
 `endif
 
         method Action readReq(FPGA_DDR_ADDRESS addr) if ((state == STATE_READY) &&
-`ifndef SRAM_DEBUG_Z
+`ifndef DRAM_DEBUG_Z
                                                          (nInflightReads.value() < calibrateMaxReads) &&
 `endif
-                                                         (nInflightReads.value() < `SRAM_MAX_OUTSTANDING_READS));
+                                                         (nInflightReads.value() < `DRAM_MAX_OUTSTANDING_READS));
             mergeReqQ.ports[0].enq(tagged DRAM_READ addr);
             nInflightReads.up();
         endmethod

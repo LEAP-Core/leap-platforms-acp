@@ -106,9 +106,9 @@ Packagehint=leap-platforms-acp
 [ACP M2 Compute Module With SRAM (Nallatech)/Requires]
 clocks_device=Null Clocks Device
 physical_platform_utils=Common Physical Platform Utilities
-ddr2_device=ACP DDR2 SRAM Device
 nallatech_edge_device=Nallatech Edge Physical Device v2
 led_device=General LED Device
+ddr_sdram_device=ACP DDR2 SRAM Device
 
 [RRR Common Module]
 File=modules/leap/virtual-platform/rrr/rrr-common/rrr-common.awb
@@ -147,7 +147,6 @@ MAPPER_OPTIONS="-cm balanced -global_opt on"
 [Soft Services Submodel]
 File=config/pm/leap/submodels/common/soft-services.apm
 Packagehint=leap
-
 
 [Standard Platform Services Submodel]
 File=config/pm/leap/submodels/platform-services/standard-platform-services.apm

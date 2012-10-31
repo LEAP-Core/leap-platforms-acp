@@ -29,7 +29,7 @@ import Vector::*;
 `include "asim/provides/nallatech_edge_device.bsh"
 `include "asim/provides/nallatech_intra_device.bsh"
 `include "asim/provides/led_device.bsh"
-`include "asim/provides/ddr2_device.bsh"
+`include "asim/provides/ddr_sdram_device.bsh"
 
 // PHYSICAL_DRIVERS
 
@@ -44,7 +44,7 @@ interface PHYSICAL_DRIVERS;
     interface NALLATECH_INTRA_DRIVER nallatechIntraDriver;
     interface NALLATECH_UMF_INTRA_DRIVER nallatechUMFIntraDriver;
     interface LEDS_DRIVER#(4)         ledsDriver;
-    interface Vector#(FPGA_DDR_BANKS, DDR2_DRIVER) ddr2Driver;
+    interface Vector#(FPGA_DDR_BANKS, DDR_DRIVER) ddrDriver;
 
 endinterface
 
@@ -61,7 +61,7 @@ interface TOP_LEVEL_WIRES;
     interface NALLATECH_EDGE_WIRES nallatechEdgeWires;
     (* prefix = "side" *)
     interface NALLATECH_INTRA_WIRES nallatechIntraWires;
-    interface Vector#(FPGA_DDR_BANKS, DDR2_WIRES) ddr2Wires;
+    interface Vector#(FPGA_DDR_BANKS, DDR_WIRES) ddr2Wires;
 
 endinterface
 
@@ -106,9 +106,9 @@ module mkPhysicalPlatform
     Reset rst = nallatech_edge_device.clocks_driver.reset;
     
     // Instantiate memory bank controllers
-    Vector#(FPGA_DDR_BANKS, DDR2_DEVICE) ddr2_sram_device = newVector();
-    Vector#(FPGA_DDR_BANKS, DDR2_DRIVER) ddr2_driver = newVector();
-    Vector#(FPGA_DDR_BANKS, DDR2_WIRES) ddr2_wires = newVector();
+    Vector#(FPGA_DDR_BANKS, DDR_DEVICE) ddr2_sram_device = newVector();
+    Vector#(FPGA_DDR_BANKS, DDR_DRIVER) ddr2_driver = newVector();
+    Vector#(FPGA_DDR_BANKS, DDR_WIRES) ddr2_wires = newVector();
     for (Integer b = 0; b < valueOf(FPGA_DDR_BANKS); b = b + 1)
     begin
         ddr2_sram_device[b] <- mkDDR2SRAMDevice(nallatech_edge_device.sram_clocks_driver.ramClk0,
@@ -136,7 +136,7 @@ module mkPhysicalPlatform
         interface nallatechUMFIntraDriver = nallatech_intra_device.umf_intra_driver;
         interface nallatechIntraDriver = nallatech_intra_device.intra_driver; 
         interface ledsDriver          = nallatech_edge_device.leds_driver;
-        interface ddr2Driver          = ddr2_driver;
+        interface ddrDriver           = ddr2_driver;
 
     endinterface
     
