@@ -47,8 +47,8 @@ typedef Bit#(FPGA_DDR_WORD_SZ) FPGA_DDR_WORD;
 // The DRAM controller uses both clock edges to pass data, which appears to
 // be 2 words per cycle.  Addresses are little endian, so the low address
 // goes in the low bits.  Most of the interfaces in this module pass:
-typedef TMul#(2, FPGA_DDR_WORD_SZ) FPGA_DDR_DUALEDGE_DATA_SZ;
-typedef Bit#(FPGA_DDR_DUALEDGE_DATA_SZ) FPGA_DDR_DUALEDGE_DATA;
+typedef TMul#(2, FPGA_DDR_WORD_SZ) FPGA_DDR_DUALEDGE_BEAT_SZ;
+typedef Bit#(FPGA_DDR_DUALEDGE_BEAT_SZ) FPGA_DDR_DUALEDGE_BEAT;
 
 // The DRAM controller reads and writes multiple dual-edge data values for
 // a single request.  The number of dual-edge data values per request is:
@@ -57,7 +57,7 @@ typedef `SRAM_BURST_LENGTH FPGA_DDR_BURST_LENGTH;
 // Each byte in a write may be disabled for writes using a bit mask.
 // !!! NOTE: to conform to the controller, a mask bit is 0 to request a write !!!
 typedef Bit#(TDiv#(FPGA_DDR_WORD_SZ, 8)) FPGA_DDR_WORD_MASK;
-typedef Bit#(TDiv#(FPGA_DDR_DUALEDGE_DATA_SZ, 8)) FPGA_DDR_DUALEDGE_DATA_MASK;
+typedef Bit#(TDiv#(FPGA_DDR_DUALEDGE_BEAT_SZ, 8)) FPGA_DDR_DUALEDGE_BEAT_MASK;
 
 // Capacity of the memory (addressing FPGA_DDR_WORDs):
 typedef `SRAM_ADDR_WIDTH FPGA_DDR_ADDRESS_SZ;

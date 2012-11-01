@@ -2976,3 +2976,15 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
 Update ACP memory configuration to yesterday's SDRAM changes in platforms.
 The result is ACP SRAM is called SDRAM.  Sigh.  We're unlikely to encounter
 SRAM in future platforms, so the ACP will have to suffer in silence.
+
+----------
+mcadler     Date: Thu Nov  1 08:10:48 EDT 2012  CSN: CSN-leap-platforms-acp-139
+                  Thu Nov  1 12:10:48 UTC 2012
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.bsv       Locally Modified          138 
+ ddr-sram-fake.bsv         Locally Modified          138 
+ ddr-sram-device.awb       Locally Modified          138 
+
+Conform to new AWB parameter naming.

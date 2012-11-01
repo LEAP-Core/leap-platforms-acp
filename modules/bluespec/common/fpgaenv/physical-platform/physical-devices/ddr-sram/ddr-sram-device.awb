@@ -36,7 +36,7 @@
 %param DRAM_MAX_OUTSTANDING_READS  8 "Maximum in-flight read requests"
 
 %param DRAM_MIN_BURST     1   "Minimum Burst Size"
-%param DRAM_DIMM_WIDTH    32  "Addressable object size"
-%param DRAM_WORD_WIDTH    64  "Physical DRAM Width"
+%param DRAM_BEAT_WIDTH    64  "Bit width of one beat in a burst"
+%param DRAM_WORD_WIDTH    32  "Addressable object size"
 %param DRAM_ADDR_BITS     21  "Address bits per bank"
 %param DRAM_NUM_BANKS     2   "DDR banks"
