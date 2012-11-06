@@ -27,6 +27,7 @@ import Vector::*;
 // DDR properties, computed from device specific properties...
 //
 
+typedef `DRAM_NUM_BANKS FPGA_DDR_BANKS;
 typedef `DRAM_MAX_OUTSTANDING_READS FPGA_DDR_MAX_OUTSTANDING_READS;
 
 // The smallest addressable word:
@@ -38,9 +39,12 @@ typedef Bit#(FPGA_DDR_WORD_SZ) FPGA_DDR_WORD;
 typedef TMul#(`SRAM_BURST_LENGTH, FPGA_DDR_WORD_SZ) FPGA_DDR_DUALEDGE_BEAT_SZ;
 typedef Bit#(FPGA_DDR_DUALEDGE_BEAT_SZ) FPGA_DDR_DUALEDGE_BEAT;
 
+typedef TDiv#(FPGA_DDR_DUALEDGE_BEAT_SZ, FPGA_DDR_WORD_SZ) FPGA_DDR_WORDS_PER_BEAT;
+typedef TDiv#(FPGA_DDR_DUALEDGE_BEAT_SZ, 8) FPGA_DDR_BYTES_PER_BEAT;
+typedef TDiv#(FPGA_DDR_WORD_SZ, 8) FPGA_DDR_BYTES_PER_WORD;
+
 // Each byte in a write may be disabled for writes using a bit mask.
 // !!! NOTE: to conform to the controller, a mask bit is 0 to request a write !!!
-typedef TDiv#(FPGA_DDR_WORD_SZ, 8) FPGA_DDR_BYTES_PER_WORD;
 typedef Bit#(FPGA_DDR_BYTES_PER_WORD) FPGA_DDR_WORD_MASK;
 typedef Bit#(TDiv#(FPGA_DDR_DUALEDGE_BEAT_SZ, 8)) FPGA_DDR_DUALEDGE_BEAT_MASK;
 
@@ -392,7 +396,7 @@ module mkDDR2SRAMDevice
     
     rule initPhase1 ((state == STATE_INIT) && (initPhase == 1));
         // Data to write
-        Vector#(TDiv#(FPGA_DDR_DUALEDGE_BEAT_SZ, 8), Bit#(8)) init_data = replicate('haa);
+        Vector#(FPGA_DDR_BYTES_PER_BEAT, Bit#(8)) init_data = replicate('haa);
 
         // Write request on first burst
         if (initBurstIdx == 0)
@@ -406,7 +410,7 @@ module mkDDR2SRAMDevice
         if (initBurstIdx == fromInteger(valueOf(FPGA_DDR_LAST_BURST_IDX)))
         begin
             // Point to next dual-edge data address
-            let next_addr = initAddr + fromInteger(valueOf(TMul#(FPGA_DDR_BURST_LENGTH, TDiv#(FPGA_DDR_DUALEDGE_BEAT_SZ, FPGA_DDR_WORD_SZ))));
+            let next_addr = initAddr + fromInteger(valueOf(TMul#(FPGA_DDR_BURST_LENGTH, FPGA_DDR_WORDS_PER_BEAT)));
             initAddr <= next_addr;
 
             if (next_addr == 0)

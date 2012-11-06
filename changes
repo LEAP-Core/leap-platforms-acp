@@ -2988,3 +2988,24 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
  ddr-sram-device.awb       Locally Modified          138 
 
 Conform to new AWB parameter naming.
+
+----------
+mcadler     Date: Mon Nov  5 20:01:18 EST 2012  CSN: CSN-leap-platforms-acp-140
+                  Tue Nov  6 01:01:18 UTC 2012
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          139 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          139 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified          139 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified          139 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          139 
+
+Directory config/pm/platforms/debuggers/acp
+ fpga0_passthrough.apm     Locally Modified          139 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.bsv       Locally Modified          139 
+ ddr-sram-vhdl-import.bsv  Locally Modified          139 
+
+Local memory implementation changed.

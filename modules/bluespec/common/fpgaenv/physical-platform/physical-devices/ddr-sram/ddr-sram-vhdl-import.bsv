@@ -42,11 +42,6 @@
 // not flexible.
 //
 
-// Number of memory banks.  The controller instantiates a controller for a
-// single bank.  It is the responsibility of higher level code to allocate
-// one controller for each available bank.
-typedef `DRAM_NUM_BANKS FPGA_DDR_BANKS;
-
 // The smallest addressable word:
 typedef 32 FPGA_DDR_WORD_SZ;
 

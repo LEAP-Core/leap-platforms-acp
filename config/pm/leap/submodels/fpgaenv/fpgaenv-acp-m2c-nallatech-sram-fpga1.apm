@@ -57,7 +57,7 @@ physical_platform=ACP FPGA with Intra Channel and SRAM (Nallatech)
 channelio=Basic Virtual Channel Multiplexer
 rrr=RRR Clients and Servers
 physical_platform_debugger=Null Physical Platform Debugger
-local_mem=Local Memory Interface using DDR2 Memory
+local_mem=Local Memory using DDR DRAM (burst smaller than line)
 remote_memory=Null Remote Memory
 
 [Null Physical Platform Debugger]
@@ -177,10 +177,6 @@ Packagehint=leap
 CRYSTAL_CLOCK_FREQ=200
 MODEL_CLOCK_FREQ=50
 
-[Local Memory Interface using DDR2 Memory]
-File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-ddr2.awb
-Packagehint=leap
-
 [ACP FPGA with Intra Channel and SRAM (Nallatech)/Requires]
 clocks_device=Null Clocks Device
 nallatech_intra_device=Nallatech Intra Physical Device FPGA1 (Slave) v2
@@ -238,3 +234,8 @@ Packagehint=multifpga
 [FPGA Environment Datatype]
 File=modules/leap/build-support/build-pipelines/stages/multifpga_generate_logfile/fpgaenvironment.awb
 Packagehint=multifpga
+
+
+[Local Memory using DDR DRAM (burst smaller than line)]
+File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-ddr-narrow.awb
+Packagehint=leap
