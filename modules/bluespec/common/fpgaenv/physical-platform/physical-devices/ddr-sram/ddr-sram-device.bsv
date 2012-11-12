@@ -19,6 +19,7 @@
 import Clocks::*;
 import FIFO::*;
 import Vector::*;
+import List::*;
 
 `include "asim/provides/librl_bsv_base.bsh"
 
@@ -69,6 +70,7 @@ interface DDR_DRIVER;
     method ActionValue#(FPGA_DDR_DUALEDGE_BEAT) readRsp();
     method Action writeReq(FPGA_DDR_ADDRESS addr);
     method Action writeData(FPGA_DDR_DUALEDGE_BEAT data, FPGA_DDR_DUALEDGE_BEAT_MASK mask);
+    method List#(Tuple2#(String, Bool)) debugScanState();
 
 `ifndef DRAM_DEBUG_Z
     // Methods enabled only for debugging the controller:
@@ -545,6 +547,10 @@ module mkDDR2SRAMDevice
         
         method Action writeData(FPGA_DDR_DUALEDGE_BEAT data, FPGA_DDR_DUALEDGE_BEAT_MASK mask) if (state == STATE_READY);
             syncWriteDataQ.enq(tuple2(data, mask));
+        endmethod
+
+        method List#(Tuple2#(String, Bool)) debugScanState();
+            return List::nil;
         endmethod
     endinterface
 

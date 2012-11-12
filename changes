@@ -3009,3 +3009,13 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
  ddr-sram-vhdl-import.bsv  Locally Modified          139 
 
 Local memory implementation changed.
+
+----------
+mcadler     Date: Mon Nov 12 15:30:21 EST 2012  CSN: CSN-leap-platforms-acp-141
+                  Mon Nov 12 20:30:21 UTC 2012
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram
+ ddr-sram-device.bsv       Locally Modified          140 
+
+DDR_DRIVER interface now expected to have a list of debug scan objects.
