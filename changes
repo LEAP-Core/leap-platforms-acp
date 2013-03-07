@@ -3019,3 +3019,14 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr
  ddr-sram-device.bsv       Locally Modified          140 
 
 DDR_DRIVER interface now expected to have a list of debug scan objects.
+
+----------
+kfleming    Date: Thu Mar  7 11:24:22 EST 2013  CSN: CSN-leap-platforms-acp-142
+                  Thu Mar  7 16:24:22 UTC 2013
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-debugger-mem.apm Locally Added               - 
+
+
+Added apm for SRAM debugger.  Existing APMs use BRAM rather than SRAM.
