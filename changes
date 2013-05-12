@@ -3030,3 +3030,18 @@ Directory config/pm/leap/submodels/fpgaenv
 
 
 Added apm for SRAM debugger.  Existing APMs use BRAM rather than SRAM.
+
+----------
+kfleming    Date: Sun May 12 17:07:15 EDT 2013  CSN: CSN-leap-platforms-acp-143
+                  Sun May 12 21:07:15 UTC 2013
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          142 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          142 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          142 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          142 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          142 
+
+
+Updated apm to use new awb parameter parser.
