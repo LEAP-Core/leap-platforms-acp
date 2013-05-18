@@ -3045,3 +3045,14 @@ Directory config/pm/leap/submodels/fpgaenv
 
 
 Updated apm to use new awb parameter parser.
+
+----------
+mcadler     Date: Sat May 18 09:10:23 EDT 2013  CSN: CSN-leap-platforms-acp-144
+                  Sat May 18 13:10:23 UTC 2013
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          143 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          143 
+
+Fix broken configurations.

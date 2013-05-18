@@ -165,6 +165,7 @@ bsv_tool=BSV Build Tool (First Phase)
 fpgamap_parser=FPGAMap
 fpga_environment_parser=FPGA Environment Datatype
 parameter_substitution=AWB Parameter Substitution Parser
+li_module=LEAP LI Module Handler
 
 [Xilinx PAR]
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-par.awb
@@ -237,3 +238,8 @@ Packagehint=multifpga
 [AWB Parameter Substitution Parser]
 File=modules/leap/build-support/build-pipelines/stages/parameter_substitution/parameter_substitution.awb
 Packagehint=leap
+
+[LEAP LI Module Handler]
+File=modules/leap/build-support/build-pipelines/stages/li_module/li_module.awb
+Packagehint=leap
+
