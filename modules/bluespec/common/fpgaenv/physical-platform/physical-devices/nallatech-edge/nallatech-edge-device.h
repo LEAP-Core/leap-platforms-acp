@@ -58,6 +58,9 @@ class NALLATECH_EDGE_DEVICE_CLASS: public PLATFORMS_MODULE_CLASS
 
     UINT64 WorkspaceBytes() const;
 
+    bool didInit;
+    bool didCleanup;
+
   public:
     NALLATECH_EDGE_DEVICE_CLASS(PLATFORMS_MODULE);
     ~NALLATECH_EDGE_DEVICE_CLASS();

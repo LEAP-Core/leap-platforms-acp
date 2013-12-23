@@ -59,12 +59,11 @@ void *NALChannelIO_Main(void *argv)
 
 // constructor
 PHYSICAL_CHANNEL_CLASS::PHYSICAL_CHANNEL_CLASS(
-    PLATFORMS_MODULE     p,
-    PHYSICAL_DEVICES d)
+    PLATFORMS_MODULE p)
     : PLATFORMS_MODULE_CLASS(p),
       correctedH2FErrs(0)
 {
-    nallatechEdgeDevice = d->GetNallatechEdgeDevice();
+    nallatechEdgeDevice = new NALLATECH_EDGE_DEVICE_CLASS(p);
 }
 
 // destructor
@@ -72,6 +71,9 @@ PHYSICAL_CHANNEL_CLASS::~PHYSICAL_CHANNEL_CLASS()
 {
     pthread_cancel(ioThreadID);
     pthread_join(ioThreadID, NULL);
+
+    nallatechEdgeDevice->Uninit();
+    delete nallatechEdgeDevice;
 
     if (correctedH2FErrs != 0)
     {
@@ -88,6 +90,8 @@ PHYSICAL_CHANNEL_CLASS::Init()
         ASIMERROR("UMF_CHUNK and NALLATECH_WORD size mismatch");
         CallbackExit(1);
     }    
+
+    nallatechEdgeDevice->Init();
 
     // Enforce minimum numbers of write and read windows for the ring
     // buffer code.

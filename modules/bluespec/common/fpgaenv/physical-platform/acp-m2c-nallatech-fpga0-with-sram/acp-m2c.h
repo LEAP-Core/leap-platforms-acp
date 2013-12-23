@@ -20,7 +20,8 @@
 #define __PHYSICAL_PLATFORM__
 
 #include "asim/syntax.h"
-#include "asim/provides/nallatech_edge_device.h"
+#include "asim/provides/physical_channel.h"
+
 
 // ====================================================
 //       ACP M2 Compute Module Physical Platform
@@ -34,7 +35,7 @@ class PHYSICAL_DEVICES_CLASS: public PLATFORMS_MODULE_CLASS
   private:
 
     // Nallatech Edge Device
-    NALLATECH_EDGE_DEVICE_CLASS nallatechEdgeDevice;
+    PHYSICAL_CHANNEL_CLASS nallatechEdgeDevice;
 
   public:
 
@@ -43,7 +44,7 @@ class PHYSICAL_DEVICES_CLASS: public PLATFORMS_MODULE_CLASS
     ~PHYSICAL_DEVICES_CLASS();
 
     // accessors to individual devices
-    NALLATECH_EDGE_DEVICE GetNallatechEdgeDevice() { return &nallatechEdgeDevice; }
+    PHYSICAL_CHANNEL GetLegacyPhysicalChannel() { return &nallatechEdgeDevice; }
 };
 
 #endif

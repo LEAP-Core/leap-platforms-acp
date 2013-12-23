@@ -41,7 +41,9 @@ using namespace std;
 
 NALLATECH_EDGE_DEVICE_CLASS::NALLATECH_EDGE_DEVICE_CLASS(
     PLATFORMS_MODULE p) :
-    PLATFORMS_MODULE_CLASS(p)
+    PLATFORMS_MODULE_CLASS(p),
+    didInit(false),
+    didCleanup(false)
 {
     workspace = NULL;
 }
@@ -84,6 +86,9 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
 {
 	int ret;
 	int i;
+
+    if (didInit) return;
+    didInit = true;
 
     // Which card is allocated?  The run script will pass the FPGA device
     // allocated in FPGA_DEV_PATH.  The socket number is the last digit of
@@ -201,6 +206,9 @@ NALLATECH_EDGE_DEVICE_CLASS::Uninit()
 void
 NALLATECH_EDGE_DEVICE_CLASS::Cleanup()
 {
+    if (didCleanup) return;
+    didCleanup = true;
+
     cout << "ACP shutting down...\n";
 
     // shutdown ACP stack

@@ -20,7 +20,7 @@
 #define __PHYSICAL_CHANNEL__
 
 #include "asim/provides/umf.h"
-#include "asim/provides/physical_platform.h"
+#include "asim/provides/nallatech_edge_device.h"
 #include <pthread.h>
 
 
@@ -109,7 +109,7 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
 
   public:
 
-    PHYSICAL_CHANNEL_CLASS(PLATFORMS_MODULE, PHYSICAL_DEVICES);
+    PHYSICAL_CHANNEL_CLASS(PLATFORMS_MODULE);
     ~PHYSICAL_CHANNEL_CLASS();
 
     void Init();

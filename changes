@@ -3056,3 +3056,30 @@ Directory config/pm/leap/submodels/fpgaenv
  fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          143 
 
 Fix broken configurations.
+
+----------
+mcadler     Date: Sun Dec 22 22:27:46 EST 2013  CSN: CSN-leap-platforms-acp-145
+                  Mon Dec 23 03:27:46 UTC 2013
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified          144 
+ nallatech-edge-channel.h  Locally Modified          144 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0-with-sram
+ acp-m2c.h                 Locally Modified          144 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0
+ acp-m2c.h                 Locally Modified          144 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech
+ acp-m2c.h                 Locally Modified          144 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.h                 Locally Modified          144 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.h   Locally Modified          144 
+ nallatech-edge-device.cpp Locally Modified          144 
+
+Update to most recent platforms software interfaces.
