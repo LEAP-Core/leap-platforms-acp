@@ -3083,3 +3083,15 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
  nallatech-edge-device.cpp Locally Modified          144 
 
 Update to most recent platforms software interfaces.
+
+----------
+mcadler     Date: Mon Jan  6 23:08:15 EST 2014  CSN: CSN-leap-platforms-acp-146
+                  Tue Jan  7 04:08:15 UTC 2014
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          145 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          145 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified          145 
+
+Update multi-FPGA configurations.

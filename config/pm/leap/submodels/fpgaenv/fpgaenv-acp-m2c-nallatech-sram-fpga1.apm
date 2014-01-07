@@ -20,7 +20,7 @@ model=FPGA Environment
 virtual_platform=Standard Virtual Platform
 fpga_components=Hardware FPGA Components for Virtex 5
 librl_bsv=RL Bluespec Library Submodel
-build_pipeline=FPGA Platform Build Pipeline
+build_pipeline=FPGA Platform Build Pipeline (Legacy)
 soft_services=Soft Services for MultiFPGA Submodel
 
 [Standard Virtual Platform]
@@ -134,23 +134,6 @@ Packagehint=leap
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-post-synth.awb
 Packagehint=leap
 
-[FPGA Platform Build Pipeline]
-File=modules/leap/build-support/pipelines/multifpga_platform/fpga-platform-build-pipeline.awb
-Packagehint=multifpga
-
-[FPGA Platform Build Pipeline/Requires]
-fpga_program_tool=FPGA Programming Tool
-post_synthesis_tool=Xilinx Post-synthesis Toolchain
-software_tool=Software build tool
-mcd_tool=MCD Tool for Xilinx
-iface_tool=Interface builder
-wrapper_gen_tool=Synthesis Boundary Wrapper generation tool
-synthesis_tool=XST Synthesis Tool
-bsv_tool=BSV Build Tool (First Phase)
-fpgamap_parser=FPGAMap
-fpga_environment_parser=FPGA Environment Datatype
-parameter_substitution=AWB Parameter Substitution Parser
-
 [Xilinx PAR]
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-par.awb
 Packagehint=leap
@@ -243,3 +226,35 @@ Packagehint=leap
 [AWB Parameter Substitution Parser]
 File=modules/leap/build-support/build-pipelines/stages/parameter_substitution/parameter_substitution.awb
 Packagehint=leap
+
+[LEAP LI Module Handler]
+File=modules/leap/build-support/build-pipelines/stages/li_module/li_module.awb
+Packagehint=leap
+
+[Synthesis library]
+File=modules/leap/build-support/build-pipelines/stages/synthesis/synthesis_library.awb
+Packagehint=leap
+
+[XST Synthesis Tool/Requires]
+synthesis_library=Synthesis library
+
+[FPGA Platform Build Pipeline (Legacy)]
+File=modules/leap/build-support/pipelines/multifpga_platform/fpga-platform-build-pipeline.awb
+Packagehint=multifpga
+
+[FPGA Platform Build Pipeline (Legacy)/Requires]
+fpga_program_tool=FPGA Programming Tool
+li_module=LEAP LI Module Handler
+mcd_tool=MCD Tool for Xilinx
+iface_tool=Interface builder
+parameter_substitution=AWB Parameter Substitution Parser
+synthesis_tool=XST Synthesis Tool
+bsv_tool=BSV Build Tool (First Phase)
+fpgamap_parser=FPGAMap
+fpga_environment_parser=FPGA Environment Datatype
+software_tool=Software build tool
+post_synthesis_tool=Xilinx Post-synthesis Toolchain
+wrapper_gen_tool=Synthesis Boundary Wrapper generation tool
+
+[RL Bluespec Library Submodel/Params]
+FIFO_MEM_MIN_ENTRIES_FOR_BRAM=32
