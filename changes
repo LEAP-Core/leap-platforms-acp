@@ -3095,3 +3095,13 @@ Directory config/pm/leap/submodels/fpgaenv
  fpgaenv-acp-m2c-nallatech.apm Locally Modified          145 
 
 Update multi-FPGA configurations.
+
+----------
+mcadler     Date: Wed Jan  8 09:50:23 EST 2014  CSN: CSN-leap-platforms-acp-147
+                  Wed Jan  8 14:50:23 UTC 2014
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device-debugger.cpp Locally Modified          146 
+
+Make multi-FPGA work.

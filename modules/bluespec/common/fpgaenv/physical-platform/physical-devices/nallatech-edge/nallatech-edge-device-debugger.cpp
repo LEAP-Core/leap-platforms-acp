@@ -82,6 +82,11 @@ NALLATECH_EDGE_DEVICE_CLASS::GetReadWindow(int windowID) const
 void
 NALLATECH_EDGE_DEVICE_CLASS::Init()
 {
+    // This is a hack to deal with multi-FPGA.
+    static bool didInit = false;
+    if (didInit) return;
+    didInit = true;
+
 	int ret;
 	int i;
 
@@ -307,19 +312,21 @@ NALLATECH_EDGE_DEVICE_CLASS::Uninit()
 void
 NALLATECH_EDGE_DEVICE_CLASS::Cleanup()
 {
-    cout << "ACP shutting down...\n";
 
     // shutdown ACP stack
     if (workspace != NULL)
     {
+        cout << "ACP shutting down...\n";
         ACP_Deallocate(hafu, workspace, WorkspaceBytes());
-    }
 
-    cout << "Deallocate done.\n";
-	ACP_CloseAFU(hafu);
-    cout << "AFU closed.\n";
-	ACP_CloseSocket(hsocket);
-    cout << "All finished, exiting.\n";
+        cout << "Deallocate done.\n";
+        ACP_CloseAFU(hafu);
+        cout << "AFU closed.\n";
+        ACP_CloseSocket(hsocket);
+        cout << "All finished, exiting.\n";
+
+        workspace = NULL;
+    }
 }
 
 
