@@ -3105,3 +3105,17 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
  nallatech-edge-device-debugger.cpp Locally Modified          146 
 
 Make multi-FPGA work.
+
+----------
+keflemin    Date: Tue Mar  4 16:20:29 EST 2014  CSN: CSN-leap-platforms-acp-148
+                  Tue Mar  4 21:20:29 UTC 2014
+
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-intra
+ nallatech-intra-channel.cpp Locally Modified          147 
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified          147 
+
+
+Changed legacy physical channels to use correct packet endianess.

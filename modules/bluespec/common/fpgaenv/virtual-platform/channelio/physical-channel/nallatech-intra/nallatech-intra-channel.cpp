@@ -493,10 +493,7 @@ PHYSICAL_CHANNEL_CLASS::Write(
     window_data[index++] = message->EncodeHeaderWithPhyChannelPvt(1);
 
     // write message data to buffer
-    // NOTE: hardware demarshaller expects chunk pattern to start from most
-    //       significant chunk and end at least significant chunk, so we will
-    //       send chunks in reverse order
-    index += message->ReverseExtractAllChunks(&window_data[index]);
+    index += message->ExtractAllChunks(&window_data[index]);
 
     writeWindows[curWriteWindow].nWords = index;
     VERIFYX(index <= NALLATECH_MAX_MSG_WORDS);
