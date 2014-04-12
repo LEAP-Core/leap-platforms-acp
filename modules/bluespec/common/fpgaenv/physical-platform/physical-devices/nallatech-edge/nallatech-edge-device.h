@@ -26,6 +26,7 @@
 #include "asim/provides/umf.h"
 #include "platforms-module.h"
 
+
 typedef UMF_CHUNK NALLATECH_WORD;
 
 #define NALLATECH_MAX_MSG_WORDS (NALLATECH_MAX_MSG_BYTES / sizeof(NALLATECH_WORD))

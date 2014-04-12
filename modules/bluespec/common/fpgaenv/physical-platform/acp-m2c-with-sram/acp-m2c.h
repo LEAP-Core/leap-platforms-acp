@@ -21,6 +21,7 @@
 
 #include "asim/syntax.h"
 #include "asim/provides/physical_channel.h"
+#include "awb/provides/physical_platform_utils.h"
 
 
 // ====================================================
@@ -35,13 +36,15 @@ class PHYSICAL_DEVICES_CLASS: public PLATFORMS_MODULE_CLASS
   private:
 
     // Nallatech Edge Device
-    PHYSICAL_CHANNEL_CLASS nallatechEdgeDevice;
+    NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS nallatechEdgeDevice;
 
   public:
 
     // constructor-destructor
     PHYSICAL_DEVICES_CLASS(PLATFORMS_MODULE);
     ~PHYSICAL_DEVICES_CLASS();
+
+    void Init();
 
     // accessors to individual devices
     PHYSICAL_CHANNEL GetLegacyPhysicalChannel() { return &nallatechEdgeDevice; }

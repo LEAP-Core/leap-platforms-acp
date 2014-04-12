@@ -32,6 +32,7 @@
 #include "asim/syntax.h"
 #include "asim/provides/physical_platform_utils.h"
 #include "asim/provides/nallatech_edge_device.h"
+#include "awb/provides/low_level_platform_interface.h"
 
 using namespace std;
 
@@ -40,7 +41,7 @@ using namespace std;
 // ============================================
 
 NALLATECH_EDGE_DEVICE_CLASS::NALLATECH_EDGE_DEVICE_CLASS(
-    PLATFORMS_MODULE p) :
+    PLATFORMS_MODULE p) : 
     PLATFORMS_MODULE_CLASS(p),
     didInit(false),
     didCleanup(false)
@@ -195,11 +196,7 @@ NALLATECH_EDGE_DEVICE_CLASS::Init()
 void
 NALLATECH_EDGE_DEVICE_CLASS::Uninit()
 {
-    Cleanup();
 
-    // call default uninit so that we can continue
-    // chain if necessary
-    PLATFORMS_MODULE_CLASS::Uninit();
 }
 
 // cleanup

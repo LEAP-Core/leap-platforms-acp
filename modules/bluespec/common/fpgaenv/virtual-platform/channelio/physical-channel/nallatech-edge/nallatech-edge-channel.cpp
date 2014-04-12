@@ -37,9 +37,9 @@ using namespace std;
 // Pseudo DMA is a bypass of the normal I/O stack to handle scratchpad I/O
 // without having to copy the data.
 //
-int PHYSICAL_CHANNEL_CLASS::pseudoDMAChannelID = 0;
-int PHYSICAL_CHANNEL_CLASS::pseudoDMAServiceID = 0;
-PHYSICAL_CHANNEL_CLASS::PSEUDO_DMA_HANDLER PHYSICAL_CHANNEL_CLASS::pseudoDMAHandler = NULL;
+int NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::pseudoDMAChannelID = 0;
+int NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::pseudoDMAServiceID = 0;
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::PSEUDO_DMA_HANDLER NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::pseudoDMAHandler = NULL;
 
 
 //
@@ -47,7 +47,7 @@ PHYSICAL_CHANNEL_CLASS::PSEUDO_DMA_HANDLER PHYSICAL_CHANNEL_CLASS::pseudoDMAHand
 //
 void *NALChannelIO_Main(void *argv)
 {
-    PHYSICAL_CHANNEL instance = PHYSICAL_CHANNEL(argv);
+    NALLATECH_EDGE_PHYSICAL_CHANNEL instance = NALLATECH_EDGE_PHYSICAL_CHANNEL(argv);
     instance->IOThread();
     return NULL;
 }
@@ -58,16 +58,17 @@ void *NALChannelIO_Main(void *argv)
 // ============================================
 
 // constructor
-PHYSICAL_CHANNEL_CLASS::PHYSICAL_CHANNEL_CLASS(
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS(
     PLATFORMS_MODULE p)
-    : PLATFORMS_MODULE_CLASS(p),
-      correctedH2FErrs(0)
+  : PHYSICAL_CHANNEL_CLASS(p), 
+    correctedH2FErrs(0)
 {
     nallatechEdgeDevice = new NALLATECH_EDGE_DEVICE_CLASS(p);
+    umfFactory = new UMF_FACTORY_CLASS();
 }
 
 // destructor
-PHYSICAL_CHANNEL_CLASS::~PHYSICAL_CHANNEL_CLASS()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::~NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS()
 {
     pthread_cancel(ioThreadID);
     pthread_join(ioThreadID, NULL);
@@ -83,7 +84,7 @@ PHYSICAL_CHANNEL_CLASS::~PHYSICAL_CHANNEL_CLASS()
 
 // init
 void
-PHYSICAL_CHANNEL_CLASS::Init()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::Init()
 {
     if (sizeof (UMF_CHUNK) != sizeof (NALLATECH_WORD))
     {
@@ -149,7 +150,7 @@ PHYSICAL_CHANNEL_CLASS::Init()
 // NextWriteWindow in the ring of write windows.
 //
 inline
-int PHYSICAL_CHANNEL_CLASS::NextWriteWindow(int curWindow)
+int NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::NextWriteWindow(int curWindow)
 {
     return ((curWindow + 1) == NALLATECH_NUM_WRITE_WINDOWS) ? 0 : curWindow + 1;
 }
@@ -160,7 +161,7 @@ int PHYSICAL_CHANNEL_CLASS::NextWriteWindow(int curWindow)
 // reserved for the NULL read transaction.
 //
 inline
-int PHYSICAL_CHANNEL_CLASS::NextReadWindow(int curWindow)
+int NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::NextReadWindow(int curWindow)
 {
     return ((curWindow + 2) == NALLATECH_NUM_READ_WINDOWS) ? 0 : curWindow + 1;
 }
@@ -180,7 +181,7 @@ int PHYSICAL_CHANNEL_CLASS::NextReadWindow(int curWindow)
 //
 inline
 UINT32
-PHYSICAL_CHANNEL_CLASS::BufferedWordsRemaining()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::BufferedWordsRemaining()
 {
     UINT32 n_words = readWindows[curReadWindow].nWords;
     UINT32 next_idx = readWindows[curReadWindow].nextReadWordIdx;
@@ -213,7 +214,7 @@ PHYSICAL_CHANNEL_CLASS::BufferedWordsRemaining()
 
 inline
 const NALLATECH_WORD *
-PHYSICAL_CHANNEL_CLASS::RawReadBufferedWords(int nWords)
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::RawReadBufferedWords(int nWords)
 {
     UINT32 r_idx = readWindows[curReadWindow].nextReadWordIdx;
     readWindows[curReadWindow].nextReadWordIdx = r_idx + nWords;
@@ -224,7 +225,7 @@ PHYSICAL_CHANNEL_CLASS::RawReadBufferedWords(int nWords)
 
 inline
 const NALLATECH_WORD *
-PHYSICAL_CHANNEL_CLASS::RawReadBufferPtr()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::RawReadBufferPtr()
 {
     UINT32 r_idx = readWindows[curReadWindow].nextReadWordIdx;
     return &(readWindows[curReadWindow].data[r_idx]);
@@ -235,7 +236,7 @@ PHYSICAL_CHANNEL_CLASS::RawReadBufferPtr()
 // is for the start of a new read attempt.  It is used for managing the
 // raw buffer size.
 NALLATECH_WORD
-PHYSICAL_CHANNEL_CLASS::TryRawReadNextWord()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::TryRawReadNextWord()
 {
     if (BufferedWordsRemaining() != 0)
     {
@@ -250,7 +251,7 @@ PHYSICAL_CHANNEL_CLASS::TryRawReadNextWord()
 // is for the start of a new read attempt.  It is used for managing the
 // raw buffer size.
 NALLATECH_WORD
-PHYSICAL_CHANNEL_CLASS::RawReadNextWord()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::RawReadNextWord()
 {
     //
     // Any data left in the current buffer?
@@ -269,7 +270,7 @@ PHYSICAL_CHANNEL_CLASS::RawReadNextWord()
 
 // non-blocking read
 UMF_MESSAGE
-PHYSICAL_CHANNEL_CLASS::TryRead()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::TryRead()
 {
   repeat:
 
@@ -343,7 +344,7 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
     // Normal (not pseudo-DMA) message flow...
     //
 
-    UMF_MESSAGE incomingMessage = new UMF_MESSAGE_CLASS;
+    UMF_MESSAGE incomingMessage = umfFactory->createUMFMessage();
     incomingMessage->SetChannelID(dummyHeader.GetChannelID());
     incomingMessage->SetServiceID(dummyHeader.GetServiceID());
     incomingMessage->SetMethodID(dummyHeader.GetMethodID());
@@ -386,7 +387,7 @@ PHYSICAL_CHANNEL_CLASS::TryRead()
 
 // blocking read
 UMF_MESSAGE
-PHYSICAL_CHANNEL_CLASS::Read()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::Read()
 {
     UMF_MESSAGE msg;
     do
@@ -405,7 +406,7 @@ PHYSICAL_CHANNEL_CLASS::Read()
 //     depending on whether check bits are being added to the message.
 //
 inline UINT32
-PHYSICAL_CHANNEL_CLASS::MaxWriteWords() const
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::MaxWriteWords() const
 {
     UINT32 max_words;
     if (CHANNEL_H2F_FIX_ERRORS)
@@ -424,7 +425,7 @@ PHYSICAL_CHANNEL_CLASS::MaxWriteWords() const
 
 // Lock a window for writing at most msgChunks chunks
 inline void
-PHYSICAL_CHANNEL_CLASS::WriteLock(
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::WriteLock(
     UINT32 msgBytes)
 {
     // Message chunks is the header + the actual message
@@ -473,7 +474,7 @@ PHYSICAL_CHANNEL_CLASS::WriteLock(
 
 // Unlock the write window
 inline void
-PHYSICAL_CHANNEL_CLASS::WriteUnlock()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::WriteUnlock()
 {
     CompareAndExchange(&writeWindows[curWriteWindow].lock, 2, 0);
 }
@@ -481,7 +482,7 @@ PHYSICAL_CHANNEL_CLASS::WriteUnlock()
 
 // Write a UMF_MESSAGE to the FPGA
 void
-PHYSICAL_CHANNEL_CLASS::Write(
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::Write(
     UMF_MESSAGE message)
 {
     WriteLock(message->GetLength());
@@ -511,7 +512,7 @@ PHYSICAL_CHANNEL_CLASS::Write(
 
 // Write a raw message (not encapsulated as a UMF_MESSAGE) to the FPGA.
 void
-PHYSICAL_CHANNEL_CLASS::WriteRaw(
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::WriteRaw(
     UMF_CHUNK header,
     UINT32 msgBytes,
     const void *msg)
@@ -568,7 +569,7 @@ PHYSICAL_CHANNEL_CLASS::WriteRaw(
 //     The command chunk at the head of a request to the FPGA.
 //
 inline void
-PHYSICAL_CHANNEL_CLASS::GenCommand(
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::GenCommand(
     int writeWindow,
     int h2fRawBufChunks,
     int f2hRawBufChunks,
@@ -628,7 +629,7 @@ PHYSICAL_CHANNEL_CLASS::GenCommand(
 //     transaction.  A compact CRC would require much more time to compute.
 //
 inline UINT32
-PHYSICAL_CHANNEL_CLASS::InsertCheckBits(
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::InsertCheckBits(
     int activeWriteWindow,
     UINT32 inBufWords)
 {
@@ -678,7 +679,7 @@ PHYSICAL_CHANNEL_CLASS::InsertCheckBits(
 //     repeated errors.
 //
 inline void
-PHYSICAL_CHANNEL_CLASS::ClearSentWords(
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::ClearSentWords(
     int activeWriteWindow,
     UINT32 unsentBufWords)
 {
@@ -722,7 +723,7 @@ PHYSICAL_CHANNEL_CLASS::ClearSentWords(
 // IOThread -- Separate thread handling actual I/O to the hardware.
 //
 void
-PHYSICAL_CHANNEL_CLASS::IOThread()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::IOThread()
 {
     //
     // This thread starts owning write window 0.
@@ -953,7 +954,7 @@ PHYSICAL_CHANNEL_CLASS::IOThread()
 
 
 void
-PHYSICAL_CHANNEL_CLASS::DebugState()
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::DebugState()
 {
     int check = nallatechEdgeDevice->DebugRegRead(100);
     printf("Check value: 0x%04x (%s)\n", check,
@@ -979,7 +980,7 @@ PHYSICAL_CHANNEL_CLASS::DebugState()
 
 
 void
-PHYSICAL_CHANNEL_CLASS::RegisterPseudoDMAHandler(
+NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS::RegisterPseudoDMAHandler(
     int channelID,
     int serviceID,
     PSEUDO_DMA_HANDLER handler)

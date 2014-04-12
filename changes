@@ -3119,3 +3119,28 @@ Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-ch
 
 
 Changed legacy physical channels to use correct packet endianess.
+
+----------
+keflemin    Date: Sat Apr 12 18:23:07 EDT 2014  CSN: CSN-leap-platforms-acp-149
+                  Sat Apr 12 22:23:07 UTC 2014
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          148 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          148 
+
+Directory modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-edge
+ nallatech-edge-channel.cpp Locally Modified          148 
+ nallatech-edge-channel.h  Locally Modified          148 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.cpp               Locally Modified          148 
+ acp-m2c.h                 Locally Modified          148 
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge
+ nallatech-edge-device.h   Locally Modified          148 
+ nallatech-edge-device.cpp Locally Modified          148 
+
+
+
+Updated ACP channel code to provide new LEAP physical device interfaces. 

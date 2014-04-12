@@ -16,13 +16,13 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
-#ifndef __PHYSICAL_CHANNEL__
-#define __PHYSICAL_CHANNEL__
+#ifndef __NALLATECH_PHYSICAL_CHANNEL__
+#define __NALLATECH_PHYSICAL_CHANNEL__
 
 #include "asim/provides/umf.h"
 #include "asim/provides/nallatech_edge_device.h"
 #include <pthread.h>
-
+#include "awb/provides/physical_platform_utils.h"
 
 //
 // Until real DMA is available we have a pseudo-DMA hack for faster processing
@@ -37,10 +37,11 @@
 //               Physical Channel              
 // ============================================
 
-typedef class PHYSICAL_CHANNEL_CLASS *PHYSICAL_CHANNEL;
+typedef class NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS *NALLATECH_EDGE_PHYSICAL_CHANNEL;
 
-class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
-                              public TRACEABLE_CLASS
+
+class NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS: public PHYSICAL_CHANNEL_CLASS,
+                                             public TRACEABLE_CLASS
 {
   private:
     // cached links to useful physical devices
@@ -107,10 +108,12 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
 
     void DebugState();
 
+    UMF_FACTORY umfFactory;
+
   public:
 
-    PHYSICAL_CHANNEL_CLASS(PLATFORMS_MODULE);
-    ~PHYSICAL_CHANNEL_CLASS();
+    NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS(PLATFORMS_MODULE p);
+    ~NALLATECH_EDGE_PHYSICAL_CHANNEL_CLASS();
 
     void Init();
 
@@ -122,7 +125,15 @@ class PHYSICAL_CHANNEL_CLASS: public PLATFORMS_MODULE_CLASS,
     // I/O management, run as a separate thread
     void IOThread();
 
-
+    // Functions for managing physical channel interfaces. 
+    void SetUMFFactory(UMF_FACTORY factoryInit) { umfFactory = factoryInit; };
+    void RegisterLogicalDeviceName(string name) { /*  ACP uses a different method for interface naming. */ }
+    class tbb::concurrent_bounded_queue<UMF_MESSAGE> *GetWriteQ() 
+    { 
+        printf("ACP does not support new-style compilation!\n");
+        exit(0); // Crash and burn.
+        return NULL;
+    } 
 
     // ====================================================================
     //
