@@ -3144,3 +3144,18 @@ Directory modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nal
 
 
 Updated ACP channel code to provide new LEAP physical device interfaces. 
+
+----------
+keflemin    Date: Mon Apr 14 10:46:10 EDT 2014  CSN: CSN-leap-platforms-acp-150
+                  Mon Apr 14 14:46:10 UTC 2014
+
+
+Directory modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram
+ acp-m2c.cpp               Locally Modified          149 
+ acp-m2c.h                 Locally Modified          149 
+
+
+Added symlinks connecting ACP physical platform codes.
+
+Added comments to base acp physical platform files.
+

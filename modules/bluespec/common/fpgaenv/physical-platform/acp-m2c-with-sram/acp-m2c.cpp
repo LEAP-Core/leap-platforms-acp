@@ -16,6 +16,10 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
+//
+// This file is shared among the several diffent ACP physical configurations using symlinks.
+//
+
 #include "asim/syntax.h"
 #include "asim/provides/physical_platform.h"
 

@@ -16,6 +16,10 @@
 // Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
+//
+// This file is shared among the several diffent ACP physical configurations using symlinks.
+//
+
 #ifndef __PHYSICAL_PLATFORM__
 #define __PHYSICAL_PLATFORM__
 
