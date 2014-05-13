@@ -258,3 +258,10 @@ wrapper_gen_tool=Synthesis Boundary Wrapper generation tool
 
 [RL Bluespec Library Submodel/Params]
 FIFO_MEM_MIN_ENTRIES_FOR_BRAM=32
+
+[Common Physical Platform Utilities/Requires]
+physical_platform_defs=Common Physical Platform Definitions
+
+[Common Physical Platform Definitions]
+File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
+Packagehint=leap-platforms

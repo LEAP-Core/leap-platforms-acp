@@ -155,3 +155,10 @@ Packagehint=leap
 [RL Bluespec Library Submodel/Params]
 FIFO_MEM_MIN_ENTRIES_FOR_BRAM=16
 FIFO_MEM_MIN_TOTAL_BITS_FOR_BRAM=1024
+
+[Common Physical Platform Utilities/Requires]
+physical_platform_defs=Common Physical Platform Definitions
+
+[Common Physical Platform Definitions]
+File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
+Packagehint=leap-platforms

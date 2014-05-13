@@ -3159,3 +3159,32 @@ Added symlinks connecting ACP physical platform codes.
 
 Added comments to base acp physical platform files.
 
+
+----------
+keflemin    Date: Tue May 13 08:33:39 EDT 2014  CSN: CSN-leap-platforms-acp-151
+                  Tue May 13 12:33:39 UTC 2014
+
+
+Directory config/pm/leap/submodels/fpgaenv
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga0.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech-no-cache-fpga1.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech-no-cache.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech-sram-fpga1.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech-jtag-no-cache.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech-debugger-mem.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech-no-local-mem.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech-passthrough-fpga1.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech-local-scratchpad.apm Locally Modified          150 
+ fpgaenv-acp-m2c-nallatech-sram-fpga0-syn.apm Locally Modified          150 
+
+Directory config/pm/platforms/debuggers/acp
+ fpga0_passthrough.apm     Locally Modified          150 
+ intra_channel_debugger_nallatech_acp_fpga0.apm Locally Modified          150 
+ intra_channel_debugger_nallatech_acp_fpga1.apm Locally Modified          150 
+ fpga1_scratchpad.apm      Locally Modified          150 
+ intra_channel_debugger_nallatech_acp_jtag.apm Locally Modified          150 
+
+
+Updated broken apms.

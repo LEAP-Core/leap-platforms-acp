@@ -98,20 +98,15 @@ Packagehint=leap-platforms
 [Little-Endian Unified Message Format/Params]
 UMF_CHUNK_BYTES=8
 
-
-
 [Starter Virtual Device]
 File=modules/leap/virtual-platform/virtual-devices/devices/starter/hybrid/starter-device.awb
 Packagehint=leap
-
-
 
 [Standard Virtual Devices/Requires]
 starter_device=Starter Virtual Device
 common_utility_devices=Base Common Devices
 front_panel=Hybrid Front Panel
 local_memory_device=NULL Local Memory Device
-
 
 [Base Common Devices]
 File=modules/leap/virtual-platform/virtual-devices/devices/common/common-utility-devices.awb
@@ -177,3 +172,10 @@ Packagehint=leap
 [Standard Platform Services Submodel]
 File=config/pm/leap/submodels/platform-services/standard-platform-services.apm
 Packagehint=leap
+
+[Common Physical Platform Utilities/Requires]
+physical_platform_defs=Common Physical Platform Definitions
+
+[Common Physical Platform Definitions]
+File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
+Packagehint=leap-platforms

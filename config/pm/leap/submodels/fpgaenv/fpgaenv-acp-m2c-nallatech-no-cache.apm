@@ -31,7 +31,7 @@ Packagehint=leap
 virtual_devices=Standard Virtual Devices
 low_level_platform_interface=Low Level Platform Interface Hybrid
 umf=Little-Endian Unified Message Format
-platform_services=Standard Platform Services Submodel
+platform_services=Standard Platform Service (No Memory Service)
 
 [FPGA Environment]
 File=modules/leap/virtual-platform/fpga-environment.awb
@@ -167,6 +167,13 @@ Packagehint=leap
 File=modules/leap/virtual-platform/virtual-devices/devices/local-memory/null/local-memory-device-null.awb
 Packagehint=leap
 
-[Standard Platform Services Submodel]
-File=config/pm/leap/submodels/platform-services/standard-platform-services.apm
+[Standard Platform Service (No Memory Service)]
+File=config/pm/leap/submodels/platform-services/standard-platform-null-mem.apm
 Packagehint=leap
+
+[Common Physical Platform Utilities/Requires]
+physical_platform_defs=Common Physical Platform Definitions
+
+[Common Physical Platform Definitions]
+File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
+Packagehint=leap-platforms

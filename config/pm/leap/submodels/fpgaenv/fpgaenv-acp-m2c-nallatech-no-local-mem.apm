@@ -95,7 +95,6 @@ UMF_CHUNK_BYTES=8
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram/ddr-sram-device.awb
 Packagehint=leap-platforms-acp
 
-
 [ACP M2 Compute Module With SRAM (Nallatech)]
 File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-with-sram/acp-m2c.awb
 Packagehint=leap-platforms-acp
@@ -152,3 +151,10 @@ Packagehint=leap
 [NULL Local Memory Interface]
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-null.awb
 Packagehint=leap
+
+[Common Physical Platform Utilities/Requires]
+physical_platform_defs=Common Physical Platform Definitions
+
+[Common Physical Platform Definitions]
+File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
+Packagehint=leap-platforms
