@@ -53,7 +53,7 @@ File=modules/leap/virtual-platform/low-level-platform-interface/hybrid-llpi.awb
 Packagehint=leap
 
 [Low Level Platform Interface Hybrid/Requires]
-physical_platform=ACP FPGA with Intra Channel and SRAM (Nallatech)
+physical_platform=ACP FPGA with Intra Channel (Nallatech)
 channelio=Basic Virtual Channel Multiplexer
 rrr=RRR Clients and Servers
 physical_platform_debugger=Null Physical Platform Debugger
@@ -169,22 +169,6 @@ MODEL_CLOCK_FREQ=50
 File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/nallatech-edge/nallatech-edge-device-intra-debugger.awb
 Packagehint=leap-platforms-acp
 
-[ACP FPGA with Intra Channel and SRAM (Nallatech)/Requires]
-clocks_device=Null Clocks Device
-nallatech_intra_device=Nallatech Intra Physical Device FPGA0 (Master) v2
-led_device=General LED Device
-physical_platform_utils=Common Physical Platform Utilities
-nallatech_edge_device=Nallatech Edge Physical Device (Intra-FPGA Debugger) v2
-ddr_sdram_device=ACP DDR2 SRAM Device
-
-[ACP DDR2 SRAM Device]
-File=modules/bluespec/common/fpgaenv/physical-platform/physical-devices/ddr-sram/ddr-sram-device.awb
-Packagehint=leap-platforms-acp
-
-[ACP FPGA with Intra Channel and SRAM (Nallatech)]
-File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0-with-sram/acp-m2c.awb
-Packagehint=leap-platforms-acp
-
 [Xilinx MAP/Params]
 MAPPER_OPTIONS="-cm balanced -global_opt on"
 
@@ -258,3 +242,21 @@ wrapper_gen_tool=Synthesis Boundary Wrapper generation tool
 
 [RL Bluespec Library Submodel/Params]
 FIFO_MEM_MIN_ENTRIES_FOR_BRAM=32
+
+[ACP FPGA with Intra Channel (Nallatech)/Requires]
+clocks_device=Null Clocks Device
+nallatech_intra_device=Nallatech Intra Physical Device FPGA0 (Master) v2
+led_device=General LED Device
+physical_platform_utils=Common Physical Platform Utilities
+nallatech_edge_device=Nallatech Edge Physical Device (Intra-FPGA Debugger) v2
+
+[ACP FPGA with Intra Channel (Nallatech)]
+File=modules/bluespec/common/fpgaenv/physical-platform/acp-m2c-nallatech-fpga0/acp-m2c.awb
+Packagehint=leap-platforms-acp
+
+[Common Physical Platform Utilities/Requires]
+physical_platform_defs=Common Physical Platform Definitions
+
+[Common Physical Platform Definitions]
+File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
+Packagehint=leap-platforms

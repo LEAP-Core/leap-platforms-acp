@@ -150,7 +150,6 @@ Packagehint=leap-platforms-acp
 File=modules/bluespec/common/fpgaenv/virtual-platform/channelio/physical-channel/nallatech-intra/nallatech-intra-channel.awb
 Packagehint=leap-platforms-acp
 
-
 [Scratchpad Memory Test System]
 File=modules/apps/tests/mem_test/mem-test.awb
 Packagehint=leap-debug
@@ -184,7 +183,13 @@ LOCAL_MEM_ADDR_BITS=16
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-bram.awb
 Packagehint=leap
 
-
 [Standard Platform Services Submodel]
 File=config/pm/leap/submodels/platform-services/standard-platform-services.apm
 Packagehint=leap
+
+[Common Physical Platform Utilities/Requires]
+physical_platform_defs=Common Physical Platform Definitions
+
+[Common Physical Platform Definitions]
+File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
+Packagehint=leap-platforms

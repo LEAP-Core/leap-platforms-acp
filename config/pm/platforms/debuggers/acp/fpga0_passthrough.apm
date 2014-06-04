@@ -98,7 +98,6 @@ UMF_CHUNK_BYTES=8
 File=modules/leap/virtual-platform/rrr/rrr-common/rrr-common.awb
 Packagehint=leap
 
-
 [Null Clocks Device/Params]
 CRYSTAL_CLOCK_FREQ=200
 
@@ -196,3 +195,10 @@ Packagehint=leap
 [Local Memory using DDR DRAM (burst smaller than line)]
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-ddr-narrow.awb
 Packagehint=leap
+
+[Common Physical Platform Utilities/Requires]
+physical_platform_defs=Common Physical Platform Definitions
+
+[Common Physical Platform Definitions]
+File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
+Packagehint=leap-platforms
