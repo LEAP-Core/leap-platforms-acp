@@ -28,7 +28,7 @@ File=modules/leap/virtual-platform/std-virtual-platform.awb
 Packagehint=leap
 
 [Standard Virtual Platform/Requires]
-virtual_devices=Standard Virtual Devices
+virtual_devices=Standard Virtual Devices Submodel
 low_level_platform_interface=Low Level Platform Interface Hybrid
 umf=Little-Endian Unified Message Format
 platform_services=MultiFPGA Master Platform Services
@@ -37,9 +37,6 @@ platform_services=MultiFPGA Master Platform Services
 File=modules/leap/virtual-platform/fpga-environment.awb
 Packagehint=leap
 
-[Standard Virtual Devices]
-File=modules/leap/virtual-platform/virtual-devices/virtual-device-sets/std/std-virtual-devices.awb
-Packagehint=leap
 
 [RRR Clients and Servers]
 File=modules/leap/virtual-platform/rrr/basic/basic-rrr.awb
@@ -95,23 +92,7 @@ Packagehint=leap-platforms
 [Little-Endian Unified Message Format/Params]
 UMF_CHUNK_BYTES=8
 
-[Starter Virtual Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/starter/hybrid/starter-device.awb
-Packagehint=leap
 
-[Standard Virtual Devices/Requires]
-starter_device=Starter Virtual Device
-common_utility_devices=Base Common Devices
-front_panel=Hybrid Front Panel
-local_memory_device=Soft Connection Local Memory Device
-
-[Base Common Devices]
-File=modules/leap/virtual-platform/virtual-devices/devices/common/common-utility-devices.awb
-Packagehint=leap
-
-[Hybrid Front Panel]
-File=modules/leap/virtual-platform/virtual-devices/devices/front-panel/hybrid/hybrid-fp.awb
-Packagehint=leap
 
 [RRR Common Module]
 File=modules/leap/virtual-platform/rrr/rrr-common/rrr-common.awb
@@ -130,10 +111,6 @@ Packagehint=leap
 
 [Xilinx BITGEN]
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-bitgen.awb
-Packagehint=leap
-
-[Xilinx LOADER]
-File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-loader.awb
 Packagehint=leap
 
 [Interface builder]
@@ -165,7 +142,7 @@ xilinx_ngd=Xilinx NGD
 xilinx_bitgen=Xilinx BITGEN
 xilinx_par=Xilinx PAR
 xilinx_map=Xilinx MAP
-xilinx_loader=Xilinx LOADER
+xilinx_loader=Xilinx LOADER (ISE/Impact)
 
 [MCD Tool for Xilinx]
 File=modules/leap/build-support/build-pipelines/stages/mcd/mcd-tcl.awb
@@ -208,15 +185,11 @@ Packagehint=leap
 
 [Soft Services for MultiFPGA Submodel]
 File=config/pm/leap/submodels/common/multifpga-soft-services.apm
-Packagehint=multifpga
-
-[Soft Connection Local Memory Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/local-memory/soft/local-memory-device-soft.awb
-Packagehint=leap
+Packagehint=leap-multifpga
 
 [MultiFPGA Master Platform Services]
 File=config/pm/leap/submodels/platform-services/multifpga-platform-services-master.apm
-Packagehint=multifpga
+Packagehint=leap-multifpga
 
 [BSV Build Tool (First Phase)/Params]
 BSC_FLAGS="-steps 10000000 +RTS -K1000M -RTS -keep-fires -aggressive-conditions -wait-for-license -no-show-method-conf -no-opt-bool -licenseWarning 7 -elab -show-schedule -verilog -show-range-conflict -remove-dollar"
@@ -231,11 +204,11 @@ Packagehint=leap
 
 [FPGAMap]
 File=modules/leap/build-support/build-pipelines/stages/parsers/map/fpgamap_parser.awb
-Packagehint=multifpga
+Packagehint=leap-multifpga
 
 [FPGA Environment Datatype]
 File=modules/leap/build-support/build-pipelines/stages/parsers/environment/fpgaenvironment.awb
-Packagehint=multifpga
+Packagehint=leap-multifpga
 
 [Local Memory using DDR DRAM (burst smaller than line)]
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-ddr-narrow.awb
@@ -247,7 +220,7 @@ Packagehint=leap
 
 [FPGA Platform Build Pipeline (Legacy)]
 File=modules/leap/build-support/pipelines/multifpga_platform/fpga-platform-build-pipeline.awb
-Packagehint=multifpga
+Packagehint=leap-multifpga
 
 [FPGA Platform Build Pipeline (Legacy)/Requires]
 fpga_program_tool=FPGA Programming Tool
@@ -262,6 +235,7 @@ software_tool=Software build tool
 post_synthesis_tool=Xilinx Post-synthesis Toolchain
 wrapper_gen_tool=Synthesis Boundary Wrapper generation tool
 li_module=LEAP LI Module Handler
+area_group_tool=Area Group Tool
 
 [LEAP LI Module Handler]
 File=modules/leap/build-support/build-pipelines/stages/li_module/li_module.awb
@@ -273,3 +247,29 @@ physical_platform_defs=Common Physical Platform Definitions
 [Common Physical Platform Definitions]
 File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
 Packagehint=leap-platforms
+
+[Synthesis library]
+File=modules/leap/build-support/build-pipelines/stages/synthesis/synthesis_library.awb
+Packagehint=leap
+
+[Xilinx LOADER (ISE/Impact)]
+File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-loader.awb
+Packagehint=leap
+
+[Area Group Tool/Requires]
+area_group_parser=Area Group Parser
+
+[Area Group Tool]
+File=modules/leap/build-support/build-pipelines/stages/area_group/area-group-tool.awb
+Packagehint=leap
+
+[Area Group Parser]
+File=modules/leap/build-support/build-pipelines/stages/area_group/parser/area-group-parser.awb
+Packagehint=leap
+
+[Synplify/XST Synthesis Tool/Requires]
+synthesis_library=Synthesis library
+
+[Standard Virtual Devices Submodel]
+File=config/pm/leap/submodels/virtual-devices/std-virtual-devices.apm
+Packagehint=leap

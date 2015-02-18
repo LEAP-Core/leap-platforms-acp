@@ -28,7 +28,7 @@ File=modules/leap/virtual-platform/std-virtual-platform.awb
 Packagehint=leap
 
 [Standard Virtual Platform/Requires]
-virtual_devices=Standard Virtual Devices
+virtual_devices=Standard Virtual Devices Submodel
 low_level_platform_interface=Low Level Platform Interface Hybrid
 umf=Little-Endian Unified Message Format
 platform_services=Standard Platform Services Submodel
@@ -37,9 +37,6 @@ platform_services=Standard Platform Services Submodel
 File=modules/leap/virtual-platform/fpga-environment.awb
 Packagehint=leap
 
-[Standard Virtual Devices]
-File=modules/leap/virtual-platform/virtual-devices/virtual-device-sets/std/std-virtual-devices.awb
-Packagehint=leap
 
 [RRR Clients and Servers]
 File=modules/leap/virtual-platform/rrr/basic/basic-rrr.awb
@@ -98,23 +95,9 @@ Packagehint=leap-platforms
 [Little-Endian Unified Message Format/Params]
 UMF_CHUNK_BYTES=8
 
-[Starter Virtual Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/starter/hybrid/starter-device.awb
-Packagehint=leap
 
-[Standard Virtual Devices/Requires]
-starter_device=Starter Virtual Device
-common_utility_devices=Base Common Devices
-front_panel=Hybrid Front Panel
-local_memory_device=NULL Local Memory Device
 
-[Base Common Devices]
-File=modules/leap/virtual-platform/virtual-devices/devices/common/common-utility-devices.awb
-Packagehint=leap
 
-[Hybrid Front Panel]
-File=modules/leap/virtual-platform/virtual-devices/devices/front-panel/hybrid/hybrid-fp.awb
-Packagehint=leap
 
 [RRR Common Module]
 File=modules/leap/virtual-platform/rrr/rrr-common/rrr-common.awb
@@ -166,16 +149,11 @@ Packagehint=leap
 File=config/pm/leap/submodels/common/librl-bsv.apm
 Packagehint=leap
 
-[FPGA Build Pipeline Xilinx/Params]
-XST_INSERT_IOBUF=0
 
 [Soft Services Submodel]
 File=config/pm/leap/submodels/common/soft-services.apm
 Packagehint=leap
 
-[NULL Local Memory Device]
-File=modules/leap/virtual-platform/virtual-devices/devices/local-memory/null/local-memory-device-null.awb
-Packagehint=leap
 
 [Standard Platform Services Submodel]
 File=config/pm/leap/submodels/platform-services/standard-platform-services.apm
@@ -187,3 +165,7 @@ physical_platform_defs=Common Physical Platform Definitions
 [Common Physical Platform Definitions]
 File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
 Packagehint=leap-platforms
+
+[Standard Virtual Devices Submodel]
+File=config/pm/leap/submodels/virtual-devices/std-virtual-devices.apm
+Packagehint=leap
