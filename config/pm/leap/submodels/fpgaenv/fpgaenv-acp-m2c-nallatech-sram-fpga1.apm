@@ -110,10 +110,6 @@ Packagehint=leap
 File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-bitgen.awb
 Packagehint=leap
 
-[Xilinx LOADER]
-File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-loader.awb
-Packagehint=leap
-
 [Interface builder]
 File=modules/leap/build-support/build-pipelines/stages/iface/iface.awb
 Packagehint=leap
@@ -143,7 +139,7 @@ xilinx_ngd=Xilinx NGD
 xilinx_bitgen=Xilinx BITGEN
 xilinx_par=Xilinx PAR
 xilinx_map=Xilinx MAP
-xilinx_loader=Xilinx LOADER
+xilinx_loader=Xilinx LOADER (ISE/Impact)
 
 [MCD Tool for Xilinx]
 File=modules/leap/build-support/build-pipelines/stages/mcd/mcd-tcl.awb
@@ -190,11 +186,11 @@ MAPPER_OPTIONS="-cm balanced -global_opt on"
 
 [Soft Services for MultiFPGA Submodel]
 File=config/pm/leap/submodels/common/multifpga-soft-services.apm
-Packagehint=multifpga
+Packagehint=leap-multifpga
 
 [MultiFPGA Slave Platform Services]
 File=config/pm/leap/submodels/platform-services/multifpga-platform-services-slave.apm
-Packagehint=multifpga
+Packagehint=leap-multifpga
 
 [Standard Virtual Devices Submodel]
 File=config/pm/leap/submodels/virtual-devices/std-virtual-devices.apm
@@ -213,11 +209,11 @@ Packagehint=leap
 
 [FPGAMap]
 File=modules/leap/build-support/build-pipelines/stages/parsers/map/fpgamap_parser.awb
-Packagehint=multifpga
+Packagehint=leap-multifpga
 
 [FPGA Environment Datatype]
 File=modules/leap/build-support/build-pipelines/stages/parsers/environment/fpgaenvironment.awb
-Packagehint=multifpga
+Packagehint=leap-multifpga
 
 [Local Memory using DDR DRAM (burst smaller than line)]
 File=modules/leap/virtual-platform/low-level-platform-interface/local-mem/local-mem-ddr-narrow.awb
@@ -240,7 +236,7 @@ synthesis_library=Synthesis library
 
 [FPGA Platform Build Pipeline (Legacy)]
 File=modules/leap/build-support/pipelines/multifpga_platform/fpga-platform-build-pipeline.awb
-Packagehint=multifpga
+Packagehint=leap-multifpga
 
 [FPGA Platform Build Pipeline (Legacy)/Requires]
 fpga_program_tool=FPGA Programming Tool
@@ -255,6 +251,7 @@ fpga_environment_parser=FPGA Environment Datatype
 software_tool=Software build tool
 post_synthesis_tool=Xilinx Post-synthesis Toolchain
 wrapper_gen_tool=Synthesis Boundary Wrapper generation tool
+area_group_tool=Area Group Tool
 
 [RL Bluespec Library Submodel/Params]
 FIFO_MEM_MIN_ENTRIES_FOR_BRAM=32
@@ -265,3 +262,25 @@ physical_platform_defs=Common Physical Platform Definitions
 [Common Physical Platform Definitions]
 File=modules/bluespec/common/fpgaenv/physical-platform/utils/physical-defs.awb
 Packagehint=leap-platforms
+
+[Xilinx LOADER (ISE/Impact)]
+File=modules/leap/build-support/build-pipelines/stages/xilinx/xilinx-loader.awb
+Packagehint=leap
+
+[RRR Debug Module]
+File=modules/leap/virtual-platform/rrr/rrr-common/rrr-debug.awb
+Packagehint=leap
+
+[RRR Common Module/Requires]
+rrr_debug=RRR Debug Module
+
+[Area Group Tool]
+File=modules/leap/build-support/build-pipelines/stages/area_group/area-group-tool.awb
+Packagehint=leap
+
+[Area Group Tool/Requires]
+area_group_parser=Area Group Parser
+
+[Area Group Parser]
+File=modules/leap/build-support/build-pipelines/stages/area_group/parser/area-group-parser.awb
+Packagehint=leap
